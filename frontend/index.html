@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Conversation with Data</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:         #0f1117;
+    --surface:    #1a1d27;
+    --surface-2:  #222636;
+    --border:     #2e3347;
+    --text:       #e8eaf0;
+    --text-muted: #6b7280;
+    --accent:     #6c8cff;
+    --accent-dim: #1e2a4a;
+    --success:    #34d399;
+    --danger:     #f87171;
+    --radius:     10px;
+    --font:       -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --mono:       "JetBrains Mono", "Fira Code", monospace;
+  }
+
+  body {
+    font-family: var(--font);
+    background:  var(--bg);
+    color:       var(--text);
+    height:      100vh;
+    display:     flex;
+    overflow:    hidden;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: 280px;
+    min-width: 280px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 20px 16px;
+    gap: 20px;
+  }
+
+  .sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+
+  .logo-text { font-size: 15px; font-weight: 600; letter-spacing: -0.3px; }
+  .logo-sub  { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  /* Database list */
+  .db-list { display: flex; flex-direction: column; gap: 6px; }
+
+  .db-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: var(--radius);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+  }
+
+  .db-item:hover         { background: var(--surface-2); border-color: var(--border); }
+  .db-item.active        { background: var(--accent-dim); border-color: var(--accent); }
+  .db-item.active .db-name { color: var(--accent); }
+
+  .db-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--success);
+    flex-shrink: 0;
+  }
+
+  .db-name  { font-size: 13px; font-weight: 500; flex: 1; truncate: ellipsis; }
+  .db-type  { font-size: 10px; color: var(--text-muted); font-family: var(--mono); }
+
+  .db-remove {
+    opacity: 0;
+    background: none;
+    border: none;
+    color: var(--danger);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: opacity 0.15s;
+    line-height: 1;
+  }
+  .db-item:hover .db-remove { opacity: 1; }
+
+  .no-db {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 12px 0;
+  }
+
+  /* Add database form */
+  .add-db-toggle {
+    width: 100%;
+    padding: 8px;
+    background: none;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .add-db-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+  .add-db-form {
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    background: var(--surface-2);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+  }
+  .add-db-form.open { display: flex; }
+
+  .form-input {
+    width: 100%;
+    padding: 7px 10px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 12px;
+    font-family: var(--font);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .form-input:focus { border-color: var(--accent); }
+  .form-input::placeholder { color: var(--text-muted); }
+
+  .form-select {
+    width: 100%;
+    padding: 7px 10px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 12px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .form-row { display: flex; gap: 6px; }
+
+  .btn {
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    font-family: var(--font);
+  }
+  .btn-primary  { background: var(--accent); color: #fff; flex: 1; }
+  .btn-primary:hover { filter: brightness(1.1); }
+  .btn-ghost    { background: none; border: 1px solid var(--border); color: var(--text-muted); }
+  .btn-ghost:hover  { border-color: var(--text-muted); color: var(--text); }
+
+  .form-hint { font-size: 10px; color: var(--text-muted); line-height: 1.5; }
+
+  /* ── Main chat area ── */
+  .chat-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .chat-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .active-db-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: var(--accent-dim);
+    border: 1px solid var(--accent);
+    border-radius: 20px;
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .no-active-badge {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  /* Messages */
+  .messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    scroll-behavior: smooth;
+  }
+
+  .messages::-webkit-scrollbar       { width: 4px; }
+  .messages::-webkit-scrollbar-track { background: transparent; }
+  .messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .message { display: flex; gap: 12px; max-width: 780px; }
+  .message.user { flex-direction: row-reverse; align-self: flex-end; }
+
+  .avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .avatar.ai   { background: var(--accent); color: #fff; }
+  .avatar.user { background: var(--surface-2); border: 1px solid var(--border); color: var(--text-muted); }
+
+  .bubble {
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.65;
+    max-width: 600px;
+  }
+
+  .message.ai   .bubble { background: var(--surface); border: 1px solid var(--border); border-radius: 12px 12px 12px 4px; }
+  .message.user .bubble { background: var(--accent-dim); border: 1px solid var(--accent); color: var(--text); border-radius: 12px 12px 4px 12px; }
+
+  /* Markdown-ish rendering */
+  .bubble strong { font-weight: 600; }
+  .bubble code {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: var(--bg);
+    padding: 1px 5px;
+    border-radius: 4px;
+    color: var(--accent);
+  }
+  .bubble pre {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px;
+    overflow-x: auto;
+    margin: 8px 0;
+  }
+  .bubble pre code { background: none; padding: 0; }
+
+  /* SQL block */
+  .sql-block {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: #a5b4fc;
+    margin: 8px 0;
+    overflow-x: auto;
+  }
+
+  /* Typing indicator */
+  .typing { display: flex; align-items: center; gap: 4px; padding: 4px 0; }
+  .typing span {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    animation: bounce 1.2s infinite;
+  }
+  .typing span:nth-child(2) { animation-delay: 0.2s; }
+  .typing span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes bounce {
+    0%, 80%, 100% { transform: translateY(0); opacity: 0.5; }
+    40%            { transform: translateY(-6px); opacity: 1; }
+  }
+
+  /* Welcome state */
+  .welcome {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 40px;
+  }
+  .welcome-icon { font-size: 40px; }
+  .welcome h2   { font-size: 18px; font-weight: 600; color: var(--text); }
+  .welcome p    { font-size: 14px; max-width: 400px; line-height: 1.6; }
+
+  /* Input bar */
+  .input-bar {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+  }
+
+  .chat-input {
+    flex: 1;
+    padding: 12px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-size: 14px;
+    font-family: var(--font);
+    outline: none;
+    resize: none;
+    min-height: 44px;
+    max-height: 160px;
+    line-height: 1.5;
+    transition: border-color 0.15s;
+  }
+  .chat-input:focus     { border-color: var(--accent); }
+  .chat-input::placeholder { color: var(--text-muted); }
+
+  .send-btn {
+    width: 44px; height: 44px;
+    background: var(--accent);
+    border: none;
+    border-radius: var(--radius);
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .send-btn:hover    { filter: brightness(1.1); }
+  .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+    z-index: 100;
+  }
+  .toast.success { background: #064e3b; border: 1px solid var(--success); color: var(--success); }
+  .toast.error   { background: #450a0a; border: 1px solid var(--danger);  color: var(--danger); }
+  .toast.show    { opacity: 1; }
+</style>
+</head>
+<body>
+
+<!-- ── Sidebar ─────────────────────────────────────────────────── -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">🗄</div>
+    <div>
+      <div class="logo-text">Conversation with Data</div>
+      <div class="logo-sub">Sepidaar Intelligence Layer</div>
+    </div>
+  </div>
+
+  <div>
+    <div class="section-label">Connected Databases</div>
+    <div class="db-list" id="dbList">
+      <div class="no-db">No databases connected</div>
+    </div>
+  </div>
+
+  <div>
+    <button class="add-db-toggle" id="addToggle" onclick="toggleAddForm()">
+      + Add database
+    </button>
+
+    <div class="add-db-form" id="addForm">
+      <input class="form-input" id="dbName" placeholder="Name  (e.g. accounting_prod)" />
+      <select class="form-select" id="dbType">
+        <option value="sqlite">SQLite</option>
+        <option value="postgresql">PostgreSQL</option>
+        <option value="mysql">MySQL / MariaDB</option>
+        <!-- add more types here as you expand SUPPORTED_TYPES in database_manager.py -->
+      </select>
+      <input class="form-input" id="dbConn"
+             placeholder="Connection string" />
+      <div class="form-hint" id="connHint">
+        sqlite:///./path/to/file.db
+      </div>
+      <div class="form-row">
+        <button class="btn btn-ghost" onclick="toggleAddForm()">Cancel</button>
+        <button class="btn btn-primary" onclick="addDatabase()">Connect</button>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ── Chat area ───────────────────────────────────────────────── -->
+<main class="chat-area">
+  <header class="chat-header">
+    <div id="activeDbBadge" class="no-active-badge">No database selected</div>
+  </header>
+
+  <div class="messages" id="messages">
+    <div class="welcome" id="welcome">
+      <div class="welcome-icon">💬</div>
+      <h2>Ask anything about your data</h2>
+      <p>Connect a database using the sidebar, then ask questions in plain English.
+         No SQL knowledge needed.</p>
+    </div>
+  </div>
+
+  <div class="input-bar">
+    <textarea class="chat-input" id="chatInput"
+              placeholder="Ask a question about your data…"
+              rows="1"
+              onkeydown="handleKey(event)"
+              oninput="autoResize(this)"></textarea>
+    <button class="send-btn" id="sendBtn" onclick="sendMessage()" title="Send">
+      ➤
+    </button>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API = "http://localhost:8000";
+
+let activeDb  = null;
+let databases = [];
+let waiting   = false;
+
+// ── Init ────────────────────────────────────────────────────────────────────
+async function init() {
+  try {
+    const res  = await fetch(`${API}/databases`);
+    const data = await res.json();
+    databases = data.databases || [];
+    activeDb  = data.active    || null;
+    renderDatabases();
+    renderActiveDb();
+  } catch (e) {
+    // Server not running yet — that's fine on first open
+  }
+}
+
+// ── Database rendering ───────────────────────────────────────────────────────
+function renderDatabases() {
+  const list = document.getElementById("dbList");
+  if (databases.length === 0) {
+    list.innerHTML = '<div class="no-db">No databases connected</div>';
+    return;
+  }
+  list.innerHTML = databases.map(db => `
+    <div class="db-item ${db.name === activeDb ? "active" : ""}"
+         onclick="activateDb('${db.name}')">
+      <div class="db-dot"></div>
+      <span class="db-name">${db.name}</span>
+      <span class="db-type">${db.type}</span>
+      <button class="db-remove" onclick="removeDb(event,'${db.name}')" title="Remove">✕</button>
+    </div>
+  `).join("");
+}
+
+function renderActiveDb() {
+  const badge = document.getElementById("activeDbBadge");
+  if (activeDb) {
+    badge.className = "active-db-badge";
+    badge.innerHTML = `<span style="width:7px;height:7px;border-radius:50%;background:#34d399;display:inline-block"></span> ${activeDb}`;
+  } else {
+    badge.className = "no-active-badge";
+    badge.textContent = "No database selected";
+  }
+}
+
+// ── Add database ─────────────────────────────────────────────────────────────
+function toggleAddForm() {
+  const form   = document.getElementById("addForm");
+  const toggle = document.getElementById("addToggle");
+  const open   = form.classList.toggle("open");
+  toggle.style.display = open ? "none" : "flex";
+}
+
+// Update connection string hint based on selected type
+document.getElementById("dbType").addEventListener("change", e => {
+  const hints = {
+    sqlite:     "sqlite:///./path/to/file.db",
+    postgresql: "postgresql://user:pass@localhost:5432/dbname",
+    mysql:      "mysql+pymysql://user:pass@localhost/dbname",
+  };
+  document.getElementById("connHint").textContent = hints[e.target.value] || "";
+});
+
+async function addDatabase() {
+  const name = document.getElementById("dbName").value.trim();
+  const type = document.getElementById("dbType").value;
+  const conn = document.getElementById("dbConn").value.trim();
+
+  if (!name || !conn) { showToast("Name and connection string required", "error"); return; }
+
+  try {
+    const res  = await fetch(`${API}/databases`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, type, connection_string: conn }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) { showToast(data.error || "Connection failed", "error"); return; }
+
+    activeDb = data.active;
+    await refreshDatabases();
+    toggleAddForm();
+
+    document.getElementById("dbName").value = "";
+    document.getElementById("dbConn").value = "";
+    showToast(`Connected to ${name}`, "success");
+  } catch (e) {
+    showToast("Server unreachable — is main.py running?", "error");
+  }
+}
+
+async function activateDb(name) {
+  try {
+    const res  = await fetch(`${API}/databases/activate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name }),
+    });
+    const data = await res.json();
+    activeDb   = data.active;
+    renderDatabases();
+    renderActiveDb();
+    showToast(`Switched to ${name}`, "success");
+  } catch (e) {
+    showToast("Could not switch database", "error");
+  }
+}
+
+async function removeDb(event, name) {
+  event.stopPropagation();
+  if (!confirm(`Remove "${name}"?`)) return;
+  try {
+    const res  = await fetch(`${API}/databases/${name}`, { method: "DELETE" });
+    const data = await res.json();
+    activeDb   = data.active;
+    await refreshDatabases();
+    showToast(`Removed ${name}`, "success");
+  } catch (e) {
+    showToast("Could not remove database", "error");
+  }
+}
+
+async function refreshDatabases() {
+  const res  = await fetch(`${API}/databases`);
+  const data = await res.json();
+  databases  = data.databases || [];
+  activeDb   = data.active    || null;
+  renderDatabases();
+  renderActiveDb();
+}
+
+// ── Chat ─────────────────────────────────────────────────────────────────────
+function handleKey(e) {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function autoResize(el) {
+  el.style.height = "auto";
+  el.style.height = Math.min(el.scrollHeight, 160) + "px";
+}
+
+async function sendMessage() {
+  if (waiting) return;
+  const input = document.getElementById("chatInput");
+  const text  = input.value.trim();
+  if (!text) return;
+
+  hideWelcome();
+  appendMessage("user", text);
+  input.value = "";
+  input.style.height = "auto";
+
+  const typingId = appendTyping();
+  setWaiting(true);
+
+  try {
+    const res  = await fetch(`${API}/chat`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: text }),
+    });
+    const data = await res.json();
+
+    removeTyping(typingId);
+
+    if (data.error) {
+      appendMessage("ai", `⚠ ${data.error}`);
+    } else {
+      appendMessage("ai", data.reply);
+      if (data.active_db !== activeDb) {
+        activeDb = data.active_db;
+        renderDatabases();
+        renderActiveDb();
+      }
+    }
+  } catch (e) {
+    removeTyping(typingId);
+    appendMessage("ai", "Cannot reach the server. Make sure `python main.py` is running.");
+  }
+
+  setWaiting(false);
+}
+
+// ── Message rendering ────────────────────────────────────────────────────────
+function hideWelcome() {
+  const w = document.getElementById("welcome");
+  if (w) w.style.display = "none";
+}
+
+function appendMessage(role, text) {
+  const container = document.getElementById("messages");
+  const div       = document.createElement("div");
+  div.className   = `message ${role}`;
+  div.innerHTML   = `
+    <div class="avatar ${role}">${role === "ai" ? "AI" : "U"}</div>
+    <div class="bubble">${renderText(text)}</div>
+  `;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function renderText(text) {
+  // Very basic markdown-ish rendering
+  return text
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+    .replace(/`([^`]+)`/g, "<code>$1</code>")
+    .replace(/\n/g, "<br>");
+}
+
+function appendTyping() {
+  const id        = "typing-" + Date.now();
+  const container = document.getElementById("messages");
+  const div       = document.createElement("div");
+  div.id          = id;
+  div.className   = "message ai";
+  div.innerHTML   = `
+    <div class="avatar ai">AI</div>
+    <div class="bubble"><div class="typing"><span></span><span></span><span></span></div></div>
+  `;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+  return id;
+}
+
+function removeTyping(id) {
+  const el = document.getElementById(id);
+  if (el) el.remove();
+}
+
+function setWaiting(val) {
+  waiting = val;
+  document.getElementById("sendBtn").disabled    = val;
+  document.getElementById("chatInput").disabled  = val;
+}
+
+// ── Toast ────────────────────────────────────────────────────────────────────
+function showToast(msg, type = "success") {
+  const t      = document.getElementById("toast");
+  t.textContent = msg;
+  t.className  = `toast ${type} show`;
+  setTimeout(() => t.classList.remove("show"), 2800);
+}
+
+// ── Boot ─────────────────────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
