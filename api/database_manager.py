@@ -18,7 +18,7 @@ SUPPORTED_TYPES = {
     "postgres":   "postgresql",
     "mysql":      "mysql",
     "mariadb":    "mysql",
-    # "mssql":   "mssql+pyodbc",
+    "mssql":   "mssql+pyodbc",
     # "oracle":  "oracle+cx_oracle",
 }
 

@@ -428,7 +428,7 @@
         <option value="sqlite">SQLite</option>
         <option value="postgresql">PostgreSQL</option>
         <option value="mysql">MySQL / MariaDB</option>
-        <!-- add more types here as you expand SUPPORTED_TYPES in database_manager.py -->
+        <option value="mssql">SQL Server (MSSQL)</option>
       </select>
       <input class="form-input" id="dbConn"
              placeholder="Connection string" />
@@ -536,6 +536,7 @@ document.getElementById("dbType").addEventListener("change", e => {
     sqlite:     "sqlite:///./path/to/file.db",
     postgresql: "postgresql://user:pass@localhost:5432/dbname",
     mysql:      "mysql+pymysql://user:pass@localhost/dbname",
+    mssql:      "mssql+pyodbc://sa:password@localhost/dbname?driver=ODBC+Driver+17+for+SQL+Server",
   };
   document.getElementById("connHint").textContent = hints[e.target.value] || "";
 });

@@ -61,7 +61,12 @@ Return ONLY the corrected SQL, no explanation, no markdown fences.
 Fixed SQL:"""
 
         response = self.llm.invoke([HumanMessage(content=prompt)])
-        fixed    = response.content.strip().replace("```sql", "").replace("```", "").strip()
+        content = response.content.strip()
+        # Extract only the SQL part — find first SELECT/WITH/INSERT
+        import re
+        match = re.search(r'(SELECT|WITH|INSERT|UPDATE|DELETE)[\s\S]+', content, re.IGNORECASE)
+        fixed = match.group(0).strip() if match else content
+        fixed = fixed.replace("```sql", "").replace("```", "").strip()
         return fixed
 
     def _schema_to_text(self, schema: list[dict]) -> str:
