@@ -3,56 +3,65 @@ pipeline/sql_generation/layer.py
 =================================
 Layer 4 — SQL Generation  [BASIC]
 
-Generates a SQL query from the user's question and the enriched/filtered schema.
+Generates a SQL query from the user's question and the schema text from RAG Layer.
 
 TODO improvements:
-  - Detect SQL dialect (SQLite vs PostgreSQL have syntax differences)
   - Add chain-of-thought: ask LLM to reason before writing SQL
-  - Support few-shot examples if user provides them
+  - Support few-shot examples generated automatically from schema
   - Post-process to strip markdown fences more robustly
+  - Detect when question is not a data query (e.g. greetings) and skip SQL
 """
 
+import re
 from langchain_core.messages import HumanMessage
 from pipeline.base import BaseLayer
 
 
 class SQLGenerationLayer(BaseLayer):
 
-    def run(self, question: str, schema: list[dict]) -> str:
-        schema_text = self._schema_to_text(schema)
+    def run(self, question: str, schema_text: str) -> str:
+        """
+        Generates a T-SQL query for Microsoft SQL Server.
 
-        prompt = f"""You are a SQL expert. Generate a SQL query to answer the user's question.
+        Args:
+            question:    Natural language question from the user
+            schema_text: LLM-ready schema text from RAG Layer
+                         (CREATE TABLE statements + sample rows)
 
-Database schema:
+        Returns:
+            str: A valid T-SQL query string
+        """
+        prompt = f"""### Task
+Generate a T-SQL query for Microsoft SQL Server.
+
+### Rules
+- Output ONLY the SQL query. Nothing else.
+- No explanations, no comments, no markdown, no other languages.
+- First word MUST be SELECT.
+- Use square brackets for schema and table names: [ACC].[Account]
+- Use TOP instead of LIMIT: SELECT TOP 100 ...
+- Use table aliases for readability.
+
+### Schema
 {schema_text}
 
-Rules:
-- Return ONLY the SQL query, no explanation, no markdown fences
-- Use standard SQL compatible with both SQLite and PostgreSQL
-- Use table aliases for readability
-- Limit results to 100 rows unless the user specifies otherwise
+### Question
+{question}
 
-Question: {question}
-
-SQL:"""
+### SQL
+SELECT"""
 
         response = self.llm.invoke([HumanMessage(content=prompt)])
-        sql      = response.content.strip()
-        sql      = sql.replace("```sql", "").replace("```", "").strip()
-        return sql
 
-    def _schema_to_text(self, schema: list[dict]) -> str:
-        lines = []
-        for table in schema:
-            lines.append(f"Table: {table['table']}")
-            for col in table["columns"]:
-                desc    = f" — {col['description']}" if col.get("description") else ""
-                samples = f" (e.g. {col['samples'][:3]})" if col.get("samples") else ""
-                lines.append(f"  {col['name']} {col['type']}{desc}{samples}")
-            for fk in table.get("foreign_keys", []):
-                lines.append(
-                    f"  FK: {fk['constrained_columns']} → "
-                    f"{fk['referred_table']}.{fk['referred_columns']}"
-                )
-            lines.append("")
-        return "\n".join(lines)
+        # Prepend SELECT since we primed the model with it
+        sql = "SELECT " + response.content.strip()
+
+        # Strip any markdown fences the model might have added
+        sql = sql.replace("```sql", "").replace("```", "").strip()
+
+        # Extract only the SQL part in case model added extra text before SELECT
+        match = re.search(r'(SELECT|WITH|INSERT|UPDATE|DELETE)[\s\S]+', sql, re.IGNORECASE)
+        if match:
+            sql = match.group(0).strip()
+
+        return sql

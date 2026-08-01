@@ -1,86 +1,120 @@
 """
 pipeline/introspection/layer.py
 ================================
-Layer 1 — Introspection  [BASIC]
+Layer 1 — Introspection
 
-Reads the database schema automatically:
-tables, columns, types, sample values, foreign keys.
+Uses LangChain's SQLDatabase to read all schemas automatically.
 No human involvement — works on any unknown database.
-
-Updated to support SQL Server schemas (e.g. ACC.Account, AST.Asset)
 """
 
-from sqlalchemy import inspect, text
+from dataclasses import dataclass, field
+from sqlalchemy import inspect
+from langchain_community.utilities import SQLDatabase
 from pipeline.base import BaseLayer
 
-# SQL Server system schemas to skip
-SYSTEM_SCHEMAS = {
-    "sys", "INFORMATION_SCHEMA", "guest", "db_owner",
-    "db_accessadmin", "db_securityadmin", "db_ddladmin",
-    "db_backupoperator", "db_datareader", "db_datawriter",
-    "db_denydatareader", "db_denydatawriter"
-}
+
+@dataclass
+class IntrospectionResult:
+    """
+    Result of the Introspection Layer.
+
+    Holds one SQLDatabase per schema and provides helper methods
+    for downstream layers (Enrichment, RAG, SQL Generation).
+    """
+    db_per_schema: dict = field(default_factory=dict)  # {schema_name: SQLDatabase}
+    schemas: list = field(default_factory=list)         # ['ACC', 'AST', 'FMK', ...]
+
+    def get_full_schema_info(self) -> str:
+        """
+        Returns schema info for ALL tables in LLM-ready format.
+
+        Example output:
+            -- Schema: ACC
+            CREATE TABLE [ACC].[Account] (...)
+            /* 2 rows from Account: ... */
+
+            -- Schema: AST
+            CREATE TABLE [AST].[Asset] (...)
+        """
+        parts = []
+        for schema, db in self.db_per_schema.items():
+            parts.append(f"-- Schema: {schema}\n{db.get_table_info()}")
+        return "\n\n".join(parts)
+
+    def get_schema_info_for(self, schemas: list[str]) -> str:
+        """
+        Returns schema info only for the given list of schemas.
+        Used by the RAG Layer to pass only relevant tables to the LLM.
+        """
+        parts = []
+        for schema in schemas:
+            if schema in self.db_per_schema:
+                parts.append(f"-- Schema: {schema}\n{self.db_per_schema[schema].get_table_info()}")
+        return "\n\n".join(parts)
+
+    def get_all_table_names(self) -> list[str]:
+        """
+        Returns all table names in schema.table format.
+        Example: ['ACC.Account', 'ACC.Voucher', 'AST.Asset', ...]
+        """
+        tables = []
+        for schema, db in self.db_per_schema.items():
+            for table in db.get_usable_table_names():
+                tables.append(f"{schema}.{table}")
+        return tables
+
+    def get_db_for_schema(self, schema: str) -> SQLDatabase | None:
+        """Returns the SQLDatabase object for a given schema."""
+        return self.db_per_schema.get(schema)
+
+    def summary(self) -> str:
+        """Returns a short summary of what was found."""
+        lines = [f"Found {len(self.schemas)} schemas:"]
+        for schema, db in self.db_per_schema.items():
+            count = len(db.get_usable_table_names())
+            lines.append(f"  {schema}: {count} tables")
+        return "\n".join(lines)
 
 
 class IntrospectionLayer(BaseLayer):
 
-    def run(self, db_name: str) -> list[dict]:
+    def run(self, db_name: str) -> IntrospectionResult:
         """
-        Returns:
-            [
-              {
-                "table": "ACC.Account",
-                "schema": "ACC",
-                "columns": [
-                  {"name": "Id", "type": "INTEGER", "samples": [1, 2, 3]},
-                  ...
-                ],
-                "foreign_keys": [...]
-              },
-              ...
-            ]
+        Reads ALL schemas from the database and returns an IntrospectionResult.
+
+        Steps:
+        1. Use SQLAlchemy to discover all schema names
+        2. Build one SQLDatabase per schema using LangChain
+        3. Return results wrapped in IntrospectionResult
 
         TODO:
-          - Also read views (inspector.get_view_names())
-          - Read CHECK constraints (hints for enum-like columns)
-          - Smarter sampling: avoid PII, prefer diverse values
-          - Handle very large tables with TABLESAMPLE
+          - Cache results to disk to avoid re-reading on every query
+          - Add support for views in addition to tables
+          - Handle schemas where the user has no read permission
         """
         engine    = self.db_manager.get_engine(db_name)
         inspector = inspect(engine)
-        tables    = []
 
-        for schema_name in inspector.get_schema_names():
-            if schema_name in SYSTEM_SCHEMAS:
-                continue
+        all_schemas = inspector.get_schema_names()
+        print(f"[Introspection] Found {len(all_schemas)} schemas: {all_schemas}")
 
-            for table_name in inspector.get_table_names(schema=schema_name):
-                columns      = inspector.get_columns(table_name, schema=schema_name)
-                foreign_keys = inspector.get_foreign_keys(table_name, schema=schema_name)
+        db_per_schema = {}
+        for schema in all_schemas:
+            try:
+                db_per_schema[schema] = SQLDatabase(
+                    engine=engine,
+                    schema=schema,
+                    sample_rows_in_table_info=2,
+                )
+                table_count = len(db_per_schema[schema].get_usable_table_names())
+                print(f"[Introspection] {schema}: {table_count} tables")
+            except Exception as e:
+                print(f"[Introspection] WARNING — skipping schema '{schema}': {e}")
 
-                col_descriptors = []
-                for col in columns:
-                    samples = self._sample_column(engine, schema_name, table_name, col["name"])
-                    col_descriptors.append({
-                        "name":    col["name"],
-                        "type":    str(col["type"]),
-                        "samples": samples,
-                    })
+        result = IntrospectionResult(
+            db_per_schema=db_per_schema,
+            schemas=list(db_per_schema.keys())
+        )
 
-                tables.append({
-                    "table":        f"{schema_name}.{table_name}",
-                    "schema":       schema_name,
-                    "columns":      col_descriptors,
-                    "foreign_keys": foreign_keys,
-                })
-
-        return tables
-
-    def _sample_column(self, engine, schema_name: str, table_name: str, col_name: str, n: int = 5) -> list:
-        try:
-            with engine.connect() as conn:
-                sql    = f'SELECT DISTINCT [{col_name}] FROM [{schema_name}].[{table_name}] WHERE [{col_name}] IS NOT NULL'
-                result = conn.execute(text(sql))
-                return [row[0] for row in result.fetchall()[:n]]
-        except Exception:
-            return []
+        print(f"\n[Introspection] Summary:\n{result.summary()}")
+        return result
