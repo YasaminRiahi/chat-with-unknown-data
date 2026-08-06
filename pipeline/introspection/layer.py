@@ -23,6 +23,12 @@ class IntrospectionResult:
     """
     db_per_schema: dict = field(default_factory=dict)  # {schema_name: SQLDatabase}
     schemas: list = field(default_factory=list)         # ['ACC', 'AST', 'FMK', ...]
+    enriched_table_info: dict[tuple[str, str], str] = field(default_factory=dict)
+    semantic_table_info: dict[tuple[str, str], str] = field(default_factory=dict)
+    table_metadata: dict[tuple[str, str], dict] = field(default_factory=dict)
+    table_descriptions: dict[tuple[str, str], str] = field(default_factory=dict)
+    column_descriptions: dict[tuple[str, str, str], str] = field(default_factory=dict)
+    sensitive_tables: set[tuple[str, str]] = field(default_factory=set)
 
     def get_full_schema_info(self) -> str:
         """
@@ -57,11 +63,57 @@ class IntrospectionResult:
         Returns all table names in schema.table format.
         Example: ['ACC.Account', 'ACC.Voucher', 'AST.Asset', ...]
         """
+        if self.table_metadata:
+            return [f"{schema}.{table}" for schema, table in self.table_metadata]
         tables = []
         for schema, db in self.db_per_schema.items():
             for table in db.get_usable_table_names():
                 tables.append(f"{schema}.{table}")
         return tables
+
+    def resolve_table(self, schema: str, table: str) -> tuple[str, str] | None:
+        """Resolve a qualified table name case-insensitively."""
+        wanted = (schema.casefold(), table.casefold())
+        for candidate in self.table_metadata:
+            if (candidate[0].casefold(), candidate[1].casefold()) == wanted:
+                return candidate
+        return None
+
+    def get_columns(self, schema: str, table: str) -> list[dict]:
+        """Return authoritative structured column metadata for one table."""
+        key = self.resolve_table(schema, table)
+        if key is None:
+            return []
+        return list(self.table_metadata[key].get("columns", []))
+
+    def iter_table_info(self):
+        """Yield one retrievable schema document per table."""
+        for schema, db in self.db_per_schema.items():
+            for table in db.get_usable_table_names():
+                try:
+                    info = db.get_table_info(table_names=[table])
+                except Exception as exc:
+                    print(f"[Introspection] WARNING - skipping {schema}.{table}: {exc}")
+                    continue
+                yield schema, table, f"-- Schema: {schema}\n{info}"
+
+    def iter_retrieval_documents(self):
+        """Yield enriched table documents when enrichment is available."""
+        for schema, table, table_info in self.iter_table_info():
+            key = (schema, table)
+            semantic = self.semantic_table_info.get(key, "")
+            prompt_schema = (
+                f"-- Semantic hints (may be incomplete; DDL is authoritative)\n"
+                f"{semantic}\n{table_info}"
+                if semantic else table_info
+            )
+            yield (
+                schema,
+                table,
+                self.enriched_table_info.get(key, table_info),
+                prompt_schema,
+                key in self.sensitive_tables,
+            )
 
     def get_db_for_schema(self, schema: str) -> SQLDatabase | None:
         """Returns the SQLDatabase object for a given schema."""
@@ -95,25 +147,74 @@ class IntrospectionLayer(BaseLayer):
         engine    = self.db_manager.get_engine(db_name)
         inspector = inspect(engine)
 
-        all_schemas = inspector.get_schema_names()
+        system_schemas = {
+            "information_schema", "sys", "guest",
+            "db_owner", "db_accessadmin", "db_securityadmin",
+            "db_ddladmin", "db_backupoperator", "db_datareader",
+            "db_datawriter", "db_denydatareader", "db_denydatawriter",
+        }
+        all_schemas = [
+            schema for schema in inspector.get_schema_names()
+            if schema.lower() not in system_schemas
+        ]
         print(f"[Introspection] Found {len(all_schemas)} schemas: {all_schemas}")
 
         db_per_schema = {}
+        table_metadata = {}
         for schema in all_schemas:
             try:
                 db_per_schema[schema] = SQLDatabase(
                     engine=engine,
                     schema=schema,
-                    sample_rows_in_table_info=2,
+                    # DDL is sufficient for SQL generation; sample rows make
+                    # wide/large schemas consume the chat model's token quota.
+                    sample_rows_in_table_info=0,
                 )
                 table_count = len(db_per_schema[schema].get_usable_table_names())
                 print(f"[Introspection] {schema}: {table_count} tables")
+                for table in db_per_schema[schema].get_usable_table_names():
+                    try:
+                        columns = inspector.get_columns(table, schema=schema)
+                        pk = inspector.get_pk_constraint(table, schema=schema) or {}
+                        primary_keys = set(pk.get("constrained_columns") or [])
+                        foreign_keys = {}
+                        for fk in inspector.get_foreign_keys(table, schema=schema):
+                            target_schema = fk.get("referred_schema") or schema
+                            target_table = fk.get("referred_table") or "unknown"
+                            for source, target in zip(
+                                fk.get("constrained_columns") or [],
+                                fk.get("referred_columns") or [],
+                            ):
+                                foreign_keys[str(source)] = (
+                                    f"{target_schema}.{target_table}.{target}"
+                                )
+                        table_metadata[(schema, table)] = {
+                            "schema": schema,
+                            "table": table,
+                            "columns": [
+                                {
+                                    "name": str(column["name"]),
+                                    "type": str(column.get("type", "unknown")),
+                                    "nullable": bool(column.get("nullable", True)),
+                                    "comment": str(column.get("comment") or "").strip(),
+                                    "primary_key": str(column["name"]) in primary_keys,
+                                    "references": foreign_keys.get(str(column["name"])),
+                                }
+                                for column in columns
+                            ],
+                        }
+                    except Exception as exc:
+                        print(
+                            f"[Introspection] WARNING - metadata for "
+                            f"{schema}.{table}: {exc}"
+                        )
             except Exception as e:
                 print(f"[Introspection] WARNING — skipping schema '{schema}': {e}")
 
         result = IntrospectionResult(
             db_per_schema=db_per_schema,
-            schemas=list(db_per_schema.keys())
+            schemas=list(db_per_schema.keys()),
+            table_metadata=table_metadata,
         )
 
         print(f"\n[Introspection] Summary:\n{result.summary()}")

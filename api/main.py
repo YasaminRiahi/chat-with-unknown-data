@@ -11,32 +11,39 @@ Or from project root:
   python -m uvicorn api.main:app --reload --port 8000
 """
 
-import json
 from contextlib import asynccontextmanager
+import re
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from langchain_ollama import ChatOllama, OllamaEmbeddings
+from langchain_groq import ChatGroq
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 
 from api.database_manager import DatabaseManager
+from api.config import Settings
+from api.model_logging import (
+    LoggedChatModel,
+    LoggedOllamaEmbeddings,
+    ModelCallLogger,
+)
 from pipeline import Pipeline
 
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
-OLLAMA_BASE_URL = "http://localhost:11434"
-CHAT_MODEL      = "gemma3:4b"
-EMBED_MODEL     = "nomic-embed-text"
+settings = Settings.from_env()
 
 
 # ── App setup ─────────────────────────────────────────────────────────────────
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print(f"Starting — model: {CHAT_MODEL} | embeddings: {EMBED_MODEL}")
+    print(
+        f"Starting - model: {settings.chat_model} | "
+        f"embeddings: {settings.embedding_model}"
+    )
     yield
     print("Shutting down.")
 
@@ -51,12 +58,30 @@ app.add_middleware(
 
 # ── Core singletons ───────────────────────────────────────────────────────────
 
-llm = ChatOllama(model=CHAT_MODEL, base_url=OLLAMA_BASE_URL, temperature=0.1)
+model_call_logger = ModelCallLogger(settings.model_log_path)
 
-embeddings = OllamaEmbeddings(model=EMBED_MODEL, base_url=OLLAMA_BASE_URL)
+groq_model = ChatGroq(
+    model=settings.chat_model,
+    api_key=settings.groq_api_key,
+    temperature=0.1,
+)
+llm = LoggedChatModel(groq_model, model_call_logger)
+
+embeddings = LoggedOllamaEmbeddings(
+    model=settings.embedding_model,
+    base_url=settings.ollama_base_url,
+).configure_logging(model_call_logger)
 
 db_manager = DatabaseManager()
-pipeline   = Pipeline(llm, embeddings, db_manager)
+pipeline = Pipeline(
+    llm,
+    embeddings,
+    db_manager,
+    enrichment_cache_dir=settings.enrichment_cache_dir,
+    embedding_cache_dir=settings.embedding_cache_dir,
+    llm_enrichment_enabled=settings.llm_enrichment_enabled,
+    enrichment_batch_size=settings.enrichment_batch_size,
+)
 
 # ── Session state (single session, in-memory) ─────────────────────────────────
 # TODO: replace with Redis or DB-backed sessions for multi-user support
@@ -98,6 +123,8 @@ Be concise and friendly.
 
 def detect_intent(message: str) -> str:
     msg = message.lower()
+    if re.fullmatch(r"\s*(hi|hello|hey|سلام|درود)[!.?\s]*", msg):
+        return "greeting"
     if any(k in msg for k in ["what database", "which database", "list database",
                                "what db", "connected db", "available db",
                                "چه دیتابیس", "چه پایگاه"]):
@@ -117,6 +144,9 @@ def run_chat(user_message: str) -> str:
 
     intent = detect_intent(user_message)
 
+    if intent == "greeting":
+        return "Hi! Ask me a question about your connected database."
+
     if intent == "list_databases":
         return handle_list_databases()
 
@@ -131,20 +161,14 @@ def run_chat(user_message: str) -> str:
 
     # Run pipeline if a DB is active
     if active_db:
+        metadata_answer = pipeline.answer_metadata_question(user_message, active_db)
+        if metadata_answer is not None:
+            return metadata_answer
         result = pipeline.run(user_message, active_db)
         if result["success"]:
-            user_message = (
-                f"[System: SQL executed successfully]\n"
-                f"SQL: {result['sql']}\n"
-                f"Result: {json.dumps(result['result'], default=str)}\n"
-                f"Explain this result to the user in plain English."
-            )
+            return result["answer"]
         else:
-            user_message = (
-                f"[System: Could not generate valid SQL. Error: {result.get('error')}]\n"
-                f"Original question: {user_message}\n"
-                f"Apologize and explain the issue."
-            )
+            return f"I couldn't process that request: {result.get('error')}"
 
     # Build message list for LLM
     messages = [SystemMessage(content=build_system_prompt())]
@@ -163,7 +187,11 @@ def run_chat(user_message: str) -> str:
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "model": CHAT_MODEL}
+    return {
+        "status": "ok",
+        "model": settings.chat_model,
+        "embedding_model": settings.embedding_model,
+    }
 
 @app.get("/databases")
 def list_databases():
@@ -175,6 +203,7 @@ def add_database(req: AddDatabaseRequest):
     global active_db
     try:
         db_manager.add_database(req.name, req.type, req.connection_string)
+        pipeline.clear_cache(req.name)
         if not active_db:
             active_db = req.name
         return {"success": True, "active": active_db}
@@ -194,6 +223,7 @@ def remove_database(name: str):
     global active_db
     try:
         db_manager.remove_database(name)
+        pipeline.clear_cache(name)
         if active_db == name:
             remaining = db_manager.list_databases()
             active_db = remaining[0] if remaining else None

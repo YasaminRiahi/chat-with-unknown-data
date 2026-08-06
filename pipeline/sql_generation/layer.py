@@ -19,6 +19,15 @@ from pipeline.base import BaseLayer
 
 class SQLGenerationLayer(BaseLayer):
 
+    @staticmethod
+    def _extract_sql(content: str) -> str:
+        sql = content.replace("```sql", "").replace("```", "").strip()
+        sql = re.sub(r"^(?:SELECT\s+){2,}", "SELECT ", sql, flags=re.IGNORECASE)
+        match = re.search(r"\b(SELECT|WITH)\b[\s\S]+", sql, re.IGNORECASE)
+        if not match:
+            raise RuntimeError("The model did not return a read-only SQL query.")
+        return match.group(0).strip()
+
     def run(self, question: str, schema_text: str) -> str:
         """
         Generates a T-SQL query for Microsoft SQL Server.
@@ -41,6 +50,10 @@ Generate a T-SQL query for Microsoft SQL Server.
 - Use square brackets for schema and table names: [ACC].[Account]
 - Use TOP instead of LIMIT: SELECT TOP 100 ...
 - Use table aliases for readability.
+- For every Persian/non-ASCII string literal, use SQL Server Unicode syntax
+  with an N prefix, for example: N'حسن انجام کار'.
+- Prefer the simplest table that directly contains the requested value. Do not
+  add a join unless the requested result requires it and the schema supports it.
 
 ### Schema
 {schema_text}
@@ -48,20 +61,8 @@ Generate a T-SQL query for Microsoft SQL Server.
 ### Question
 {question}
 
-### SQL
-SELECT"""
+### SQL"""
 
         response = self.llm.invoke([HumanMessage(content=prompt)])
 
-        # Prepend SELECT since we primed the model with it
-        sql = "SELECT " + response.content.strip()
-
-        # Strip any markdown fences the model might have added
-        sql = sql.replace("```sql", "").replace("```", "").strip()
-
-        # Extract only the SQL part in case model added extra text before SELECT
-        match = re.search(r'(SELECT|WITH|INSERT|UPDATE|DELETE)[\s\S]+', sql, re.IGNORECASE)
-        if match:
-            sql = match.group(0).strip()
-
-        return sql
+        return self._extract_sql(str(response.content))

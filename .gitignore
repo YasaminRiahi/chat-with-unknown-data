@@ -1,4 +1,3 @@
-
 __pycache__/
 *.py[cod]
 *.pyo
@@ -14,7 +13,6 @@ venv/
 env/
 .env
 
-.env
 .env.local
 .env.production
 
@@ -37,6 +35,7 @@ faiss_index/
 
 *.log
 logs/
+.cache/
 
 .pytest_cache/
 .coverage
