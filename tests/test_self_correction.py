@@ -92,6 +92,48 @@ class SelfCorrectionTests(unittest.TestCase):
         self.assertEqual(len(database.calls), 3)
         self.assertIn("TOP 200", database.calls[1])
         self.assertIn("LIKE N'", database.calls[1])
+        prompt = llm.invoke.call_args.args[0][0].content
+        self.assertIn("Execution result:\n[]", prompt)
+
+    def test_error_retry_has_full_context_and_stops_on_repeated_sql(self):
+        database = Mock()
+        database.execute_query.side_effect = RuntimeError("Invalid column name")
+        llm = Mock()
+        llm.invoke.return_value = Mock(content="SELECT [Missing] FROM [dbo].[Thing]")
+        layer = SelfCorrectionLayer(llm, None, database)
+
+        with self.assertRaisesRegex(RuntimeError, "Invalid column name"):
+            layer.run(
+                "SELECT [Missing] FROM [dbo].[Thing]",
+                "test1", "original question", "relevant schema", max_retries=3,
+            )
+
+        self.assertEqual(database.execute_query.call_count, 1)
+        self.assertEqual(llm.invoke.call_count, 1)
+        prompt = llm.invoke.call_args.args[0][0].content
+        self.assertIn("original question", prompt)
+        self.assertIn("relevant schema", prompt)
+        self.assertIn("SELECT [Missing]", prompt)
+        self.assertIn("Invalid column name", prompt)
+        self.assertIn("Execution result:", prompt)
+
+    def test_error_correction_is_limited_to_three_retries(self):
+        database = Mock()
+        database.execute_query.side_effect = RuntimeError("syntax error")
+        llm = Mock()
+        llm.invoke.side_effect = [
+            Mock(content=f"SELECT {number} AS [Value]") for number in range(2, 5)
+        ]
+        layer = SelfCorrectionLayer(llm, None, database)
+
+        with self.assertRaisesRegex(RuntimeError, "at most 3 retries"):
+            layer.run(
+                "SELECT 1 AS [Value]", "test1", "question", "schema",
+                max_retries=3,
+            )
+
+        self.assertEqual(database.execute_query.call_count, 4)
+        self.assertEqual(llm.invoke.call_count, 3)
 
 
 if __name__ == "__main__":

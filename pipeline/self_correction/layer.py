@@ -26,6 +26,7 @@ from pipeline.base import BaseLayer
 
 class SelfCorrectionLayer(BaseLayer):
 
+    MAX_RETRIES = 3
     MAX_VALUE_PREDICATES = 3
     MAX_PROBE_VALUES = 200
     MAX_VALUE_CANDIDATES = 5
@@ -56,7 +57,7 @@ class SelfCorrectionLayer(BaseLayer):
         return match.group(0).strip()
 
     def run(self, sql: str, db_name: str, original_question: str,
-            schema_text: str, max_retries: int = 3) -> tuple[list[dict], str]:
+            schema_text: str, max_retries: int = MAX_RETRIES) -> tuple[list[dict], str]:
         """
         Runs the SQL query and retries with LLM correction on failure.
 
@@ -65,7 +66,7 @@ class SelfCorrectionLayer(BaseLayer):
             db_name:           Name of the active database connection
             original_question: Original user question (for context in correction prompt)
             schema_text:       Schema text from RAG Layer (for correction context)
-            max_retries:       Maximum number of correction attempts
+            max_retries:       Maximum retries after the initial execution
 
         Returns:
             tuple: (result_rows, final_sql)
@@ -77,13 +78,13 @@ class SelfCorrectionLayer(BaseLayer):
         empty_result_corrected = False
         attempted_sql = {sql.strip()}
 
-        for attempt in range(max_retries):
+        for attempt in range(max_retries + 1):
             try:
                 result = self.db_manager.execute_query(db_name, sql)
                 if result:
                     return result, sql
 
-                if not empty_result_corrected and attempt < max_retries - 1:
+                if not empty_result_corrected and attempt < max_retries:
                     empty_result_corrected = True
                     try:
                         candidates = self._find_value_candidates(db_name, sql)
@@ -109,11 +110,19 @@ class SelfCorrectionLayer(BaseLayer):
             except Exception as e:
                 last_error = str(e)
                 print(f"[SelfCorrection] Attempt {attempt + 1} failed: {last_error}")
-                if attempt < max_retries - 1:
-                    sql = self._fix_sql(sql, last_error, original_question, schema_text)
+                if attempt < max_retries:
+                    corrected = self._fix_sql(
+                        sql, last_error, original_question, schema_text
+                    )
+                    normalized = corrected.strip()
+                    if normalized in attempted_sql:
+                        print("[SelfCorrection] Repeated SQL - stopping retries")
+                        break
+                    attempted_sql.add(normalized)
+                    sql = corrected
 
         raise RuntimeError(
-            f"SQL failed after {max_retries} attempts. Last error: {last_error}"
+            f"SQL failed after at most {max_retries} retries. Last error: {last_error}"
         )
 
     @staticmethod
@@ -289,6 +298,9 @@ Schema:
 Empty-result SQL:
 {sql}
 
+Execution result:
+[]
+
 Candidate values observed in the exact referenced database columns:
 {json.dumps(candidates, ensure_ascii=False)}
 
@@ -327,6 +339,9 @@ Broken SQL:
 
 Error:
 {error}
+
+Execution result:
+Unavailable because execution raised an error before rows were returned.
 
 Rules:
 - Return ONLY the corrected SQL, no explanation, no markdown fences.

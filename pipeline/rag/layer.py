@@ -221,11 +221,6 @@ class RAGLayer(BaseLayer):
     BASE_ENTITY_MARGIN = 0.05
     BASE_ENTITY_BONUS = 0.03
     DERIVATIVE_TABLE_PENALTY = 0.015
-    DERIVATIVE_SUFFIXES = {
-        "item", "items", "detail", "details", "history", "mapping",
-        "link", "relation", "association",
-    }
-
     def __init__(
         self, llm, embeddings, db_manager,
         cache_dir: str = ".cache/embeddings",
@@ -279,10 +274,10 @@ class RAGLayer(BaseLayer):
     ) -> list[tuple[dict[str, Any], float]]:
         """Prefer a close-scoring base entity over an unrequested derivative.
 
-        Example: Coefficient is favored over ContractCoefficientItem when their
+        Example: Contract is favored over ContractCoefficient when their
         semantic scores are close and the question does not explicitly contain
-        the compound table's extra English qualifier tokens. No concrete table
-        or column names are encoded here.
+        the compound table's extra identifier tokens. No concrete table or
+        column names are encoded here.
         """
         question_tokens = set(self._identifier_tokens(question))
         candidates = []
@@ -294,7 +289,7 @@ class RAGLayer(BaseLayer):
         derivative_keys: set[tuple[str, str]] = set()
         for compound, compound_score, compound_tokens in candidates:
             ordered_tokens = self._identifier_tokens(compound["table"])
-            if not ordered_tokens or ordered_tokens[-1] not in self.DERIVATIVE_SUFFIXES:
+            if len(ordered_tokens) < 2:
                 continue
             possible_bases = [
                 (base, base_score, base_tokens)
@@ -310,7 +305,7 @@ class RAGLayer(BaseLayer):
             base, base_score, base_tokens = max(
                 possible_bases, key=lambda candidate: candidate[1]
             )
-            extra_qualifiers = compound_tokens - base_tokens - self.DERIVATIVE_SUFFIXES
+            extra_qualifiers = compound_tokens - base_tokens
             explicitly_requested = bool(extra_qualifiers & question_tokens)
             score_gap = compound_score - base_score
             if (
@@ -413,6 +408,34 @@ class RAGLayer(BaseLayer):
         ]
         # Always retain the closest table, even for an unusually low score.
         return selected or [(scored[0][0]["schema"], scored[0][0]["table"])]
+
+    @staticmethod
+    def _add_fk_referenced_tables(
+        tables: list[tuple[str, str]], result: IntrospectionResult,
+    ) -> list[tuple[str, str]]:
+        """Add direct FK targets needed to understand available joins.
+
+        Only one hop is added. Recursively traversing the relationship graph can
+        pull a large, mostly irrelevant part of an unknown schema into the
+        prompt. Semantic matches retain their original order and FK targets are
+        appended once.
+        """
+        expanded = list(tables)
+        included = set(tables)
+        for table_key in tables:
+            metadata = result.table_metadata.get(table_key, {})
+            for column in metadata.get("columns", []):
+                reference = column.get("references")
+                if not reference:
+                    continue
+                parts = str(reference).split(".", 2)
+                if len(parts) != 3:
+                    continue
+                target = result.resolve_table(parts[0], parts[1])
+                if target is not None and target not in included:
+                    included.add(target)
+                    expanded.append(target)
+        return expanded
 
     def _select_columns(
         self, question: str, tables: list[tuple[str, str]],
@@ -581,6 +604,7 @@ class RAGLayer(BaseLayer):
         )
         if not tables:
             raise RuntimeError("No user tables were found in the active database.")
+        tables = self._add_fk_referenced_tables(tables, introspection_result)
         columns = self._select_columns(
             question, tables, index, query_vector, introspection_result
         )
