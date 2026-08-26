@@ -18,7 +18,7 @@ def _env_bool(name: str, default: bool) -> bool:
 @dataclass(frozen=True)
 class Settings:
     groq_api_key: str
-    chat_model: str = "llama-3.3-70b-versatile"
+    chat_model: str = "openai/gpt-oss-120b"
     embedding_model: str = "bge-m3"
     ollama_base_url: str = "http://localhost:11434"
     model_log_path: str = "logs/model_calls.jsonl"

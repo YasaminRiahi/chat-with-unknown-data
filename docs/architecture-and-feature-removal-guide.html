@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Architecture and Feature Removal Guide</title>
+<style>
+  @page { size: A4; margin: 16mm 15mm 18mm; @bottom-right { content: "Page " counter(page); color: #64748b; font-size: 9px; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; color: #172033; font: 10.2pt/1.48 "Segoe UI", Arial, sans-serif; }
+  h1 { font-size: 28pt; line-height: 1.08; margin: 0 0 8mm; color: #12213f; }
+  h2 { font-size: 17pt; color: #163a70; margin: 9mm 0 3mm; border-bottom: 1px solid #cbd5e1; padding-bottom: 1.5mm; break-after: avoid; }
+  h3 { font-size: 12.5pt; color: #205493; margin: 5mm 0 2mm; break-after: avoid; }
+  p { margin: 0 0 3mm; }
+  ul, ol { margin: 1.5mm 0 3mm 5mm; padding-left: 5mm; }
+  li { margin: 1mm 0; }
+  code { font: 9pt Consolas, monospace; background: #eef2f7; padding: .2mm 1mm; border-radius: 2px; }
+  table { width: 100%; border-collapse: collapse; margin: 3mm 0 5mm; font-size: 8.7pt; break-inside: auto; }
+  th { background: #163a70; color: white; text-align: left; }
+  th, td { border: 1px solid #cbd5e1; padding: 2mm; vertical-align: top; }
+  tr { break-inside: avoid; }
+  .cover { height: 250mm; display: flex; flex-direction: column; justify-content: center; padding: 15mm; background: linear-gradient(145deg,#eff6ff,#fff 55%,#e0f2fe); border-left: 5mm solid #2563eb; }
+  .cover .kicker { color:#2563eb; font-weight:700; letter-spacing:.12em; text-transform:uppercase; }
+  .cover .subtitle { font-size: 14pt; color: #475569; max-width: 135mm; }
+  .cover .meta { margin-top: 20mm; color:#64748b; }
+  .page { break-before: page; }
+  .box { padding: 3mm 4mm; margin: 3mm 0; border-left: 3px solid #2563eb; background:#eff6ff; break-inside: avoid; }
+  .warn { border-color:#d97706; background:#fff7ed; }
+  .danger { border-color:#dc2626; background:#fef2f2; }
+  .safe { border-color:#16a34a; background:#f0fdf4; }
+  .flow { font: 9pt Consolas, monospace; white-space: pre-wrap; background:#0f172a; color:#e2e8f0; padding:4mm; border-radius:4px; line-height:1.55; }
+  .tag { display:inline-block; padding:.4mm 1.5mm; border-radius:8px; font-size:8pt; font-weight:700; }
+  .low { background:#dcfce7; color:#166534; } .med { background:#fef3c7; color:#92400e; } .high { background:#fee2e2; color:#991b1b; }
+  .small { color:#64748b; font-size:8.7pt; }
+</style>
+</head>
+<body>
+<section class="cover">
+  <div class="kicker">Technical decision guide</div>
+  <h1>Chat With Unknown Data<br>Architecture & Feature Removal Guide</h1>
+  <p class="subtitle">A code-based explanation of every application and pipeline layer, what each one does, how data moves between them, and what happens if optional features are disabled or removed.</p>
+  <p class="meta">Repository reviewed: <b>chat-with-unknown-data</b><br>Prepared 19 August 2026<br>Scope: current source code in <code>api/</code>, <code>pipeline/</code>, <code>frontend/</code>, configuration, caches, logging, and tests.</p>
+</section>
+
+<section class="page">
+<h2>1. Executive summary</h2>
+<p>The system is a single-process, zero-shot Text-to-SQL application. A browser sends a natural-language question to FastAPI. The server discovers the active database structure, optionally enriches its meaning, retrieves a compact relevant schema, asks a Groq chat model to create T-SQL, executes and repairs the query, then asks the model to turn rows into a readable answer.</p>
+<div class="flow">Browser UI
+   → FastAPI / intent routing / session state
+   → metadata shortcut? ──yes──→ direct structural answer
+   └─no→ [1 Introspection] → [2 Enrichment] → [3 RAG]
+         → [4 SQL generation] → [5 Execute + self-correct]
+         → [6 Answer generation] → API response → Browser UI</div>
+<div class="box safe"><b>Best low-risk removals:</b> LLM enrichment, model-call logging, fuzzy empty-result recovery, chat-history context when no database is active, and database types you do not support. Each reduces capability, but has a contained blast radius.</div>
+<div class="box warn"><b>Possible with a replacement:</b> embeddings/RAG, answer generation, database management UI, or self-correction. Removing these without a replacement creates poor quality or a broken user path.</div>
+<div class="box danger"><b>Core path:</b> introspection, SQL generation, database execution, API chat endpoint, and an active database connection. Removing any of these changes the product from Text-to-SQL into something else.</div>
+
+<h3>Current architectural constraints</h3>
+<ul>
+  <li>SQL generation is explicitly SQL Server/T-SQL, although the connection manager advertises SQLite, PostgreSQL, MySQL/MariaDB, and MSSQL.</li>
+  <li>The execution layer does not independently reject write statements. Prompts demand SELECT, but a code-level read-only validator is still absent.</li>
+  <li>All users share one in-memory <code>active_db</code> and one <code>chat_history</code>. This is suitable for a local demo, not multi-user production.</li>
+  <li>Database connection strings are returned by <code>GET /databases</code> and therefore reach the frontend. They may contain credentials.</li>
+  <li>CORS allows every origin. Tightening it is important before deployment.</li>
+</ul>
+</section>
+
+<section class="page">
+<h2>2. Application layers outside the six-stage pipeline</h2>
+
+<h3>Frontend layer — <code>frontend/index.html</code></h3>
+<p>A dependency-free single HTML file containing layout, styling, and JavaScript. It lists databases, connects/activates/removes them, displays the active database, sends chat requests, and renders simple Markdown-like bold/code/newlines. It calls a fixed <code>http://localhost:8000</code> API.</p>
+<p><b>Inputs:</b> user text and connection details. <b>Outputs:</b> REST calls and rendered responses. <b>State:</b> local <code>activeDb</code>, database list, and waiting indicator.</p>
+<p><b>Removal impact:</b> the API remains usable through Swagger or another client. Safe if the product will be API-only. The database sidebar can be removed separately if connections are configured server-side.</p>
+
+<h3>API/orchestration layer — <code>api/main.py</code></h3>
+<p>Bootstraps settings, Groq, Ollama embeddings, the logger, database manager, and pipeline. It exposes health, database CRUD/activation, chat, and history-clear endpoints. It recognizes greetings and database-list questions, auto-selects a sole database, routes structural questions to a metadata shortcut, and otherwise runs the full pipeline.</p>
+<p><b>Important behavior:</b> database registrations and chat history disappear on restart. Chat history is only supplied to general LLM chat when no database is active; pipeline questions are effectively single-turn.</p>
+<p><b>Removal impact:</b> removing intent routing is low risk but greetings/list requests may become SQL attempts. Removing the API requires a different integration surface.</p>
+
+<h3>Configuration layer — <code>api/config.py</code> and <code>.env</code></h3>
+<p>Loads the Groq key, model names, Ollama URL, log/cache paths, and enrichment controls. Startup fails without <code>GROQ_API_KEY</code>. Only enrichment currently has a feature flag.</p>
+<p><b>Removal impact:</b> hard-coding settings reduces deployability and risks secret exposure. Keep configuration even if individual settings are removed.</p>
+
+<h3>Database access layer — <code>api/database_manager.py</code></h3>
+<p>Stores SQLAlchemy engines in memory, verifies connections with <code>SELECT 1</code>, disposes removed engines, exposes engine metadata, and executes SQL into a list of dictionaries. <code>pool_pre_ping=True</code> detects stale pooled connections.</p>
+<p><b>Removal impact:</b> core capability. It can be simplified to one preconfigured engine, which also lets you remove database CRUD and the sidebar.</p>
+
+<h3>Provider logging layer — <code>api/model_logging.py</code></h3>
+<p>Wraps Groq chat and Ollama embeddings. Every call records timestamp, operation, request payload, latency, response/error, and token usage to JSONL. Vectors are not logged, but schema text, questions, SQL, results, and model answers can be logged.</p>
+<p><b>Removal impact:</b> model behavior is unchanged; auditability, cost analysis, and debugging decline. This is a good privacy-oriented removal if replaced with minimal redacted metrics.</p>
+</section>
+
+<section class="page">
+<h2>3. Layer 1 — Introspection</h2>
+<p><b>File:</b> <code>pipeline/introspection/layer.py</code></p>
+<p>This is the authoritative schema-discovery layer. SQLAlchemy inspects all non-system schemas. LangChain creates one <code>SQLDatabase</code> per schema with zero sample rows. For every table it collects columns, types, nullability, comments, primary keys, and foreign-key targets.</p>
+<h3>Output contract: <code>IntrospectionResult</code></h3>
+<ul>
+  <li><code>db_per_schema</code> and <code>schemas</code>: schema-level access.</li>
+  <li><code>table_metadata</code>: structured authoritative table/column metadata.</li>
+  <li>Mutable enrichment fields used by layers 2 and 3: semantic descriptions, enriched documents, and sensitive-table flags.</li>
+  <li>Helpers to resolve qualified names, list tables/columns, produce DDL, and yield one document per table.</li>
+</ul>
+<p>The orchestrator keeps this result in memory by database name. Connecting/removing a database clears relevant in-memory caches. Structural questions such as “how many tables?” can be answered directly from this result without embeddings or model calls.</p>
+<div class="box"><b>Dependencies:</b> active SQLAlchemy engine, database inspection permissions, and LangChain <code>SQLDatabase</code>. <b>Downstream consumers:</b> every pipeline layer except final answer generation.</div>
+<h3>Can it be removed?</h3>
+<p><span class="tag high">CORE / HIGH RISK</span> Not in an unknown-database product. It could only be replaced by a static schema file, a curated semantic model, or user-supplied DDL. That replacement would remove “unknown database” discovery.</p>
+<h3>Features inside it that can be trimmed</h3>
+<table><tr><th>Feature</th><th>Effect of removal</th><th>Risk</th></tr>
+<tr><td>Multi-schema discovery</td><td>Simpler single-schema product; tables outside the chosen/default schema become invisible.</td><td>Medium</td></tr>
+<tr><td>Foreign/primary-key metadata</td><td>Less metadata work, but joins and required structural columns become less reliable.</td><td>High</td></tr>
+<tr><td>Metadata-question shortcut</td><td>Structural questions use embeddings + LLM + SQL instead of deterministic answers; slower and costlier.</td><td>Low functional / higher cost</td></tr>
+<tr><td>LangChain <code>SQLDatabase</code></td><td>Possible if DDL formatting is rebuilt directly from SQLAlchemy metadata.</td><td>Medium</td></tr></table>
+</section>
+
+<section class="page">
+<h2>4. Layer 2 — Enrichment</h2>
+<p><b>File:</b> <code>pipeline/enrichment/layer.py</code></p>
+<p>Transforms raw identifiers and DDL into retrieval-friendly documents. Deterministic enrichment humanizes names, includes types/nullability/keys/references/comments, and detects potentially sensitive columns by name. Optional LLM enrichment asks Groq for conservative table and column meanings in bounded batches.</p>
+<h3>Caching and validation</h3>
+<p>Descriptions are stored per database under <code>.cache/enrichment/</code>. A DDL SHA-256 fingerprint and prompt version determine whether a table is reusable. Model output must be JSON, unknown table IDs are ignored, and only exact known column names are accepted. If an LLM batch fails, deterministic metadata remains available.</p>
+<div class="box safe"><b>Already optional:</b> set <code>LLM_ENRICHMENT_ENABLED=false</code>. The layer still produces deterministic documents and sensitive-name flags. This is the safest way to reduce first-query cost and avoid sending full schema metadata to Groq.</div>
+<h3>Can it be removed?</h3>
+<p><span class="tag med">OPTIONAL WITH SMALL ADAPTER</span> The RAG layer expects populated <code>table_metadata</code> and can use empty semantic descriptions. If the whole layer is bypassed, Layer 1 already supplies structured metadata, but retrieval documents become identifier/comment based. Confirm RAG receives its inputs and remove enrichment cache/config wiring.</p>
+<table><tr><th>Remove</th><th>Benefit</th><th>Cost</th></tr>
+<tr><td>LLM descriptions only</td><td>Lower cost, latency, and external schema exposure</td><td>Lower semantic retrieval quality for cryptic names and Persian/English mismatch</td></tr>
+<tr><td>Sensitive-name detection</td><td>Less code</td><td>Currently only a flag; removing it loses a future policy hook, not query behavior</td></tr>
+<tr><td>Persistent enrichment cache</td><td>Less disk state</td><td>LLM enrichment repeats after restart and costs more</td></tr>
+<tr><td>Entire layer</td><td>Simpler pipeline</td><td>Raw metadata retrieval quality; must adjust orchestration and validate RAG inputs</td></tr></table>
+</section>
+
+<section class="page">
+<h2>5. Layer 3 — RAG / schema selection</h2>
+<p><b>File:</b> <code>pipeline/rag/layer.py</code></p>
+<p>Prevents the entire database schema from overflowing the chat model context. It builds embeddings for every table and column using local Ollama/BGE-M3, persists vectors under <code>.cache/embeddings/</code>, embeds each question, scores cosine similarity, selects tables and columns, and formats a compact schema prompt.</p>
+<h3>Selection behavior</h3>
+<ul>
+  <li>At most 8 tables; up to 24 rerank candidates; minimum similarity 0.30.</li>
+  <li>An explicit <code>schema.table</code> mention is included directly.</li>
+  <li>Base entities can outrank close derivative tables such as “Item/Detail/History” when qualifiers were not requested.</li>
+  <li>Tables with 30 or fewer columns keep all columns. Wider tables keep at least the top 20, plus primary keys, foreign keys, and close identifier variants.</li>
+  <li>A shared 21,000-character schema budget omits lower-priority columns fairly across selected tables.</li>
+  <li>Embedding cache entries are keyed by text digest and model name; changed metadata is selectively re-embedded. Bad/NaN batches fall back to resilient single-document embedding.</li>
+</ul>
+<h3>Can it be removed?</h3>
+<p><span class="tag high">HIGH RISK ON LARGE SCHEMAS</span> For a small known schema, replace it with “send all DDL” or configured table allowlists. For unknown/wide databases, removal causes context overflow, cost/latency growth, and wrong-table selection. Removing only persistent vector caching preserves correctness but repeats expensive embedding work.</p>
+<div class="box warn"><b>Ollama removal path:</b> use lexical/BM25 matching, a hosted embedding provider, or explicit table selection. Simply deleting embeddings breaks <code>RAGLayer.run()</code>.</div>
+</section>
+
+<section class="page">
+<h2>6. Layer 4 — SQL generation</h2>
+<p><b>File:</b> <code>pipeline/sql_generation/layer.py</code></p>
+<p>Sends the natural-language question and compact schema to Groq. The prompt requires T-SQL, SELECT-only output, bracketed identifiers, <code>TOP</code>, Unicode <code>N'…'</code> literals, simple tables, and only necessary joins. The response parser removes Markdown fences, collapses duplicate SELECT tokens, and extracts the first SELECT/WITH expression.</p>
+<div class="box danger"><b>Safety gap:</b> extraction checks that SELECT or WITH appears, but does not prove the complete statement is read-only. A malicious or mistaken model response containing additional statements could reach database execution. Use a read-only database account and add AST/dialect validation before production.</div>
+<h3>Can it be removed?</h3>
+<p><span class="tag high">CORE</span> Only if users supply SQL themselves or if questions map to fixed query templates. It can be replaced with a different model or deterministic query builder.</p>
+<h3>Dialect mismatch</h3>
+<p>This layer always produces SQL Server syntax, while the database UI accepts SQLite, PostgreSQL, and MySQL. If those database types matter, make dialect a pipeline input and use dialect-specific prompts/validation. Otherwise, removing non-MSSQL connection options is a sensible simplification.</p>
+
+<h2>7. Layer 5 — execution and self-correction</h2>
+<p><b>File:</b> <code>pipeline/self_correction/layer.py</code></p>
+<p>Executes generated SQL through the database manager and returns successful rows. On SQL errors, it asks Groq to repair the query using the error, original question, and selected schema, for up to three total attempts.</p>
+<p>If valid SQL returns no rows, it parses up to three exact text equality predicates, confirms referenced columns are strings, probes at most 200 real values using bounded LIKE terms, scores Persian-aware normalized similarity, keeps up to five candidates above 0.70, and permits one model-assisted correction using only observed values. This helps spelling/script-variant mistakes without inventing replacements.</p>
+<h3>Can features be removed?</h3>
+<table><tr><th>Feature</th><th>Outcome</th><th>Risk</th></tr>
+<tr><td>Fuzzy empty-result recovery</td><td>Valid zero-row queries immediately return “No matching records.”</td><td><span class="tag low">Low</span>; simplest contained removal</td></tr>
+<tr><td>LLM error repair</td><td>First SQL error is returned/fails; lower model cost and fewer retries</td><td><span class="tag med">Medium</span>; worse success rate</td></tr>
+<tr><td>All correction but keep execution</td><td>A thin executor returns first result/error</td><td><span class="tag med">Medium</span></td></tr>
+<tr><td>Execution</td><td>No data answer is possible</td><td><span class="tag high">Core</span></td></tr></table>
+</section>
+
+<section class="page">
+<h2>8. Layer 6 — answer generation</h2>
+<p><b>File:</b> <code>pipeline/answer_generation/layer.py</code></p>
+<p>If there are no rows, returns a fixed “No matching records” message without a model call. Otherwise it sends the question, executed SQL, and all rows serialized as JSON to Groq and requests a concise answer grounded only in those results.</p>
+<h3>Can it be removed?</h3>
+<p><span class="tag low">OPTIONAL</span> Return rows directly as JSON or render them as a table in the frontend. This eliminates a model call, reduces latency/cost, and avoids sending result data to Groq. The tradeoff is losing summaries, number formatting, and natural-language explanations.</p>
+<div class="box warn"><b>Scaling issue:</b> there is no row or character limit before result JSON is placed in the model prompt. Large result sets can exceed context or expose more data than necessary. Adding query limits and deterministic table rendering may be preferable to removing the layer outright.</div>
+
+<h2>9. Cross-cutting caches, privacy, and state</h2>
+<table><tr><th>Component</th><th>Stored data</th><th>Removal effect</th></tr>
+<tr><td>In-memory introspection cache</td><td>Schema objects and metadata per database</td><td>Repeated schema inspection on every question</td></tr>
+<tr><td>Enrichment cache</td><td>Generated table/column descriptions and fingerprints</td><td>Repeated enrichment or metadata-only behavior</td></tr>
+<tr><td>Embedding cache</td><td>Vectors, retrieval text, hashes, model metadata</td><td>Repeated local embedding after restarts</td></tr>
+<tr><td>Model JSONL logs</td><td>Prompts, schema, questions, results, answers, timing, usage</td><td>Less audit/debug visibility; substantially less retained sensitive data</td></tr>
+<tr><td>Chat history</td><td>One global in-memory conversation</td><td>Little impact on active-database pipeline questions</td></tr></table>
+</section>
+
+<section class="page">
+<h2>10. Feature-removal decision matrix</h2>
+<table><tr><th>Candidate</th><th>Complexity</th><th>Main benefit</th><th>Main loss / required replacement</th></tr>
+<tr><td>Disable LLM enrichment via env</td><td>None</td><td>Cost, latency, schema privacy</td><td>Weaker semantics for cryptic names</td></tr>
+<tr><td>Remove fuzzy zero-row correction</td><td>Low</td><td>Less probing/model use; simpler behavior</td><td>Misspellings return no rows</td></tr>
+<tr><td>Remove answer-generation LLM</td><td>Low–medium</td><td>Cost, latency, result privacy</td><td>Add JSON/table presentation</td></tr>
+<tr><td>Remove full model-call payload logs</td><td>Low</td><td>Privacy and disk reduction</td><td>Use redacted metrics if observability matters</td></tr>
+<tr><td>Remove non-MSSQL DB types</td><td>Low</td><td>Product truth matches T-SQL implementation</td><td>No SQLite/Postgres/MySQL connectivity</td></tr>
+<tr><td>Single preconfigured database</td><td>Medium</td><td>Removes sidebar CRUD, active selection, credential exposure</td><td>Need secure server-side connection config</td></tr>
+<tr><td>Remove LLM SQL error repair</td><td>Low</td><td>Predictability and lower cost</td><td>More failed questions</td></tr>
+<tr><td>Remove embeddings/Ollama</td><td>Medium–high</td><td>No local model dependency</td><td>Need lexical retrieval, allowlist, or all-DDL strategy</td></tr>
+<tr><td>Remove RAG entirely</td><td>High</td><td>Simpler architecture</td><td>Only viable for small schemas; context/quality risk</td></tr>
+<tr><td>Remove introspection</td><td>High</td><td>No live schema discovery</td><td>Must supply static schema; no longer “unknown data”</td></tr></table>
+
+<h3>Recommended simplification profiles</h3>
+<p><b>Privacy-first:</b> disable LLM enrichment; replace answer generation with table/JSON output; redact or remove payload logging; use a read-only DB account; keep local embeddings.</p>
+<p><b>Lowest operating complexity:</b> support MSSQL only; preconfigure one database server-side; remove DB-management UI; disable fuzzy recovery; keep RAG and SQL generation.</p>
+<p><b>Small-schema prototype:</b> bypass enrichment and embeddings, send all DDL under a strict size limit, generate SQL once, execute once, return a frontend table. This is much smaller but should fail closed when schema size exceeds the limit.</p>
+</section>
+
+<section class="page">
+<h2>11. Safe removal order and verification</h2>
+<ol>
+  <li><b>Define the product boundary:</b> supported database dialects, single vs multiple databases, hosted vs local models, and whether raw results are acceptable.</li>
+  <li><b>Use existing flags first:</b> disable LLM enrichment without deleting code, then compare retrieval quality.</li>
+  <li><b>Remove leaf features:</b> answer generation, fuzzy zero-row repair, verbose logging, greeting/history behavior. These have few downstream consumers.</li>
+  <li><b>Replace before deleting shared infrastructure:</b> add lexical retrieval before removing embeddings; add static/configured schema before removing introspection.</li>
+  <li><b>Test each cut:</b> structural question, single-table lookup, join, aggregate, Persian literal, misspelled value, invalid column, empty result, wide table, restart/cache reuse, and database removal/reconnection.</li>
+</ol>
+<h3>Minimum security work regardless of feature cuts</h3>
+<ul>
+  <li>Use database credentials restricted to read-only SELECT access.</li>
+  <li>Add code-level SQL validation and reject multiple statements and data-changing operations.</li>
+  <li>Stop returning connection strings to browsers; return only safe display metadata.</li>
+  <li>Restrict CORS and add authentication/authorization before remote deployment.</li>
+  <li>Cap query rows and answer-generation payload size.</li>
+  <li>Move shared global state to per-user sessions if more than one user is possible.</li>
+</ul>
+
+<h2>12. Source map</h2>
+<table><tr><th>Area</th><th>Primary source</th></tr>
+<tr><td>Pipeline orchestration and metadata shortcut</td><td><code>pipeline/__init__.py</code></td></tr>
+<tr><td>Shared layer dependency contract</td><td><code>pipeline/base.py</code></td></tr>
+<tr><td>Six pipeline stages</td><td><code>pipeline/*/layer.py</code></td></tr>
+<tr><td>HTTP API, intent routing, shared state</td><td><code>api/main.py</code></td></tr>
+<tr><td>Connection lifecycle and execution</td><td><code>api/database_manager.py</code></td></tr>
+<tr><td>Provider audit logging</td><td><code>api/model_logging.py</code></td></tr>
+<tr><td>Environment settings</td><td><code>api/config.py</code>, <code>.env.example</code></td></tr>
+<tr><td>Browser client</td><td><code>frontend/index.html</code></td></tr></table>
+<p class="small">This guide describes the repository as reviewed on the preparation date. It is an architecture and change-impact document, not a guarantee of production security.</p>
+</section>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!doctype html><html><head><meta charset="utf-8"><title>RAG and Downstream Layers Guide</title></head><body>
+<section class="cover">
+<h1>RAG and Downstream Layers</h1>
+<p class="subtitle">Implemented features, selection rules, similarity calculations, ordering, limits, and end-to-end flow</p>
+<p class="meta">Chat With Unknown Data | Code-based reference | August 2026</p>
+<div class="callout"><b>Scope:</b> What the current code implements in RAG (Layer 3), SQL Generation (Layer 4), Self-Correction (Layer 5), and Answer Generation (Layer 6).</div>
+</section>
+
+<section><h2>1. Pipeline Overview</h2>
+<div class="flow">Question -> metadata shortcut -> introspection and enrichment -> RAG -> SQL generation -> execution and self-correction -> answer generation</div>
+<h3>Metadata shortcut</h3><p>Structural questions can bypass embeddings and SQL. The pipeline directly answers requests to list or count schemas/tables, and can list or count columns when an exact qualified table is supplied.</p>
+<h3>Normal data-question path</h3><ol>
+<li>Introspection supplies authoritative schemas, tables, columns, types, nullability, primary keys, and foreign keys.</li>
+<li>Enrichment supplies optional table and column descriptions.</li>
+<li>RAG selects relevant schema context.</li><li>The chat model produces T-SQL.</li>
+<li>Self-correction executes it and treats errors differently from empty successes.</li>
+<li>Answer generation converts successful rows into a concise response.</li></ol>
+<table><tr><th>Layer</th><th>Main input</th><th>Main output</th></tr>
+<tr><td>RAG</td><td>Question plus enriched metadata</td><td>Compact relevant schema</td></tr>
+<tr><td>SQL generation</td><td>Question plus compact schema</td><td>T-SQL</td></tr>
+<tr><td>Self-correction</td><td>SQL, question, schema, database</td><td>Rows plus final SQL</td></tr>
+<tr><td>Answer generation</td><td>Question, final SQL, rows</td><td>User-facing answer</td></tr></table>
+</section>
+
+<section><h2>2. RAG Documents and Embedding Index</h2>
+<h3>Table documents</h3><p>Each contains its schema/table identifier, enriched purpose, column names, and enriched column descriptions. Table similarity therefore reflects the table name, purpose, and meanings of its columns.</p>
+<h3>Column documents</h3><p>Each contains its owning table, column name, data type, description, primary-key status, and foreign-key target. Ranking can use both business meaning and structural metadata.</p>
+<h3>Persistent cache</h3><ul>
+<li>Vectors are stored under <code>.cache/embeddings/</code> with a database-derived filename.</li>
+<li>The embedding model name and a SHA-256 document digest control reuse.</li>
+<li>Only new or changed documents are embedded again; the index is also retained in memory.</li>
+<li>Batches contain at most 32 documents or 24,000 characters.</li>
+<li>Failed batches are retried one document at a time.</li>
+<li>Empty, infinite, and NaN vectors are rejected. Reproducible NaN cases use safe metadata formatting.</li></ul>
+<h3>Embedding model</h3><p>The default is local Ollama <code>bge-m3</code> for multilingual Persian/English retrieval. The complete question is embedded once and reused for table and column scoring.</p>
+</section>
+
+<section><h2>3. RAG Table Selection and Order</h2>
+<h3>Step 1: exact qualified-table detection</h3><p>The question is checked for an exact case-insensitive <code>schema.table</code>. Brackets and common quotes are ignored. If found, semantic table selection is bypassed and at most eight matches are kept. Multiple matches follow introspection order, not mention order. The query vector is still used for columns.</p>
+<h3>Step 2: semantic similarity</h3><p>Every table receives cosine similarity:</p>
+<div class="flow">table score = cosine(question vector, table-document vector)</div>
+<p>The initial order is descending cosine score. Only the top 24 candidates reach identifier reranking.</p>
+<h3>Step 3: compound/base reranking</h3><p>PascalCase, snake_case, dots, and hyphens are split into lowercase tokens. There is no predefined business-word list. A base is a strict token subset of a compound table in the same schema.</p>
+<table><tr><th>Question</th><th>Base</th><th>Compound</th><th>Result</th></tr>
+<tr><td>show contracts</td><td>Contract</td><td>ContractCoefficient</td><td>Prefer base when scores are close</td></tr>
+<tr><td>show contract coefficient</td><td>Contract</td><td>ContractCoefficient</td><td>Keep compound</td></tr></table>
+<p>The rule activates only when the compound leads by 0.00 to 0.05 and none of its extra tokens appears in the question. The base receives +0.03 and compound -0.015, followed by another sort. Tokens are exact; singular/plural normalization is not implemented.</p>
+<h3>Step 4: cutoff</h3><div class="flow">threshold = max(0.30, best adjusted score - 0.10)</div>
+<p>After reranking only eight candidates remain. Tables meeting the threshold are retained in score order. If none qualifies, the closest table is retained even below 0.30.</p>
+</section>
+
+<section><h2>4. FK Expansion and Column Selection</h2>
+<h3>Direct FK targets</h3><p>After semantic selection, direct FK-referenced tables are appended. Semantic tables stay first; FK targets follow in selected-table and column-metadata order. Duplicates are removed. Expansion is one hop, does not follow reverse FKs, and may raise the final table count above eight.</p>
+<div class="flow">Order selected -> Order.CustomerId references Customer.Id -> append Customer</div>
+<h3>Column similarity</h3><p>Columns inside the final table set are ordered using cosine similarity between the question vector and each column document.</p>
+<h3>Tables with 30 or fewer columns</h3><p>All columns are included. PK/FK columns are promoted first, followed by other columns. Both groups preserve semantic-score order.</p>
+<h3>Tables with more than 30 columns</h3><ol>
+<li>Include every PK and FK column.</li><li>Include identifiers explicitly present in the normalized question.</li>
+<li>Add highest-scoring columns until at least 20 are selected.</li>
+<li>Add siblings differing by one prefix or suffix token, such as <code>Title</code>/<code>Title_En</code>.</li></ol>
+<p>Structural and sibling additions can raise the result above 20 columns.</p>
+<h3>Compact schema</h3><p>Output includes purpose, name, type, nullability, PK, FK target, and description/comment. A 21,000-character shared limit applies. Columns are allocated round-robin across tables, and omitted counts are shown.</p>
+</section>
+
+<section><h2>5. RAG Decision Reference</h2>
+<table><tr><th>Decision</th><th>Implemented method</th></tr>
+<tr><td>Explicit table</td><td>Exact lexical schema.table match</td></tr>
+<tr><td>Initial table order</td><td>Cosine similarity descending</td></tr>
+<tr><td>Compound/base adjustment</td><td>Token-subset rule among top 24</td></tr>
+<tr><td>Semantic cutoff</td><td>At most 8; score at least max(0.30, best - 0.10)</td></tr>
+<tr><td>Low-score fallback</td><td>Always retain closest table</td></tr>
+<tr><td>Join context</td><td>Append direct outgoing FK targets</td></tr>
+<tr><td>Column order</td><td>Cosine similarity with structural promotion</td></tr>
+<tr><td>PK/FK columns</td><td>Always retained</td></tr>
+<tr><td>Small tables</td><td>All columns at 30 or fewer</td></tr>
+<tr><td>Wide tables</td><td>Keys, explicit names, top 20+, siblings</td></tr>
+<tr><td>Prompt size</td><td>21,000-character round-robin budget</td></tr></table>
+<h3>Similarity and matching types</h3><ul>
+<li><b>Cosine similarity:</b> numerical semantic table/column ranking.</li>
+<li><b>Exact qualified-name match:</b> table-selection override.</li>
+<li><b>Identifier token subset:</b> compound/base reranking.</li>
+<li><b>Normalized containment:</b> explicit wide-table column retention.</li>
+<li><b>One-token prefix/suffix relation:</b> sibling column retention.</li></ul>
+</section>
+
+<section><h2>6. Layer 4 - SQL Generation</h2>
+<p>One chat-model call uses only the original question and compact RAG schema.</p>
+<h3>Prompt constraints</h3><ul>
+<li>Generate SQL Server T-SQL and output only SQL.</li><li>Start with <code>SELECT</code>.</li>
+<li>Use bracketed <code>[schema].[table]</code> names and aliases.</li><li>Use <code>TOP</code>, not <code>LIMIT</code>.</li>
+<li>Use <code>N'...'</code> for non-ASCII literals.</li><li>Prefer the simplest directly useful table.</li>
+<li>Avoid joins unless needed and supported by the schema.</li></ul>
+<h3>Output cleanup</h3><p>Markdown fences are removed, repeated leading <code>SELECT SELECT</code> is collapsed, and content starting at the first <code>SELECT</code> or <code>WITH</code> is extracted. Output with neither is rejected.</p>
+<div class="callout"><b>Limitation:</b> This uses regular expressions, not a SQL AST, and does not independently prove that the complete statement is read-only.</div>
+</section>
+
+<section><h2>7. Layer 5 - Execution and Empty Results</h2>
+<h3>Non-empty success</h3><p>SQL executes through SQLAlchemy. Returned rows and successful SQL are immediately passed onward without another LLM call.</p>
+<h3>Empty success</h3><p>An empty result is handled separately from an error. At most one grounded correction is attempted; the model is not asked to invent values.</p>
+<ol><li>Parse qualified bracketed tables from FROM/JOIN, aliases, and exact string equalities.</li>
+<li>Inspect at most three predicates and require a real string column.</li>
+<li>Probe the exact column with escaped full tokens and three-character prefixes, returning at most 200 distinct values.</li>
+<li>Keep at most five candidates scoring at least 0.70.</li>
+<li>Give the model the question, schema, empty SQL, <code>[]</code>, and grounded candidates.</li></ol>
+<h3>Candidate similarity</h3><div class="flow">0.70 x whole-string SequenceMatcher + 0.20 x token-overlap F1 + 0.10 x average best-token edit similarity</div>
+<p>Comparison normalization covers case, punctuation, Persian/Arabic character variants, diacritics, and zero-width non-joiners. Original values are preserved for SQL. Without grounded candidates, the empty result is returned unchanged.</p>
+</section>
+
+<section><h2>8. Error Correction and Retry Rules</h2>
+<h3>Error context</h3><p>The model receives the original question, relevant schema, failed SQL, exact error, and a statement that execution returned no rows because it raised an error.</p>
+<h3>Retry behavior</h3><ul>
+<li>At most three corrections after the initial execution: four executions maximum.</li>
+<li>Attempted SQL strings are tracked; repeated SQL stops retries early.</li>
+<li>Corrections undergo the same fence cleanup and SELECT/WITH extraction.</li></ul>
+<table><tr><th>Outcome</th><th>Meaning</th><th>Strategy</th></tr>
+<tr><td>Rows</td><td>Success</td><td>Return immediately</td></tr>
+<tr><td>Empty list</td><td>SQL ran; text condition may be strict</td><td>One grounded-value correction if possible</td></tr>
+<tr><td>Exception</td><td>Syntax/schema/permission/other failure</td><td>General repair, up to three retries</td></tr></table>
+<div class="callout"><b>Limitations:</b> Error types do not yet have separate repair strategies. There is no independent read-only validator, so a read-only database account remains important.</div>
+</section>
+
+<section><h2>9. Layer 6 - Answer Generation</h2>
+<h3>Empty rows</h3><p>Returns <code>No matching records were found.</code> without an LLM call.</p>
+<h3>Non-empty rows</h3><p>The model receives the question, successful SQL, and all rows as JSON. It must state the direct answer first, format numbers, summarize patterns, avoid SQL/JSON discussion unless asked, and use only supplied facts.</p>
+<div class="callout"><b>Limitation:</b> Result JSON currently has no row or character limit before entering the prompt.</div>
+<h3>Complete flow</h3><div class="flow">Ensure metadata -> enrich -> build/reuse vectors -> embed question -> choose tables -> append FK targets -> choose columns -> compact schema -> generate SQL -> execute/correct -> summarize rows</div>
+<h3>Operational defaults</h3><ul>
+<li>Chat: <code>openai/gpt-oss-120b</code> on Groq, temperature 0.1.</li>
+<li>Embeddings: local Ollama <code>bge-m3</code>.</li>
+<li>Model logs can contain questions, schema identifiers, SQL, and results.</li></ul>
+</section>
+</body></html>

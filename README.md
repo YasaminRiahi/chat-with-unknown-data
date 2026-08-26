@@ -21,7 +21,7 @@ Copy the example environment file:
 copy .env.example .env
 ```
 
-Put the Groq key in `.env`. The defaults are `llama-3.3-70b-versatile` on Groq
+Put the Groq key in `.env`. The defaults are `openai/gpt-oss-120b` on Groq
 for chat/SQL/answers and local `bge-m3` on Ollama for multilingual
 Persian/English embeddings. Override them with `CHAT_MODEL`, `EMBEDDING_MODEL`,
 and `OLLAMA_BASE_URL`. Keep `.env` private and never put API keys in frontend
