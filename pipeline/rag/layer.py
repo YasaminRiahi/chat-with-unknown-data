@@ -300,18 +300,28 @@ class RAGLayer(BaseLayer):
             ]
             if not possible_bases:
                 continue
-            # The most semantically relevant subset identifies whether this is
-            # a Contract question, a Coefficient question, etc.
-            base, base_score, base_tokens = max(
-                possible_bases, key=lambda candidate: candidate[1]
-            )
-            extra_qualifiers = compound_tokens - base_tokens
-            explicitly_requested = bool(extra_qualifiers & question_tokens)
-            score_gap = compound_score - base_score
-            if (
-                not explicitly_requested
-                and 0 <= score_gap <= self.BASE_ENTITY_MARGIN
-            ):
+            # Check question compatibility before choosing a base. Otherwise a
+            # high-scoring but explicitly different subset can prevent the
+            # base actually named by the question from being promoted. For
+            # example, Coefficient must not block Contract for a "contract"
+            # question about ContractCoefficientItem.
+            eligible_bases = []
+            for base, base_score, base_tokens in possible_bases:
+                extra_qualifiers = compound_tokens - base_tokens
+                explicitly_requested = bool(
+                    extra_qualifiers & question_tokens
+                )
+                score_gap = compound_score - base_score
+                if (
+                    not explicitly_requested
+                    and 0 <= score_gap <= self.BASE_ENTITY_MARGIN
+                ):
+                    eligible_bases.append((base, base_score, base_tokens))
+
+            if eligible_bases:
+                base, base_score, _ = max(
+                    eligible_bases, key=lambda candidate: candidate[1]
+                )
                 base_key = (base["schema"], base["table"])
                 compound_key = (compound["schema"], compound["table"])
                 base_keys.add(base_key)

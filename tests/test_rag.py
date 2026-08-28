@@ -32,6 +32,18 @@ class TableRerankingTests(unittest.TestCase):
 
         self.assertEqual(ranked[0][0]["table"], "ContractCoefficient")
 
+    def test_unrequested_higher_scoring_base_does_not_block_named_base(self):
+        contract = self._table("Contract")
+        coefficient = self._table("Coefficient")
+        compound = self._table("ContractCoefficientItem")
+
+        ranked = self.rag._rerank_table_scores(
+            "show contract",
+            [(compound, 0.82), (coefficient, 0.81), (contract, 0.80)],
+        )
+
+        self.assertEqual(ranked[0][0]["table"], "Contract")
+
     def test_direct_fk_targets_are_added_without_recursive_expansion(self):
         result = IntrospectionResult(table_metadata={
             ("dbo", "Order"): {

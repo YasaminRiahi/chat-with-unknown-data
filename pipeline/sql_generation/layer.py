@@ -54,6 +54,17 @@ Generate a T-SQL query for Microsoft SQL Server.
   with an N prefix, for example: N'حسن انجام کار'.
 - Prefer the simplest table that directly contains the requested value. Do not
   add a join unless the requested result requires it and the schema supports it.
+- Match date/time filtering to the precision stated by the user. A calendar
+  date without a time means the entire day, not midnight. A date with only an
+  hour means the entire hour; with an hour and minute, the entire minute; and
+  with seconds, the entire second. Do not invent time components the user did
+  not provide.
+- For a datetime-like column, express those periods as index-friendly half-open
+  ranges: column >= period_start AND column < next_period_start. For example,
+  a request for 2019-03-31 must use >= '20190331' AND < '20190401', rather than
+  equality, CAST(column AS date), BETWEEN, or an end-of-day value. Keep an
+  explicitly requested exact timestamp exact only when the user's wording
+  clearly requires exact equality.
 
 ### Schema
 {schema_text}
