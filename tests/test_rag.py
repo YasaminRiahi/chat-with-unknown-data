@@ -1,4 +1,5 @@
 import unittest
+from types import SimpleNamespace
 
 from pipeline.introspection.layer import IntrospectionResult
 from pipeline.rag.layer import RAGLayer, _PersistentEmbeddingIndex
@@ -44,7 +45,7 @@ class TableRerankingTests(unittest.TestCase):
 
         self.assertEqual(ranked[0][0]["table"], "Contract")
 
-    def test_direct_fk_targets_are_added_without_recursive_expansion(self):
+    def test_direct_fk_neighbors_are_added_without_recursive_expansion(self):
         result = IntrospectionResult(table_metadata={
             ("dbo", "Order"): {
                 "columns": [{"name": "CustomerId", "references": "dbo.Customer.Id"}]
@@ -58,6 +59,22 @@ class TableRerankingTests(unittest.TestCase):
         tables = self.rag._add_fk_referenced_tables([("dbo", "Order")], result)
 
         self.assertEqual(tables, [("dbo", "Order"), ("dbo", "Customer")])
+
+    def test_referencing_child_table_is_added(self):
+        result = IntrospectionResult(table_metadata={
+            ("dbo", "Voucher"): {"columns": []},
+            ("dbo", "VoucherItem"): {
+                "columns": [
+                    {"name": "VoucherId", "references": "dbo.Voucher.Id"}
+                ]
+            },
+        })
+
+        tables = self.rag._add_fk_referenced_tables(
+            [("dbo", "Voucher")], result
+        )
+
+        self.assertEqual(tables, [("dbo", "Voucher"), ("dbo", "VoucherItem")])
 
 
 class HybridRetrievalTests(unittest.TestCase):
@@ -99,10 +116,130 @@ class HybridRetrievalTests(unittest.TestCase):
         rag.reranker = FakeReranker()
         account = self.index.items["table:dbo.Account"]
         archive = self.index.items["table:dbo.CustomerAccountArchive"]
-        ranked = rag._model_rerank(
+        ranked, applied = rag._model_rerank(
             "find archived accounts", [(account, 1.0), (archive, 0.9)]
         )
+        self.assertTrue(applied)
         self.assertEqual(ranked[0][0]["table"], "CustomerAccountArchive")
+
+    def test_low_reranker_scores_do_not_use_cosine_threshold(self):
+        class FakeReranker:
+            @staticmethod
+            def score_pairs(pairs):
+                return [0.292058, 0.123024, 0.071387, 0.048274]
+
+        rag = RAGLayer(None, None, None, reranker=FakeReranker())
+        candidates = [
+            ({"kind": "table", "schema": "ACC", "table": name, "text": name}, score)
+            for name, score in [
+                ("GLVoucher", 1.0),
+                ("GLVoucherItem", 0.9),
+                ("Bill", 0.8),
+                ("Voucher", 0.7),
+            ]
+        ]
+
+        class FakeIndex:
+            @staticmethod
+            def scores(query_vector, kind):
+                return candidates
+
+            @staticmethod
+            def lexical_scores(question, kind):
+                return candidates
+
+        selected = rag._select_tables(
+            "voucher totals", IntrospectionResult(), FakeIndex(), []
+        )
+
+        self.assertEqual(
+            selected,
+            [("ACC", "GLVoucher"), ("ACC", "GLVoucherItem"), ("ACC", "Bill")],
+        )
+
+    def test_schema_linker_selects_related_tables_as_a_group(self):
+        class FakeLLM:
+            @staticmethod
+            def invoke(messages):
+                return SimpleNamespace(content=(
+                    '{"tables":["ACC.GLVoucher","ACC.GLVoucherItem",'
+                    '"ACC.Voucher"],"reason":"bridge relationship"}'
+                ))
+
+        rag = RAGLayer(FakeLLM(), None, None, schema_linking_enabled=True)
+        result = IntrospectionResult(
+            table_metadata={
+                ("ACC", "GLVoucher"): {"columns": [
+                    {"name": "GLVoucherId", "primary_key": True}
+                ]},
+                ("ACC", "GLVoucherItem"): {"columns": [
+                    {"name": "GLVoucherRef"}, {"name": "VoucherRef"}
+                ]},
+                ("ACC", "Voucher"): {"columns": [
+                    {"name": "VoucherId", "primary_key": True}
+                ]},
+                ("GNR", "Bill"): {"columns": [{"name": "BillId"}]},
+            }
+        )
+        scored = [
+            ({"schema": schema, "table": table}, score)
+            for (schema, table), score in [
+                (("ACC", "GLVoucher"), 1.0),
+                (("ACC", "GLVoucherItem"), 0.9),
+                (("GNR", "Bill"), 0.8),
+                (("ACC", "Voucher"), 0.7),
+            ]
+        ]
+
+        selected = rag._llm_schema_link("find the linked voucher", scored, result)
+
+        self.assertEqual(selected, [
+            ("ACC", "GLVoucher"),
+            ("ACC", "GLVoucherItem"),
+            ("ACC", "Voucher"),
+        ])
+        relationships = rag._schema_link_relationships(
+            [(item["schema"], item["table"]) for item, _ in scored], result
+        )
+        self.assertIn({
+            "from": "ACC.GLVoucherItem.VoucherRef",
+            "to": "ACC.Voucher.VoucherId",
+            "confidence": "inferred_name_match",
+        }, relationships)
+
+    def test_schema_linker_rejects_invented_table(self):
+        class FakeLLM:
+            @staticmethod
+            def invoke(messages):
+                return SimpleNamespace(content='{"tables":["ACC.MadeUp"]}')
+
+        rag = RAGLayer(FakeLLM(), None, None, schema_linking_enabled=True)
+        scored = [({"schema": "ACC", "table": "Voucher"}, 1.0)]
+        result = IntrospectionResult(table_metadata={
+            ("ACC", "Voucher"): {"columns": []}
+        })
+
+        self.assertIsNone(rag._llm_schema_link("find voucher", scored, result))
+
+    def test_schema_link_metadata_is_compact_and_prioritized(self):
+        metadata = {"columns": [
+            {"name": "Unrelated"},
+            {"name": "CreationDate"},
+            {"name": "VoucherRef"},
+            {"name": "VoucherItemId", "primary_key": True},
+            *({"name": f"Extra{index}"} for index in range(20)),
+        ]}
+
+        columns = RAGLayer._schema_link_columns(
+            metadata, "show the voucher creation date"
+        )
+
+        self.assertLessEqual(len(columns), RAGLayer.MAX_SCHEMA_LINK_COLUMNS)
+        self.assertEqual(
+            [column["name"] for column in columns[:3]],
+            ["VoucherRef", "VoucherItemId", "CreationDate"],
+        )
+        self.assertNotIn("type", columns[0])
 
 
 if __name__ == "__main__":

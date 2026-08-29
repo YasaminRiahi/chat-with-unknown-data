@@ -28,6 +28,7 @@ class Pipeline:
         embedding_cache_dir: str = ".cache/embeddings",
         reranker_enabled: bool = False,
         reranker_model: str = "BAAI/bge-reranker-v2-m3",
+        schema_linking_enabled: bool = True,
     ):
         self.introspection = IntrospectionLayer(llm, embeddings, db_manager)
         self.enrichment = EnrichmentLayer(
@@ -41,7 +42,7 @@ class Pipeline:
         reranker = CrossEncoderReranker(reranker_model, enabled=reranker_enabled)
         self.rag = RAGLayer(
             llm, embeddings, db_manager, cache_dir=embedding_cache_dir,
-            reranker=reranker,
+            reranker=reranker, schema_linking_enabled=schema_linking_enabled,
         )
         self.sql_generation = SQLGenerationLayer(llm, embeddings, db_manager)
         self.self_correction = SelfCorrectionLayer(llm, embeddings, db_manager)

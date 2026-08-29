@@ -28,6 +28,7 @@ class Settings:
     enrichment_batch_size: int = 12
     reranker_enabled: bool = False
     reranker_model: str = "BAAI/bge-reranker-v2-m3"
+    schema_linking_enabled: bool = True
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -58,4 +59,7 @@ class Settings:
             ),
             reranker_enabled=_env_bool("RERANKER_ENABLED", cls.reranker_enabled),
             reranker_model=os.getenv("RERANKER_MODEL", cls.reranker_model),
+            schema_linking_enabled=_env_bool(
+                "SCHEMA_LINKING_ENABLED", cls.schema_linking_enabled
+            ),
         )

@@ -14,6 +14,8 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
+from langchain_core.messages import HumanMessage
+
 from pipeline.base import BaseLayer
 from pipeline.introspection.layer import IntrospectionResult
 
@@ -265,6 +267,9 @@ class _PersistentEmbeddingIndex:
 
 class RAGLayer(BaseLayer):
     MAX_TABLES = 8
+    MIN_RERANKED_TABLES = 3
+    RERANKER_RELATIVE_THRESHOLD = 0.25
+    MAX_FK_EXPANSION = 4
     TABLE_RERANK_CANDIDATES = 24
     ALL_COLUMNS_TABLE_LIMIT = 30
     MAX_WIDE_TABLE_COLUMNS = 20
@@ -276,6 +281,8 @@ class RAGLayer(BaseLayer):
     DERIVATIVE_TABLE_PENALTY = 0.015
     FUSION_CANDIDATES = 30
     RRF_K = 60
+    SCHEMA_LINK_CANDIDATES = 12
+    MAX_SCHEMA_LINK_COLUMNS = 12
 
     @staticmethod
     def _log_table_ranking(
@@ -293,11 +300,13 @@ class RAGLayer(BaseLayer):
     def __init__(
         self, llm, embeddings, db_manager,
         cache_dir: str = ".cache/embeddings", reranker=None,
+        schema_linking_enabled: bool = True,
     ):
         super().__init__(llm, embeddings, db_manager)
         self.cache_dir = Path(cache_dir)
         self.indexes: dict[str, _PersistentEmbeddingIndex] = {}
         self.reranker = reranker
+        self.schema_linking_enabled = schema_linking_enabled
 
     @classmethod
     def _fuse_scores(
@@ -321,9 +330,13 @@ class RAGLayer(BaseLayer):
 
     def _model_rerank(
         self, question: str, scored: list[tuple[dict[str, Any], float]],
-    ) -> list[tuple[dict[str, Any], float]]:
-        if self.reranker is None or not scored:
-            return scored
+    ) -> tuple[list[tuple[dict[str, Any], float]], bool]:
+        if (
+            self.reranker is None
+            or not getattr(self.reranker, "enabled", True)
+            or not scored
+        ):
+            return scored, False
         candidates = scored[:self.FUSION_CANDIDATES]
         try:
             scores = self.reranker.score_pairs([
@@ -331,12 +344,191 @@ class RAGLayer(BaseLayer):
             ])
         except Exception as exc:
             print(f"[RAG] WARNING - reranker unavailable ({exc}); using fused ranking")
-            return scored
+            return scored, False
         reranked = sorted(
             ((item, float(score)) for (item, _), score in zip(candidates, scores)),
             key=lambda match: match[1], reverse=True,
         )
-        return reranked + scored[self.FUSION_CANDIDATES:]
+        return reranked + scored[self.FUSION_CANDIDATES:], True
+
+    @classmethod
+    def _schema_link_columns(
+        cls, metadata: dict[str, Any], question: str = "",
+    ) -> list[dict[str, Any]]:
+        """Return compact columns while retaining identifiers and relationships."""
+        columns = list(metadata.get("columns", []))
+        question_tokens = set(cls._identifier_tokens(question))
+        important, matching, ordinary = [], [], []
+        for column in columns:
+            normalized = cls._normalized(str(column.get("name", "")))
+            column_tokens = set(cls._identifier_tokens(str(column.get("name", ""))))
+            if (
+                column.get("primary_key")
+                or column.get("references")
+                or normalized.endswith("id")
+                or normalized.endswith("ref")
+            ):
+                target = important
+            elif question_tokens & column_tokens:
+                target = matching
+            else:
+                target = ordinary
+            target.append(column)
+        selected = (important + matching + ordinary)[:cls.MAX_SCHEMA_LINK_COLUMNS]
+        return [
+            {
+                "name": str(column.get("name", "")),
+                "primary_key": bool(column.get("primary_key")),
+                "references": column.get("references"),
+            }
+            for column in selected
+        ]
+
+    @classmethod
+    def _schema_link_relationships(
+        cls, candidate_keys: list[tuple[str, str]], result: IntrospectionResult,
+    ) -> list[dict[str, str]]:
+        """Build authoritative FK edges plus conservative Ref-to-Id hints."""
+        candidate_set = set(candidate_keys)
+        relationships: list[dict[str, str]] = []
+        seen: set[tuple[str, str]] = set()
+
+        def add(source: str, target: str, confidence: str) -> None:
+            edge = (source.casefold(), target.casefold())
+            if edge not in seen:
+                seen.add(edge)
+                relationships.append({
+                    "from": source, "to": target, "confidence": confidence,
+                })
+
+        table_by_stem: dict[str, list[tuple[str, str]]] = {}
+        for key in candidate_keys:
+            table_by_stem.setdefault(cls._normalized(key[1]), []).append(key)
+
+        for source_key in candidate_keys:
+            metadata = result.table_metadata.get(source_key, {})
+            for column in metadata.get("columns", []):
+                column_name = str(column.get("name", ""))
+                reference = column.get("references")
+                if reference:
+                    parts = str(reference).split(".", 2)
+                    target_key = (
+                        result.resolve_table(parts[0], parts[1])
+                        if len(parts) == 3 else None
+                    )
+                    if target_key in candidate_set:
+                        add(
+                            f"{source_key[0]}.{source_key[1]}.{column_name}",
+                            f"{target_key[0]}.{target_key[1]}.{parts[2]}",
+                            "declared_fk",
+                        )
+                    continue
+
+                normalized_column = cls._normalized(column_name)
+                if not normalized_column.endswith("ref"):
+                    continue
+                stem = normalized_column[:-3]
+                for target_key in table_by_stem.get(stem, []):
+                    target_columns = result.table_metadata.get(
+                        target_key, {}
+                    ).get("columns", [])
+                    id_names = {
+                        "id", stem + "id", cls._normalized(target_key[1]) + "id"
+                    }
+                    target_column = next(
+                        (
+                            str(candidate.get("name", ""))
+                            for candidate in target_columns
+                            if cls._normalized(str(candidate.get("name", "")))
+                            in id_names
+                        ),
+                        None,
+                    )
+                    if target_column:
+                        add(
+                            f"{source_key[0]}.{source_key[1]}.{column_name}",
+                            f"{target_key[0]}.{target_key[1]}.{target_column}",
+                            "inferred_name_match",
+                        )
+        return relationships
+
+    def _llm_schema_link(
+        self, question: str, scored: list[tuple[dict[str, Any], float]],
+        result: IntrospectionResult,
+    ) -> list[tuple[str, str]] | None:
+        """Select a coherent table group, failing open to deterministic retrieval."""
+        if not self.schema_linking_enabled or self.llm is None or not scored:
+            return None
+
+        candidates = scored[:self.SCHEMA_LINK_CANDIDATES]
+        keys = [(item["schema"], item["table"]) for item, _ in candidates]
+        payload = []
+        for rank, ((item, score), key) in enumerate(zip(candidates, keys), start=1):
+            payload.append({
+                "id": f"{key[0]}.{key[1]}",
+                "retrieval_rank": rank,
+                "retrieval_score": round(float(score), 6),
+                "description": result.table_descriptions.get(key, ""),
+                "columns": self._schema_link_columns(
+                    result.table_metadata.get(key, {}), question
+                ),
+            })
+        relationships = self._schema_link_relationships(keys, result)
+        prompt = f"""Select the smallest connected set of database tables needed to answer the question.
+
+Rules:
+- Select only exact table ids supplied in candidates; never invent identifiers.
+- Consider all candidates together, including header/detail and bridge tables.
+- A table needed only to connect two required tables should be selected.
+- declared_fk relationships are authoritative.
+- inferred_name_match relationships are hints inferred from Ref/Id names; use them
+  only when their business meaning also fits the question.
+- Prefer recall when omitting a table would make the required join impossible.
+- Select at most {self.MAX_TABLES} tables.
+- Return JSON only: {{"tables":["schema.table"],"reason":"brief reason"}}
+
+Question:
+{question}
+
+Candidates:
+{json.dumps(payload, ensure_ascii=False)}
+
+Relationships:
+{json.dumps(relationships, ensure_ascii=False)}
+"""
+        try:
+            response = self.llm.invoke([HumanMessage(content=prompt)])
+            text = str(response.content).strip().replace("```json", "").replace("```", "")
+            start, end = text.find("{"), text.rfind("}")
+            if start < 0 or end <= start:
+                raise ValueError("response did not contain a JSON object")
+            decoded = json.loads(text[start:end + 1])
+            requested = decoded.get("tables")
+            if not isinstance(requested, list) or not requested:
+                raise ValueError("response did not contain a non-empty tables array")
+
+            allowed = {f"{s}.{t}".casefold(): (s, t) for s, t in keys}
+            normalized = [str(value).strip().casefold() for value in requested]
+            if len(normalized) > self.MAX_TABLES or any(
+                value not in allowed for value in normalized
+            ):
+                raise ValueError("response contained unknown or too many tables")
+            selected = []
+            for value in normalized:
+                key = allowed[value]
+                if key not in selected:
+                    selected.append(key)
+            print(
+                "[RAG][Trace] LLM schema-linked tables: "
+                + ", ".join(f"{s}.{t}" for s, t in selected)
+            )
+            return selected
+        except Exception as exc:
+            print(
+                f"[RAG] WARNING - schema linking failed ({exc}); "
+                "using deterministic retrieval"
+            )
+            return None
 
     @staticmethod
     def _cache_name(db_name: str) -> str:
@@ -526,13 +718,45 @@ class RAGLayer(BaseLayer):
         self._log_table_ranking("BM25 top 30", lexical)
         scored = self._fuse_scores(dense, lexical)[:self.FUSION_CANDIDATES]
         self._log_table_ranking("RRF fused top 30", scored)
-        scored = self._model_rerank(question, scored)
+        scored, model_reranked = self._model_rerank(question, scored)
         self._log_table_ranking("Model-reranked top 30", scored)
         scored = scored[:self.TABLE_RERANK_CANDIDATES]
-        scored = self._rerank_table_scores(question, scored)[:self.MAX_TABLES]
+        scored = self._rerank_table_scores(question, scored)
+        linked = self._llm_schema_link(question, scored, result)
+        if linked:
+            return linked
+        scored = scored[:self.MAX_TABLES]
         self._log_table_ranking("Rule-adjusted top 8", scored, limit=self.MAX_TABLES)
         if not scored:
             return []
+        if model_reranked:
+            # Cross-encoder outputs are relevance scores, not cosine
+            # similarities. Their absolute scale varies by question, so the
+            # hybrid-retrieval cutoff must not be applied to them. Keep a
+            # small recall floor and then any additional candidates that are
+            # reasonably close to the best raw reranker score.
+            best_score = scored[0][1]
+            relative_threshold = (
+                best_score * self.RERANKER_RELATIVE_THRESHOLD
+                if best_score > 0 else best_score
+            )
+            keep_count = self.MIN_RERANKED_TABLES
+            while (
+                keep_count < len(scored)
+                and scored[keep_count][1] >= relative_threshold
+            ):
+                keep_count += 1
+            selected = [
+                (item["schema"], item["table"])
+                for item, _ in scored[:keep_count]
+            ]
+            print(
+                f"[RAG][Trace] Reranker selection: top-{keep_count} "
+                f"(minimum={self.MIN_RERANKED_TABLES}, "
+                f"relative-threshold={relative_threshold:.6f})"
+            )
+            return selected
+
         threshold = max(self.MIN_SIMILARITY, scored[0][1] - self.TABLE_SCORE_WINDOW)
         selected = [
             (item["schema"], item["table"])
@@ -557,15 +781,29 @@ class RAGLayer(BaseLayer):
     def _add_fk_referenced_tables(
         tables: list[tuple[str, str]], result: IntrospectionResult,
     ) -> list[tuple[str, str]]:
-        """Add direct FK targets needed to understand available joins.
+        """Add a bounded set of direct FK neighbors in both directions.
 
-        Only one hop is added. Recursively traversing the relationship graph can
-        pull a large, mostly irrelevant part of an unknown schema into the
-        prompt. Semantic matches retain their original order and FK targets are
-        appended once.
+        Both referenced parents and referencing children can be necessary for
+        a query. Only one hop and a small fixed number of additions are allowed
+        so a highly connected table cannot flood the schema prompt.
         """
         expanded = list(tables)
         included = set(tables)
+        additions = 0
+
+        def add(target: tuple[str, str] | None) -> None:
+            nonlocal additions
+            if (
+                target is not None
+                and target not in included
+                and additions < RAGLayer.MAX_FK_EXPANSION
+            ):
+                included.add(target)
+                expanded.append(target)
+                additions += 1
+
+        # Outgoing relationships first: these are explicit dependencies of the
+        # selected tables.
         for table_key in tables:
             metadata = result.table_metadata.get(table_key, {})
             for column in metadata.get("columns", []):
@@ -576,9 +814,24 @@ class RAGLayer(BaseLayer):
                 if len(parts) != 3:
                     continue
                 target = result.resolve_table(parts[0], parts[1])
-                if target is not None and target not in included:
-                    included.add(target)
-                    expanded.append(target)
+                add(target)
+
+        # Then add detail/child tables whose FK points at a selected table.
+        selected = set(tables)
+        for source_key, metadata in result.table_metadata.items():
+            if additions >= RAGLayer.MAX_FK_EXPANSION:
+                break
+            for column in metadata.get("columns", []):
+                reference = column.get("references")
+                if not reference:
+                    continue
+                parts = str(reference).split(".", 2)
+                if len(parts) != 3:
+                    continue
+                target = result.resolve_table(parts[0], parts[1])
+                if target in selected:
+                    add(source_key)
+                    break
         return expanded
 
     def _select_columns(

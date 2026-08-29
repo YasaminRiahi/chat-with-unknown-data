@@ -83,6 +83,7 @@ pipeline = Pipeline(
     enrichment_batch_size=settings.enrichment_batch_size,
     reranker_enabled=settings.reranker_enabled,
     reranker_model=settings.reranker_model,
+    schema_linking_enabled=settings.schema_linking_enabled,
 )
 
 # ── Session state (single session, in-memory) ─────────────────────────────────
