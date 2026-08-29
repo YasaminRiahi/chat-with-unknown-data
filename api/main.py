@@ -81,6 +81,8 @@ pipeline = Pipeline(
     embedding_cache_dir=settings.embedding_cache_dir,
     llm_enrichment_enabled=settings.llm_enrichment_enabled,
     enrichment_batch_size=settings.enrichment_batch_size,
+    reranker_enabled=settings.reranker_enabled,
+    reranker_model=settings.reranker_model,
 )
 
 # ── Session state (single session, in-memory) ─────────────────────────────────

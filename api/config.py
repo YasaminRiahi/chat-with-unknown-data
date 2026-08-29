@@ -26,6 +26,8 @@ class Settings:
     embedding_cache_dir: str = ".cache/embeddings"
     llm_enrichment_enabled: bool = True
     enrichment_batch_size: int = 12
+    reranker_enabled: bool = False
+    reranker_model: str = "BAAI/bge-reranker-v2-m3"
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -54,4 +56,6 @@ class Settings:
             enrichment_batch_size=max(
                 1, int(os.getenv("ENRICHMENT_BATCH_SIZE", cls.enrichment_batch_size))
             ),
+            reranker_enabled=_env_bool("RERANKER_ENABLED", cls.reranker_enabled),
+            reranker_model=os.getenv("RERANKER_MODEL", cls.reranker_model),
         )

@@ -66,6 +66,21 @@ prefers the base entity when derivative qualifiers were not requested. SQL
 generation uses SQL Server Unicode literals (`N'...'`) for Persian and other
 non-ASCII values.
 
+Retrieval is hybrid: dense BGE-M3 cosine results and local BM25 lexical results
+are combined with Reciprocal Rank Fusion for both tables and columns. The best
+30 table candidates are then scored by the multilingual
+`BAAI/bge-reranker-v2-m3` cross-encoder before the existing dynamic table
+selection and foreign-key expansion run. The reranker is downloaded lazily by
+`sentence-transformers` on the first full retrieval. Set
+`RERANKER_ENABLED=false` to retain hybrid retrieval without downloading or
+running the reranker, or change `RERANKER_MODEL` to another compatible
+cross-encoder.
+
+Table retrieval prints `[RAG][Trace]` lines for the dense, BM25, fused,
+model-reranked, and rule-adjusted rankings, followed by the final threshold and
+its survivors. These traces make it possible to identify the exact stage where
+a required table drops out during retrieval evaluation.
+
 When a valid query returns no rows because an exact text value is slightly
 wrong, the self-correction layer performs one bounded lookup in the exact
 referenced text column. It compares real values with Persian-aware

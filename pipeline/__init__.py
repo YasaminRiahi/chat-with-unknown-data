@@ -10,6 +10,7 @@ import re
 from pipeline.introspection.layer   import IntrospectionLayer
 from pipeline.enrichment.layer      import EnrichmentLayer
 from pipeline.rag.layer             import RAGLayer
+from pipeline.rag.reranker          import CrossEncoderReranker
 from pipeline.sql_generation.layer  import SQLGenerationLayer
 from pipeline.self_correction.layer import SelfCorrectionLayer
 from pipeline.answer_generation.layer import AnswerGenerationLayer
@@ -25,6 +26,8 @@ class Pipeline:
         llm_enrichment_enabled: bool = True,
         enrichment_batch_size: int = 12,
         embedding_cache_dir: str = ".cache/embeddings",
+        reranker_enabled: bool = False,
+        reranker_model: str = "BAAI/bge-reranker-v2-m3",
     ):
         self.introspection = IntrospectionLayer(llm, embeddings, db_manager)
         self.enrichment = EnrichmentLayer(
@@ -35,8 +38,10 @@ class Pipeline:
             llm_enabled=llm_enrichment_enabled,
             batch_size=enrichment_batch_size,
         )
+        reranker = CrossEncoderReranker(reranker_model, enabled=reranker_enabled)
         self.rag = RAGLayer(
-            llm, embeddings, db_manager, cache_dir=embedding_cache_dir
+            llm, embeddings, db_manager, cache_dir=embedding_cache_dir,
+            reranker=reranker,
         )
         self.sql_generation = SQLGenerationLayer(llm, embeddings, db_manager)
         self.self_correction = SelfCorrectionLayer(llm, embeddings, db_manager)

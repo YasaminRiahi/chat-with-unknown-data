@@ -10,6 +10,7 @@ import hashlib
 import json
 import math
 import re
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -209,6 +210,58 @@ class _PersistentEmbeddingIndex:
             matches.append((item, self._cosine(query_vector, self.vectors[item_id])))
         return sorted(matches, key=lambda match: match[1], reverse=True)
 
+    @staticmethod
+    def _lexical_tokens(text: str) -> list[str]:
+        """Tokenize prose and SQL identifiers for lightweight BM25 retrieval."""
+        expanded = re.sub(r"([a-z\d])([A-Z])", r"\1 \2", text)
+        expanded = re.sub(r"[_\-.]+", " ", expanded)
+        return re.findall(r"[^\W_]+", expanded.casefold(), flags=re.UNICODE)
+
+    def lexical_scores(
+        self, query: str, *, kind: str,
+        tables: set[tuple[str, str]] | None = None,
+    ) -> list[tuple[dict[str, Any], float]]:
+        """Return exact BM25 scores over the current metadata documents."""
+        candidates = [
+            (item_id, item) for item_id, item in self.items.items()
+            if item["kind"] == kind
+            and (tables is None or (item["schema"], item["table"]) in tables)
+        ]
+        query_terms = self._lexical_tokens(query)
+        if not candidates or not query_terms:
+            return []
+        documents = {
+            item_id: Counter(self._lexical_tokens(item["text"]))
+            for item_id, item in candidates
+        }
+        lengths = {item_id: sum(terms.values()) for item_id, terms in documents.items()}
+        average_length = sum(lengths.values()) / len(lengths) or 1.0
+        document_frequency = Counter()
+        for terms in documents.values():
+            document_frequency.update(terms.keys())
+
+        scored = []
+        total = len(candidates)
+        k1, b = 1.5, 0.75
+        for item_id, item in candidates:
+            score = 0.0
+            terms = documents[item_id]
+            for term in query_terms:
+                frequency = terms.get(term, 0)
+                if not frequency:
+                    continue
+                frequency_docs = document_frequency[term]
+                inverse_frequency = math.log(
+                    1.0 + (total - frequency_docs + 0.5) / (frequency_docs + 0.5)
+                )
+                denominator = frequency + k1 * (
+                    1.0 - b + b * lengths[item_id] / average_length
+                )
+                score += inverse_frequency * frequency * (k1 + 1.0) / denominator
+            if score > 0:
+                scored.append((item, score))
+        return sorted(scored, key=lambda match: match[1], reverse=True)
+
 
 class RAGLayer(BaseLayer):
     MAX_TABLES = 8
@@ -221,13 +274,69 @@ class RAGLayer(BaseLayer):
     BASE_ENTITY_MARGIN = 0.05
     BASE_ENTITY_BONUS = 0.03
     DERIVATIVE_TABLE_PENALTY = 0.015
+    FUSION_CANDIDATES = 30
+    RRF_K = 60
+
+    @staticmethod
+    def _log_table_ranking(
+        stage: str, scored: list[tuple[dict[str, Any], float]], *, limit: int = 30,
+    ) -> None:
+        """Print a compact retrieval trace so table losses are diagnosable."""
+        if not scored:
+            print(f"[RAG][Trace] {stage}: <no candidates>")
+            return
+        rendered = ", ".join(
+            f"{item['schema']}.{item['table']}={score:.6f}"
+            for item, score in scored[:limit]
+        )
+        print(f"[RAG][Trace] {stage}: {rendered}")
     def __init__(
         self, llm, embeddings, db_manager,
-        cache_dir: str = ".cache/embeddings",
+        cache_dir: str = ".cache/embeddings", reranker=None,
     ):
         super().__init__(llm, embeddings, db_manager)
         self.cache_dir = Path(cache_dir)
         self.indexes: dict[str, _PersistentEmbeddingIndex] = {}
+        self.reranker = reranker
+
+    @classmethod
+    def _fuse_scores(
+        cls, *rankings: list[tuple[dict[str, Any], float]],
+    ) -> list[tuple[dict[str, Any], float]]:
+        """Fuse heterogeneous rankings with Reciprocal Rank Fusion."""
+        combined: dict[str, tuple[dict[str, Any], float]] = {}
+        for ranking in rankings:
+            for rank, (item, _) in enumerate(ranking, start=1):
+                item_id = (
+                    f"{item['kind']}:{item['schema']}.{item['table']}."
+                    f"{item.get('column', {}).get('name', '')}"
+                )
+                previous = combined.get(item_id, (item, 0.0))[1]
+                combined[item_id] = (item, previous + 1.0 / (cls.RRF_K + rank))
+        ranked = sorted(combined.values(), key=lambda match: match[1], reverse=True)
+        if not ranked:
+            return []
+        maximum = ranked[0][1]
+        return [(item, score / maximum) for item, score in ranked]
+
+    def _model_rerank(
+        self, question: str, scored: list[tuple[dict[str, Any], float]],
+    ) -> list[tuple[dict[str, Any], float]]:
+        if self.reranker is None or not scored:
+            return scored
+        candidates = scored[:self.FUSION_CANDIDATES]
+        try:
+            scores = self.reranker.score_pairs([
+                (question, item["text"]) for item, _ in candidates
+            ])
+        except Exception as exc:
+            print(f"[RAG] WARNING - reranker unavailable ({exc}); using fused ranking")
+            return scored
+        reranked = sorted(
+            ((item, float(score)) for (item, _), score in zip(candidates, scores)),
+            key=lambda match: match[1], reverse=True,
+        )
+        return reranked + scored[self.FUSION_CANDIDATES:]
 
     @staticmethod
     def _cache_name(db_name: str) -> str:
@@ -403,12 +512,25 @@ class RAGLayer(BaseLayer):
     ) -> list[tuple[str, str]]:
         exact = self._exact_tables(question, result)
         if exact:
+            print(
+                "[RAG][Trace] Exact table bypass: "
+                + ", ".join(f"{schema}.{table}" for schema, table in exact)
+            )
             return exact[:self.MAX_TABLES]
 
-        scored = index.scores(query_vector, kind="table")[
-            :self.TABLE_RERANK_CANDIDATES
-        ]
+        dense = index.scores(query_vector, kind="table")[:self.FUSION_CANDIDATES]
+        lexical = index.lexical_scores(
+            question, kind="table"
+        )[:self.FUSION_CANDIDATES]
+        self._log_table_ranking("Dense top 30", dense)
+        self._log_table_ranking("BM25 top 30", lexical)
+        scored = self._fuse_scores(dense, lexical)[:self.FUSION_CANDIDATES]
+        self._log_table_ranking("RRF fused top 30", scored)
+        scored = self._model_rerank(question, scored)
+        self._log_table_ranking("Model-reranked top 30", scored)
+        scored = scored[:self.TABLE_RERANK_CANDIDATES]
         scored = self._rerank_table_scores(question, scored)[:self.MAX_TABLES]
+        self._log_table_ranking("Rule-adjusted top 8", scored, limit=self.MAX_TABLES)
         if not scored:
             return []
         threshold = max(self.MIN_SIMILARITY, scored[0][1] - self.TABLE_SCORE_WINDOW)
@@ -416,6 +538,18 @@ class RAGLayer(BaseLayer):
             (item["schema"], item["table"])
             for item, score in scored if score >= threshold
         ]
+        print(
+            f"[RAG][Trace] Final threshold={threshold:.6f} "
+            f"(minimum={self.MIN_SIMILARITY:.2f}, "
+            f"best-minus-window={scored[0][1] - self.TABLE_SCORE_WINDOW:.6f})"
+        )
+        print(
+            "[RAG][Trace] Threshold survivors: "
+            + (
+                ", ".join(f"{schema}.{table}" for schema, table in selected)
+                if selected else "<none; closest table fallback will be used>"
+            )
+        )
         # Always retain the closest table, even for an unusually low score.
         return selected or [(scored[0][0]["schema"], scored[0][0]["table"])]
 
@@ -452,7 +586,11 @@ class RAGLayer(BaseLayer):
         index: _PersistentEmbeddingIndex, query_vector: list[float],
         result: IntrospectionResult,
     ) -> dict[tuple[str, str], list[dict[str, Any]]]:
-        scored = index.scores(query_vector, kind="column", tables=set(tables))
+        dense = index.scores(query_vector, kind="column", tables=set(tables))
+        lexical = index.lexical_scores(
+            question, kind="column", tables=set(tables)
+        )
+        scored = self._fuse_scores(dense, lexical)
         by_table: dict[tuple[str, str], list[tuple[dict[str, Any], float]]] = {
             table: [] for table in tables
         }
