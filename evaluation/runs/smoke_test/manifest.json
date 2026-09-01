@@ -1,0 +1,13 @@
+{
+  "evaluator_version": 1,
+  "dataset": "D:\\lessons\\Project\\chat-with-unknown-data\\evaluation\\datasets\\test1_candidate_bilingual.json",
+  "dataset_sha256": "4d716dfad3df85172e55dedcb14ffab45a89a069706a01acc19ee7f6132b5f21",
+  "db_name": "test1",
+  "db_type": "mssql",
+  "timing_repeats": 5,
+  "created_at": "2026-09-01T13:49:08.814065+00:00",
+  "setup_latency_ms": 19963.603,
+  "setup_tokens": {
+    "by_operation": {}
+  }
+}

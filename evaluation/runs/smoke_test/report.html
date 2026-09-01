@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="fa" dir="rtl"><head><meta charset="utf-8">
+<title>گزارش ارزیابی Text-to-SQL</title>
+<style>
+body{font-family:Tahoma,Segoe UI,sans-serif;background:#f5f7fb;color:#172033;margin:0;padding:28px}
+main{max-width:1200px;margin:auto}h1,h2{color:#152a4a}.muted{color:#667085}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.card,section{background:white;border:1px solid #e2e8f0;border-radius:12px;padding:18px;margin:14px 0}
+.card b{display:block;font-size:25px;color:#176b87;margin-top:8px}.bar-row{display:grid;grid-template-columns:150px 1fr 60px;gap:10px;align-items:center;margin:10px 0}
+.track{height:14px;background:#e8edf4;border-radius:8px;overflow:hidden}.track i{height:100%;display:block;background:#22a699}
+table{width:100%;border-collapse:collapse;background:white}th,td{padding:9px;border-bottom:1px solid #e5e7eb;text-align:right;vertical-align:top}
+code{direction:ltr}@media(max-width:650px){.bar-row{grid-template-columns:100px 1fr 50px}}
+</style></head><body><main>
+<h1>گزارش ارزیابی Text-to-SQL</h1>
+<p class="muted">تولیدشده در 2026-09-01T13:52:19.155693+00:00 — 4 سؤال تکمیل‌شده</p>
+<div class="cards"><div class="card"><span>Execution Accuracy</span><b>25.0%</b></div><div class="card"><span>Valid SQL Rate</span><b>100.0%</b></div><div class="card"><span>Table Recall</span><b>75.0%</b></div><div class="card"><span>Table Precision</span><b>75.0%</b></div><div class="card"><span>Column Recall</span><b>100.0%</b></div><div class="card"><span>Correction Gain</span><b>0.0%</b></div><div class="card"><span>Correction Success</span><b>—</b></div><div class="card"><span>R-VES</span><b>25.00</b></div><div class="card"><span>Median E2E</span><b>40899.6 ms</b></div><div class="card"><span>Average Tokens</span><b>6,996</b></div><div class="card"><span>Average LLM Calls</span><b>4.00</b></div></div>
+<section><h2>Execution Accuracy بر اساس زبان</h2><div class="bar-row"><span>en</span><div class="track"><i style="width:50.0%"></i></div><b>50.0%</b></div><div class="bar-row"><span>fa</span><div class="track"><i style="width:0.0%"></i></div><b>0.0%</b></div></section>
+<section><h2>Execution Accuracy بر اساس دسته</h2><div class="bar-row"><span>count</span><div class="track"><i style="width:50.0%"></i></div><b>50.0%</b></div><div class="bar-row"><span>temporal_ordering</span><div class="track"><i style="width:0.0%"></i></div><b>0.0%</b></div></section>
+<section><h2>Execution Accuracy بر اساس سختی</h2><div class="bar-row"><span>easy</span><div class="track"><i style="width:50.0%"></i></div><b>50.0%</b></div><div class="bar-row"><span>medium</span><div class="track"><i style="width:0.0%"></i></div><b>0.0%</b></div></section>
+<section><h2>Table Recall بر اساس دسته</h2><div class="bar-row"><span>count</span><div class="track"><i style="width:50.0%"></i></div><b>50.0%</b></div><div class="bar-row"><span>temporal_ordering</span><div class="track"><i style="width:100.0%"></i></div><b>100.0%</b></div></section>
+<section><h2>Column Recall بر اساس دسته</h2><div class="bar-row"><span>temporal_ordering</span><div class="track"><i style="width:100.0%"></i></div><b>100.0%</b></div></section>
+<section><h2>سؤال‌های ناموفق (3)</h2><table><thead><tr><th>ID</th><th>سؤال</th><th>خطا/نتیجه</th></tr></thead><tbody><tr><td>intent_001_fa</td><td>تعداد کل سرآیند اسناد حسابداری چقدر است؟</td><td>Wrong result</td></tr><tr><td>intent_002_fa</td><td>۲۰ مورد آخر رسیدهای تحصیل دارایی را بر اساس تاریخ نمایش بده.</td><td>Wrong result</td></tr><tr><td>intent_002_en</td><td>Show the latest 20 acquisition receipt records ordered by date.</td><td>Wrong result</td></tr></tbody></table></section>
+<section><h2>فایل‌های همراه</h2><p><code>summary.json</code> خلاصه ماشینی، <code>per_question.csv</code> جزئیات و <code>checkpoint.jsonl</code> امکان ادامه اجرا را فراهم می‌کنند.</p></section>
+</main></body></html>

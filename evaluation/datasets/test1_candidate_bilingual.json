@@ -1,0 +1,2947 @@
+{
+  "metadata": {
+    "database": "test1",
+    "status": "candidate_not_gold",
+    "intent_count": 75,
+    "question_count": 150,
+    "languages": [
+      "fa",
+      "en"
+    ],
+    "warning": "Schema-grounded candidates only. A domain expert must validate business meaning, nullability, and reference SQL."
+  },
+  "records": [
+    {
+      "id": "intent_001_fa",
+      "language": "fa",
+      "question": "تعداد کل سرآیند اسناد حسابداری چقدر است؟",
+      "intent_id": "intent_001",
+      "db_name": "test1",
+      "schema": "ACC",
+      "table": "AccVchHdr",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [ACC].[AccVchHdr]",
+      "gold_tables": [
+        "ACC.AccVchHdr"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_001_en",
+      "language": "en",
+      "question": "How many accounting voucher header records are there?",
+      "intent_id": "intent_001",
+      "db_name": "test1",
+      "schema": "ACC",
+      "table": "AccVchHdr",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [ACC].[AccVchHdr]",
+      "gold_tables": [
+        "ACC.AccVchHdr"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_002_fa",
+      "language": "fa",
+      "question": "۲۰ مورد آخر رسیدهای تحصیل دارایی را بر اساس تاریخ نمایش بده.",
+      "intent_id": "intent_002",
+      "db_name": "test1",
+      "schema": "AST",
+      "table": "AcquisitionReceipt",
+      "reference_sql": "SELECT TOP 20 [AcquisitionReceiptID], [Date] FROM [AST].[AcquisitionReceipt] ORDER BY [Date] DESC",
+      "gold_tables": [
+        "AST.AcquisitionReceipt"
+      ],
+      "gold_columns": [
+        "AST.AcquisitionReceipt.AcquisitionReceiptID",
+        "AST.AcquisitionReceipt.Date"
+      ],
+      "category": "temporal_ordering",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_002_en",
+      "language": "en",
+      "question": "Show the latest 20 acquisition receipt records ordered by date.",
+      "intent_id": "intent_002",
+      "db_name": "test1",
+      "schema": "AST",
+      "table": "AcquisitionReceipt",
+      "reference_sql": "SELECT TOP 20 [AcquisitionReceiptID], [Date] FROM [AST].[AcquisitionReceipt] ORDER BY [Date] DESC",
+      "gold_tables": [
+        "AST.AcquisitionReceipt"
+      ],
+      "gold_columns": [
+        "AST.AcquisitionReceipt.AcquisitionReceiptID",
+        "AST.AcquisitionReceipt.Date"
+      ],
+      "category": "temporal_ordering",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_003_fa",
+      "language": "fa",
+      "question": "تعداد رکوردهای Change Item را به تفکیک نوع نمایش بده.",
+      "intent_id": "intent_003",
+      "db_name": "test1",
+      "schema": "CNT",
+      "table": "ChangeItem",
+      "reference_sql": "SELECT [Type], COUNT_BIG(*) AS [RecordCount] FROM [CNT].[ChangeItem] GROUP BY [Type] ORDER BY [RecordCount] DESC",
+      "gold_tables": [
+        "CNT.ChangeItem"
+      ],
+      "gold_columns": [
+        "CNT.ChangeItem.Type"
+      ],
+      "category": "grouping",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_003_en",
+      "language": "en",
+      "question": "Show the number of change item records grouped by type.",
+      "intent_id": "intent_003",
+      "db_name": "test1",
+      "schema": "CNT",
+      "table": "ChangeItem",
+      "reference_sql": "SELECT [Type], COUNT_BIG(*) AS [RecordCount] FROM [CNT].[ChangeItem] GROUP BY [Type] ORDER BY [RecordCount] DESC",
+      "gold_tables": [
+        "CNT.ChangeItem"
+      ],
+      "gold_columns": [
+        "CNT.ChangeItem.Type"
+      ],
+      "category": "grouping",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_004_fa",
+      "language": "fa",
+      "question": "چند رکورد از رکوردهای Agreement مقدار عنوان ندارند؟",
+      "intent_id": "intent_004",
+      "db_name": "test1",
+      "schema": "DST",
+      "table": "Agreement",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [DST].[Agreement] WHERE [Title] IS NULL",
+      "gold_tables": [
+        "DST.Agreement"
+      ],
+      "gold_columns": [
+        "DST.Agreement.Title"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_004_en",
+      "language": "en",
+      "question": "How many agreement information records have no title value?",
+      "intent_id": "intent_004",
+      "db_name": "test1",
+      "schema": "DST",
+      "table": "Agreement",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [DST].[Agreement] WHERE [Title] IS NULL",
+      "gold_tables": [
+        "DST.Agreement"
+      ],
+      "gold_columns": [
+        "DST.Agreement.Title"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_005_fa",
+      "language": "fa",
+      "question": "تعداد کل رکوردهای Extra Column Description چقدر است؟",
+      "intent_id": "intent_005",
+      "db_name": "test1",
+      "schema": "FMK",
+      "table": "ExtraColumnDescription",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [FMK].[ExtraColumnDescription]",
+      "gold_tables": [
+        "FMK.ExtraColumnDescription"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_005_en",
+      "language": "en",
+      "question": "How many extra column descriptions records are there?",
+      "intent_id": "intent_005",
+      "db_name": "test1",
+      "schema": "FMK",
+      "table": "ExtraColumnDescription",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [FMK].[ExtraColumnDescription]",
+      "gold_tables": [
+        "FMK.ExtraColumnDescription"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_006_fa",
+      "language": "fa",
+      "question": "تعداد کل صورتحساب‌ها چقدر است؟",
+      "intent_id": "intent_006",
+      "db_name": "test1",
+      "schema": "GNR",
+      "table": "Bill",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [GNR].[Bill]",
+      "gold_tables": [
+        "GNR.Bill"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_006_en",
+      "language": "en",
+      "question": "How many stores bills records are there?",
+      "intent_id": "intent_006",
+      "db_name": "test1",
+      "schema": "GNR",
+      "table": "Bill",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [GNR].[Bill]",
+      "gold_tables": [
+        "GNR.Bill"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_007_fa",
+      "language": "fa",
+      "question": "۲۰ عنوان اول از رکوردهای Compound Barcode را فهرست کن.",
+      "intent_id": "intent_007",
+      "db_name": "test1",
+      "schema": "INV",
+      "table": "CompoundBarcode",
+      "reference_sql": "SELECT TOP 20 [CompoundBarcodeID], [Title] FROM [INV].[CompoundBarcode] ORDER BY [Title]",
+      "gold_tables": [
+        "INV.CompoundBarcode"
+      ],
+      "gold_columns": [
+        "INV.CompoundBarcode.CompoundBarcodeID",
+        "INV.CompoundBarcode.Title"
+      ],
+      "category": "listing",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_007_en",
+      "language": "en",
+      "question": "List the first 20 title values from compound barcode.",
+      "intent_id": "intent_007",
+      "db_name": "test1",
+      "schema": "INV",
+      "table": "CompoundBarcode",
+      "reference_sql": "SELECT TOP 20 [CompoundBarcodeID], [Title] FROM [INV].[CompoundBarcode] ORDER BY [Title]",
+      "gold_tables": [
+        "INV.CompoundBarcode"
+      ],
+      "gold_columns": [
+        "INV.CompoundBarcode.CompoundBarcodeID",
+        "INV.CompoundBarcode.Title"
+      ],
+      "category": "listing",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_008_fa",
+      "language": "fa",
+      "question": "چند رکورد از رکوردهای Item Transactions Fact مقدار تاریخ ندارند؟",
+      "intent_id": "intent_008",
+      "db_name": "test1",
+      "schema": "MRP",
+      "table": "ItemTransactionsFact",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [MRP].[ItemTransactionsFact] WHERE [Date] IS NULL",
+      "gold_tables": [
+        "MRP.ItemTransactionsFact"
+      ],
+      "gold_columns": [
+        "MRP.ItemTransactionsFact.Date"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_008_en",
+      "language": "en",
+      "question": "How many item transactions fact records have no date value?",
+      "intent_id": "intent_008",
+      "db_name": "test1",
+      "schema": "MRP",
+      "table": "ItemTransactionsFact",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [MRP].[ItemTransactionsFact] WHERE [Date] IS NULL",
+      "gold_tables": [
+        "MRP.ItemTransactionsFact"
+      ],
+      "gold_columns": [
+        "MRP.ItemTransactionsFact.Date"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_009_fa",
+      "language": "fa",
+      "question": "چند رکورد از رکوردهای Custom Contact مقدار تاریخ ایجاد ندارند؟",
+      "intent_id": "intent_009",
+      "db_name": "test1",
+      "schema": "MSG",
+      "table": "CustomContact",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [MSG].[CustomContact] WHERE [CreationDate] IS NULL",
+      "gold_tables": [
+        "MSG.CustomContact"
+      ],
+      "gold_columns": [
+        "MSG.CustomContact.CreationDate"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_009_en",
+      "language": "en",
+      "question": "How many custom contact table records have no creation date value?",
+      "intent_id": "intent_009",
+      "db_name": "test1",
+      "schema": "MSG",
+      "table": "CustomContact",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [MSG].[CustomContact] WHERE [CreationDate] IS NULL",
+      "gold_tables": [
+        "MSG.CustomContact"
+      ],
+      "gold_columns": [
+        "MSG.CustomContact.CreationDate"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_010_fa",
+      "language": "fa",
+      "question": "چند رکورد از رکوردهای Branch مقدار کد ندارند؟",
+      "intent_id": "intent_010",
+      "db_name": "test1",
+      "schema": "PAY",
+      "table": "Branch",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [PAY].[Branch] WHERE [Code] IS NULL",
+      "gold_tables": [
+        "PAY.Branch"
+      ],
+      "gold_columns": [
+        "PAY.Branch.Code"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_010_en",
+      "language": "en",
+      "question": "How many stores information about branches records have no code value?",
+      "intent_id": "intent_010",
+      "db_name": "test1",
+      "schema": "PAY",
+      "table": "Branch",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [PAY].[Branch] WHERE [Code] IS NULL",
+      "gold_tables": [
+        "PAY.Branch"
+      ],
+      "gold_columns": [
+        "PAY.Branch.Code"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_011_fa",
+      "language": "fa",
+      "question": "تعداد کل رکوردهای Bill Of Loading چقدر است؟",
+      "intent_id": "intent_011",
+      "db_name": "test1",
+      "schema": "POM",
+      "table": "BillOfLoading",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [POM].[BillOfLoading]",
+      "gold_tables": [
+        "POM.BillOfLoading"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_011_en",
+      "language": "en",
+      "question": "How many stores information about bills of loading records are there?",
+      "intent_id": "intent_011",
+      "db_name": "test1",
+      "schema": "POM",
+      "table": "BillOfLoading",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [POM].[BillOfLoading]",
+      "gold_tables": [
+        "POM.BillOfLoading"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_012_fa",
+      "language": "fa",
+      "question": "چند رکورد از رکوردهای Cashier مقدار عنوان ندارند؟",
+      "intent_id": "intent_012",
+      "db_name": "test1",
+      "schema": "POS",
+      "table": "Cashier",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [POS].[Cashier] WHERE [Title] IS NULL",
+      "gold_tables": [
+        "POS.Cashier"
+      ],
+      "gold_columns": [
+        "POS.Cashier.Title"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_012_en",
+      "language": "en",
+      "question": "How many cashier details records have no title value?",
+      "intent_id": "intent_012",
+      "db_name": "test1",
+      "schema": "POS",
+      "table": "Cashier",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [POS].[Cashier] WHERE [Title] IS NULL",
+      "gold_tables": [
+        "POS.Cashier"
+      ],
+      "gold_columns": [
+        "POS.Cashier.Title"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_013_fa",
+      "language": "fa",
+      "question": "تعداد رکوردهای Account Type را به تفکیک نوع نمایش بده.",
+      "intent_id": "intent_013",
+      "db_name": "test1",
+      "schema": "RPA",
+      "table": "AccountType",
+      "reference_sql": "SELECT [Type], COUNT_BIG(*) AS [RecordCount] FROM [RPA].[AccountType] GROUP BY [Type] ORDER BY [RecordCount] DESC",
+      "gold_tables": [
+        "RPA.AccountType"
+      ],
+      "gold_columns": [
+        "RPA.AccountType.Type"
+      ],
+      "category": "grouping",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_013_en",
+      "language": "en",
+      "question": "Show the number of account type table, containing details about account types records grouped by type.",
+      "intent_id": "intent_013",
+      "db_name": "test1",
+      "schema": "RPA",
+      "table": "AccountType",
+      "reference_sql": "SELECT [Type], COUNT_BIG(*) AS [RecordCount] FROM [RPA].[AccountType] GROUP BY [Type] ORDER BY [RecordCount] DESC",
+      "gold_tables": [
+        "RPA.AccountType"
+      ],
+      "gold_columns": [
+        "RPA.AccountType.Type"
+      ],
+      "category": "grouping",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_014_fa",
+      "language": "fa",
+      "question": "۲۰ مورد آخر رکوردهای Scheduling را بر اساس تاریخ ایجاد نمایش بده.",
+      "intent_id": "intent_014",
+      "db_name": "test1",
+      "schema": "SCD",
+      "table": "Scheduling",
+      "reference_sql": "SELECT TOP 20 [SchedulingId], [CreationDate] FROM [SCD].[Scheduling] ORDER BY [CreationDate] DESC",
+      "gold_tables": [
+        "SCD.Scheduling"
+      ],
+      "gold_columns": [
+        "SCD.Scheduling.SchedulingId",
+        "SCD.Scheduling.CreationDate"
+      ],
+      "category": "temporal_ordering",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_014_en",
+      "language": "en",
+      "question": "Show the latest 20 scheduling records ordered by creation date.",
+      "intent_id": "intent_014",
+      "db_name": "test1",
+      "schema": "SCD",
+      "table": "Scheduling",
+      "reference_sql": "SELECT TOP 20 [SchedulingId], [CreationDate] FROM [SCD].[Scheduling] ORDER BY [CreationDate] DESC",
+      "gold_tables": [
+        "SCD.Scheduling"
+      ],
+      "gold_columns": [
+        "SCD.Scheduling.SchedulingId",
+        "SCD.Scheduling.CreationDate"
+      ],
+      "category": "temporal_ordering",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_015_fa",
+      "language": "fa",
+      "question": "۲۰ عنوان اول از رکوردهای Addition Factor را فهرست کن.",
+      "intent_id": "intent_015",
+      "db_name": "test1",
+      "schema": "SLS",
+      "table": "AdditionFactor",
+      "reference_sql": "SELECT TOP 20 [AdditionFactorID], [Title] FROM [SLS].[AdditionFactor] ORDER BY [Title]",
+      "gold_tables": [
+        "SLS.AdditionFactor"
+      ],
+      "gold_columns": [
+        "SLS.AdditionFactor.AdditionFactorID",
+        "SLS.AdditionFactor.Title"
+      ],
+      "category": "listing",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_015_en",
+      "language": "en",
+      "question": "List the first 20 title values from addition factor.",
+      "intent_id": "intent_015",
+      "db_name": "test1",
+      "schema": "SLS",
+      "table": "AdditionFactor",
+      "reference_sql": "SELECT TOP 20 [AdditionFactorID], [Title] FROM [SLS].[AdditionFactor] ORDER BY [Title]",
+      "gold_tables": [
+        "SLS.AdditionFactor"
+      ],
+      "gold_columns": [
+        "SLS.AdditionFactor.AdditionFactorID",
+        "SLS.AdditionFactor.Title"
+      ],
+      "category": "listing",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_016_fa",
+      "language": "fa",
+      "question": "تعداد کل رکوردهای Abstract Product Operation چقدر است؟",
+      "intent_id": "intent_016",
+      "db_name": "test1",
+      "schema": "WKO",
+      "table": "AbstractProductOperation",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [WKO].[AbstractProductOperation]",
+      "gold_tables": [
+        "WKO.AbstractProductOperation"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_016_en",
+      "language": "en",
+      "question": "How many abstract product operations records are there?",
+      "intent_id": "intent_016",
+      "db_name": "test1",
+      "schema": "WKO",
+      "table": "AbstractProductOperation",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [WKO].[AbstractProductOperation]",
+      "gold_tables": [
+        "WKO.AbstractProductOperation"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_017_fa",
+      "language": "fa",
+      "question": "تعداد کل اقلام اسناد حسابداری چقدر است؟",
+      "intent_id": "intent_017",
+      "db_name": "test1",
+      "schema": "ACC",
+      "table": "AccVchItm",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [ACC].[AccVchItm]",
+      "gold_tables": [
+        "ACC.AccVchItm"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_017_en",
+      "language": "en",
+      "question": "How many accounting voucher item records are there?",
+      "intent_id": "intent_017",
+      "db_name": "test1",
+      "schema": "ACC",
+      "table": "AccVchItm",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [ACC].[AccVchItm]",
+      "gold_tables": [
+        "ACC.AccVchItm"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_018_fa",
+      "language": "fa",
+      "question": "مجموع Total Cost در اقلام رسید تحصیل دارایی چقدر است؟",
+      "intent_id": "intent_018",
+      "db_name": "test1",
+      "schema": "AST",
+      "table": "AcquisitionReceiptItem",
+      "reference_sql": "SELECT SUM([TotalCost]) AS [TotalValue] FROM [AST].[AcquisitionReceiptItem]",
+      "gold_tables": [
+        "AST.AcquisitionReceiptItem"
+      ],
+      "gold_columns": [
+        "AST.AcquisitionReceiptItem.TotalCost"
+      ],
+      "category": "aggregation",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_018_en",
+      "language": "en",
+      "question": "What is the total total cost across acquisition receipt item?",
+      "intent_id": "intent_018",
+      "db_name": "test1",
+      "schema": "AST",
+      "table": "AcquisitionReceiptItem",
+      "reference_sql": "SELECT SUM([TotalCost]) AS [TotalValue] FROM [AST].[AcquisitionReceiptItem]",
+      "gold_tables": [
+        "AST.AcquisitionReceiptItem"
+      ],
+      "gold_columns": [
+        "AST.AcquisitionReceiptItem.TotalCost"
+      ],
+      "category": "aggregation",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_019_fa",
+      "language": "fa",
+      "question": "تعداد کل ضرایب چقدر است؟",
+      "intent_id": "intent_019",
+      "db_name": "test1",
+      "schema": "CNT",
+      "table": "Coefficient",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [CNT].[Coefficient]",
+      "gold_tables": [
+        "CNT.Coefficient"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_019_en",
+      "language": "en",
+      "question": "How many coefficient records are there?",
+      "intent_id": "intent_019",
+      "db_name": "test1",
+      "schema": "CNT",
+      "table": "Coefficient",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [CNT].[Coefficient]",
+      "gold_tables": [
+        "CNT.Coefficient"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_020_fa",
+      "language": "fa",
+      "question": "چند رکورد از رکوردهای Area And Path مقدار عنوان ندارند؟",
+      "intent_id": "intent_020",
+      "db_name": "test1",
+      "schema": "DST",
+      "table": "AreaAndPath",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [DST].[AreaAndPath] WHERE [Title] IS NULL",
+      "gold_tables": [
+        "DST.AreaAndPath"
+      ],
+      "gold_columns": [
+        "DST.AreaAndPath.Title"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_020_en",
+      "language": "en",
+      "question": "How many area and path information records have no title value?",
+      "intent_id": "intent_020",
+      "db_name": "test1",
+      "schema": "DST",
+      "table": "AreaAndPath",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [DST].[AreaAndPath] WHERE [Title] IS NULL",
+      "gold_tables": [
+        "DST.AreaAndPath"
+      ],
+      "gold_columns": [
+        "DST.AreaAndPath.Title"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_021_fa",
+      "language": "fa",
+      "question": "تعداد کل رکوردهای Extra Data چقدر است؟",
+      "intent_id": "intent_021",
+      "db_name": "test1",
+      "schema": "FMK",
+      "table": "ExtraData",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [FMK].[ExtraData]",
+      "gold_tables": [
+        "FMK.ExtraData"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_021_en",
+      "language": "en",
+      "question": "How many extra data records are there?",
+      "intent_id": "intent_021",
+      "db_name": "test1",
+      "schema": "FMK",
+      "table": "ExtraData",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [FMK].[ExtraData]",
+      "gold_tables": [
+        "FMK.ExtraData"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_022_fa",
+      "language": "fa",
+      "question": "مجموع مبلغ در اقلام صورتحساب چقدر است؟",
+      "intent_id": "intent_022",
+      "db_name": "test1",
+      "schema": "GNR",
+      "table": "BillItem",
+      "reference_sql": "SELECT SUM([Amount]) AS [TotalValue] FROM [GNR].[BillItem]",
+      "gold_tables": [
+        "GNR.BillItem"
+      ],
+      "gold_columns": [
+        "GNR.BillItem.Amount"
+      ],
+      "category": "aggregation",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_022_en",
+      "language": "en",
+      "question": "What is the total amount across stores bill items?",
+      "intent_id": "intent_022",
+      "db_name": "test1",
+      "schema": "GNR",
+      "table": "BillItem",
+      "reference_sql": "SELECT SUM([Amount]) AS [TotalValue] FROM [GNR].[BillItem]",
+      "gold_tables": [
+        "GNR.BillItem"
+      ],
+      "gold_columns": [
+        "GNR.BillItem.Amount"
+      ],
+      "category": "aggregation",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_023_fa",
+      "language": "fa",
+      "question": "۲۰ عنوان اول از رکوردهای Group را فهرست کن.",
+      "intent_id": "intent_023",
+      "db_name": "test1",
+      "schema": "INV",
+      "table": "Group",
+      "reference_sql": "SELECT TOP 20 [GroupID], [Title] FROM [INV].[Group] ORDER BY [Title]",
+      "gold_tables": [
+        "INV.Group"
+      ],
+      "gold_columns": [
+        "INV.Group.GroupID",
+        "INV.Group.Title"
+      ],
+      "category": "listing",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_023_en",
+      "language": "en",
+      "question": "List the first 20 title values from group.",
+      "intent_id": "intent_023",
+      "db_name": "test1",
+      "schema": "INV",
+      "table": "Group",
+      "reference_sql": "SELECT TOP 20 [GroupID], [Title] FROM [INV].[Group] ORDER BY [Title]",
+      "gold_tables": [
+        "INV.Group"
+      ],
+      "gold_columns": [
+        "INV.Group.GroupID",
+        "INV.Group.Title"
+      ],
+      "category": "listing",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_024_fa",
+      "language": "fa",
+      "question": "چند رکورد از رکوردهای Management Report Filter مقدار Place Holder ندارند؟",
+      "intent_id": "intent_024",
+      "db_name": "test1",
+      "schema": "MRP",
+      "table": "ManagementReportFilter",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [MRP].[ManagementReportFilter] WHERE [PlaceHolder] IS NULL",
+      "gold_tables": [
+        "MRP.ManagementReportFilter"
+      ],
+      "gold_columns": [
+        "MRP.ManagementReportFilter.PlaceHolder"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_024_en",
+      "language": "en",
+      "question": "How many management report filter records have no place holder value?",
+      "intent_id": "intent_024",
+      "db_name": "test1",
+      "schema": "MRP",
+      "table": "ManagementReportFilter",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [MRP].[ManagementReportFilter] WHERE [PlaceHolder] IS NULL",
+      "gold_tables": [
+        "MRP.ManagementReportFilter"
+      ],
+      "gold_columns": [
+        "MRP.ManagementReportFilter.PlaceHolder"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_025_fa",
+      "language": "fa",
+      "question": "تعداد کل رکوردهای Inbox چقدر است؟",
+      "intent_id": "intent_025",
+      "db_name": "test1",
+      "schema": "MSG",
+      "table": "Inbox",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [MSG].[Inbox]",
+      "gold_tables": [
+        "MSG.Inbox"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_025_en",
+      "language": "en",
+      "question": "How many inbox table records are there?",
+      "intent_id": "intent_025",
+      "db_name": "test1",
+      "schema": "MSG",
+      "table": "Inbox",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [MSG].[Inbox]",
+      "gold_tables": [
+        "MSG.Inbox"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_026_fa",
+      "language": "fa",
+      "question": "۲۰ مورد آخر رکوردهای Calculation را بر اساس تاریخ نمایش بده.",
+      "intent_id": "intent_026",
+      "db_name": "test1",
+      "schema": "PAY",
+      "table": "Calculation",
+      "reference_sql": "SELECT TOP 20 [CalculationId], [Date] FROM [PAY].[Calculation] ORDER BY [Date] DESC",
+      "gold_tables": [
+        "PAY.Calculation"
+      ],
+      "gold_columns": [
+        "PAY.Calculation.CalculationId",
+        "PAY.Calculation.Date"
+      ],
+      "category": "temporal_ordering",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_026_en",
+      "language": "en",
+      "question": "Show the latest 20 stores information about calculations records ordered by date.",
+      "intent_id": "intent_026",
+      "db_name": "test1",
+      "schema": "PAY",
+      "table": "Calculation",
+      "reference_sql": "SELECT TOP 20 [CalculationId], [Date] FROM [PAY].[Calculation] ORDER BY [Date] DESC",
+      "gold_tables": [
+        "PAY.Calculation"
+      ],
+      "gold_columns": [
+        "PAY.Calculation.CalculationId",
+        "PAY.Calculation.Date"
+      ],
+      "category": "temporal_ordering",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_027_fa",
+      "language": "fa",
+      "question": "چند رکورد از رکوردهای Bill Of Loading Item مقدار Version ندارند؟",
+      "intent_id": "intent_027",
+      "db_name": "test1",
+      "schema": "POM",
+      "table": "BillOfLoadingItem",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [POM].[BillOfLoadingItem] WHERE [Version] IS NULL",
+      "gold_tables": [
+        "POM.BillOfLoadingItem"
+      ],
+      "gold_columns": [
+        "POM.BillOfLoadingItem.Version"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_027_en",
+      "language": "en",
+      "question": "How many stores information about bill of loading items records have no version value?",
+      "intent_id": "intent_027",
+      "db_name": "test1",
+      "schema": "POM",
+      "table": "BillOfLoadingItem",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [POM].[BillOfLoadingItem] WHERE [Version] IS NULL",
+      "gold_tables": [
+        "POM.BillOfLoadingItem"
+      ],
+      "gold_columns": [
+        "POM.BillOfLoadingItem.Version"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_028_fa",
+      "language": "fa",
+      "question": "تعداد فاکتورهای فروش را به تفکیک وضعیت نمایش بده.",
+      "intent_id": "intent_028",
+      "db_name": "test1",
+      "schema": "POS",
+      "table": "Invoice",
+      "reference_sql": "SELECT [State], COUNT_BIG(*) AS [RecordCount] FROM [POS].[Invoice] GROUP BY [State] ORDER BY [RecordCount] DESC",
+      "gold_tables": [
+        "POS.Invoice"
+      ],
+      "gold_columns": [
+        "POS.Invoice.State"
+      ],
+      "category": "grouping",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_028_en",
+      "language": "en",
+      "question": "Show the number of invoice details records grouped by state.",
+      "intent_id": "intent_028",
+      "db_name": "test1",
+      "schema": "POS",
+      "table": "Invoice",
+      "reference_sql": "SELECT [State], COUNT_BIG(*) AS [RecordCount] FROM [POS].[Invoice] GROUP BY [State] ORDER BY [RecordCount] DESC",
+      "gold_tables": [
+        "POS.Invoice"
+      ],
+      "gold_columns": [
+        "POS.Invoice.State"
+      ],
+      "category": "grouping",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_029_fa",
+      "language": "fa",
+      "question": "تعداد کل رکوردهای Bank چقدر است؟",
+      "intent_id": "intent_029",
+      "db_name": "test1",
+      "schema": "RPA",
+      "table": "Bank",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [RPA].[Bank]",
+      "gold_tables": [
+        "RPA.Bank"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_029_en",
+      "language": "en",
+      "question": "How many bank table, containing details about banks records are there?",
+      "intent_id": "intent_029",
+      "db_name": "test1",
+      "schema": "RPA",
+      "table": "Bank",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [RPA].[Bank]",
+      "gold_tables": [
+        "RPA.Bank"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_030_fa",
+      "language": "fa",
+      "question": "چند رکورد از رکوردهای Scheduling Item مقدار Date Time ندارند؟",
+      "intent_id": "intent_030",
+      "db_name": "test1",
+      "schema": "SCD",
+      "table": "SchedulingItem",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [SCD].[SchedulingItem] WHERE [DateTime] IS NULL",
+      "gold_tables": [
+        "SCD.SchedulingItem"
+      ],
+      "gold_columns": [
+        "SCD.SchedulingItem.DateTime"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_030_en",
+      "language": "en",
+      "question": "How many scheduling item records have no date time value?",
+      "intent_id": "intent_030",
+      "db_name": "test1",
+      "schema": "SCD",
+      "table": "SchedulingItem",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [SCD].[SchedulingItem] WHERE [DateTime] IS NULL",
+      "gold_tables": [
+        "SCD.SchedulingItem"
+      ],
+      "gold_columns": [
+        "SCD.SchedulingItem.DateTime"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_031_fa",
+      "language": "fa",
+      "question": "تعداد کل حساب‌ها چقدر است؟",
+      "intent_id": "intent_031",
+      "db_name": "test1",
+      "schema": "ACC",
+      "table": "Account",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [ACC].[Account]",
+      "gold_tables": [
+        "ACC.Account"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_031_en",
+      "language": "en",
+      "question": "How many account records are there?",
+      "intent_id": "intent_031",
+      "db_name": "test1",
+      "schema": "ACC",
+      "table": "Account",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [ACC].[Account]",
+      "gold_tables": [
+        "ACC.Account"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_032_fa",
+      "language": "fa",
+      "question": "۲۰ مورد آخر دارایی‌ها را بر اساس تاریخ ایجاد نمایش بده.",
+      "intent_id": "intent_032",
+      "db_name": "test1",
+      "schema": "AST",
+      "table": "Asset",
+      "reference_sql": "SELECT TOP 20 [AssetId], [CreationDate] FROM [AST].[Asset] ORDER BY [CreationDate] DESC",
+      "gold_tables": [
+        "AST.Asset"
+      ],
+      "gold_columns": [
+        "AST.Asset.AssetId",
+        "AST.Asset.CreationDate"
+      ],
+      "category": "temporal_ordering",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_032_en",
+      "language": "en",
+      "question": "Show the latest 20 asset records ordered by creation date.",
+      "intent_id": "intent_032",
+      "db_name": "test1",
+      "schema": "AST",
+      "table": "Asset",
+      "reference_sql": "SELECT TOP 20 [AssetId], [CreationDate] FROM [AST].[Asset] ORDER BY [CreationDate] DESC",
+      "gold_tables": [
+        "AST.Asset"
+      ],
+      "gold_columns": [
+        "AST.Asset.AssetId",
+        "AST.Asset.CreationDate"
+      ],
+      "category": "temporal_ordering",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_033_fa",
+      "language": "fa",
+      "question": "تعداد قراردادها را به تفکیک نوع نمایش بده.",
+      "intent_id": "intent_033",
+      "db_name": "test1",
+      "schema": "CNT",
+      "table": "Contract",
+      "reference_sql": "SELECT [Type], COUNT_BIG(*) AS [RecordCount] FROM [CNT].[Contract] GROUP BY [Type] ORDER BY [RecordCount] DESC",
+      "gold_tables": [
+        "CNT.Contract"
+      ],
+      "gold_columns": [
+        "CNT.Contract.Type"
+      ],
+      "category": "grouping",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_033_en",
+      "language": "en",
+      "question": "Show the number of contract records grouped by type.",
+      "intent_id": "intent_033",
+      "db_name": "test1",
+      "schema": "CNT",
+      "table": "Contract",
+      "reference_sql": "SELECT [Type], COUNT_BIG(*) AS [RecordCount] FROM [CNT].[Contract] GROUP BY [Type] ORDER BY [RecordCount] DESC",
+      "gold_tables": [
+        "CNT.Contract"
+      ],
+      "gold_columns": [
+        "CNT.Contract.Type"
+      ],
+      "category": "grouping",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_034_fa",
+      "language": "fa",
+      "question": "۲۰ شماره اول از توزیع‌های سرد را فهرست کن.",
+      "intent_id": "intent_034",
+      "db_name": "test1",
+      "schema": "DST",
+      "table": "ColdDistribution",
+      "reference_sql": "SELECT TOP 20 [ColdDistributionId], [Number] FROM [DST].[ColdDistribution] ORDER BY [Number]",
+      "gold_tables": [
+        "DST.ColdDistribution"
+      ],
+      "gold_columns": [
+        "DST.ColdDistribution.ColdDistributionId",
+        "DST.ColdDistribution.Number"
+      ],
+      "category": "listing",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_034_en",
+      "language": "en",
+      "question": "List the first 20 number values from cold distribution information.",
+      "intent_id": "intent_034",
+      "db_name": "test1",
+      "schema": "DST",
+      "table": "ColdDistribution",
+      "reference_sql": "SELECT TOP 20 [ColdDistributionId], [Number] FROM [DST].[ColdDistribution] ORDER BY [Number]",
+      "gold_tables": [
+        "DST.ColdDistribution"
+      ],
+      "gold_columns": [
+        "DST.ColdDistribution.ColdDistributionId",
+        "DST.ColdDistribution.Number"
+      ],
+      "category": "listing",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_035_fa",
+      "language": "fa",
+      "question": "چند رکورد از سال‌های مالی مقدار عنوان ندارند؟",
+      "intent_id": "intent_035",
+      "db_name": "test1",
+      "schema": "FMK",
+      "table": "FiscalYear",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [FMK].[FiscalYear] WHERE [Title] IS NULL",
+      "gold_tables": [
+        "FMK.FiscalYear"
+      ],
+      "gold_columns": [
+        "FMK.FiscalYear.Title"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_035_en",
+      "language": "en",
+      "question": "How many fiscal year records have no title value?",
+      "intent_id": "intent_035",
+      "db_name": "test1",
+      "schema": "FMK",
+      "table": "FiscalYear",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [FMK].[FiscalYear] WHERE [Title] IS NULL",
+      "gold_tables": [
+        "FMK.FiscalYear"
+      ],
+      "gold_columns": [
+        "FMK.FiscalYear.Title"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_036_fa",
+      "language": "fa",
+      "question": "چند رکورد از رکوردهای Calculation Element مقدار عنوان ندارند؟",
+      "intent_id": "intent_036",
+      "db_name": "test1",
+      "schema": "GNR",
+      "table": "CalculationElement",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [GNR].[CalculationElement] WHERE [Title] IS NULL",
+      "gold_tables": [
+        "GNR.CalculationElement"
+      ],
+      "gold_columns": [
+        "GNR.CalculationElement.Title"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_036_en",
+      "language": "en",
+      "question": "How many stores calculation elements records have no title value?",
+      "intent_id": "intent_036",
+      "db_name": "test1",
+      "schema": "GNR",
+      "table": "CalculationElement",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [GNR].[CalculationElement] WHERE [Title] IS NULL",
+      "gold_tables": [
+        "GNR.CalculationElement"
+      ],
+      "gold_columns": [
+        "GNR.CalculationElement.Title"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_037_fa",
+      "language": "fa",
+      "question": "۲۰ مورد آخر رکوردهای Inventory Balancing را بر اساس تاریخ نمایش بده.",
+      "intent_id": "intent_037",
+      "db_name": "test1",
+      "schema": "INV",
+      "table": "InventoryBalancing",
+      "reference_sql": "SELECT TOP 20 [InventoryBalancingId], [Date] FROM [INV].[InventoryBalancing] ORDER BY [Date] DESC",
+      "gold_tables": [
+        "INV.InventoryBalancing"
+      ],
+      "gold_columns": [
+        "INV.InventoryBalancing.InventoryBalancingId",
+        "INV.InventoryBalancing.Date"
+      ],
+      "category": "temporal_ordering",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_037_en",
+      "language": "en",
+      "question": "Show the latest 20 inventory balancing records ordered by date.",
+      "intent_id": "intent_037",
+      "db_name": "test1",
+      "schema": "INV",
+      "table": "InventoryBalancing",
+      "reference_sql": "SELECT TOP 20 [InventoryBalancingId], [Date] FROM [INV].[InventoryBalancing] ORDER BY [Date] DESC",
+      "gold_tables": [
+        "INV.InventoryBalancing"
+      ],
+      "gold_columns": [
+        "INV.InventoryBalancing.InventoryBalancingId",
+        "INV.InventoryBalancing.Date"
+      ],
+      "category": "temporal_ordering",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_038_fa",
+      "language": "fa",
+      "question": "چند رکورد از رکوردهای Management Report Filter Value مقدار Datetime Value ندارند؟",
+      "intent_id": "intent_038",
+      "db_name": "test1",
+      "schema": "MRP",
+      "table": "ManagementReportFilterValue",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [MRP].[ManagementReportFilterValue] WHERE [DatetimeValue] IS NULL",
+      "gold_tables": [
+        "MRP.ManagementReportFilterValue"
+      ],
+      "gold_columns": [
+        "MRP.ManagementReportFilterValue.DatetimeValue"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_038_en",
+      "language": "en",
+      "question": "How many management report filter values records have no datetime value value?",
+      "intent_id": "intent_038",
+      "db_name": "test1",
+      "schema": "MRP",
+      "table": "ManagementReportFilterValue",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [MRP].[ManagementReportFilterValue] WHERE [DatetimeValue] IS NULL",
+      "gold_tables": [
+        "MRP.ManagementReportFilterValue"
+      ],
+      "gold_columns": [
+        "MRP.ManagementReportFilterValue.DatetimeValue"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_039_fa",
+      "language": "fa",
+      "question": "چند رکورد از رکوردهای Message مقدار تاریخ ندارند؟",
+      "intent_id": "intent_039",
+      "db_name": "test1",
+      "schema": "MSG",
+      "table": "Message",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [MSG].[Message] WHERE [Date] IS NULL",
+      "gold_tables": [
+        "MSG.Message"
+      ],
+      "gold_columns": [
+        "MSG.Message.Date"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_039_en",
+      "language": "en",
+      "question": "How many message table records have no date value?",
+      "intent_id": "intent_039",
+      "db_name": "test1",
+      "schema": "MSG",
+      "table": "Message",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [MSG].[Message] WHERE [Date] IS NULL",
+      "gold_tables": [
+        "MSG.Message"
+      ],
+      "gold_columns": [
+        "MSG.Message.Date"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_040_fa",
+      "language": "fa",
+      "question": "چند رکورد از قراردادها مقدار شماره ندارند؟",
+      "intent_id": "intent_040",
+      "db_name": "test1",
+      "schema": "PAY",
+      "table": "Contract",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [PAY].[Contract] WHERE [Number] IS NULL",
+      "gold_tables": [
+        "PAY.Contract"
+      ],
+      "gold_columns": [
+        "PAY.Contract.Number"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_040_en",
+      "language": "en",
+      "question": "How many stores information about contracts records have no number value?",
+      "intent_id": "intent_040",
+      "db_name": "test1",
+      "schema": "PAY",
+      "table": "Contract",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [PAY].[Contract] WHERE [Number] IS NULL",
+      "gold_tables": [
+        "PAY.Contract"
+      ],
+      "gold_columns": [
+        "PAY.Contract.Number"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_041_fa",
+      "language": "fa",
+      "question": "تعداد کل رکوردهای Commercial Order چقدر است؟",
+      "intent_id": "intent_041",
+      "db_name": "test1",
+      "schema": "POM",
+      "table": "CommercialOrder",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [POM].[CommercialOrder]",
+      "gold_tables": [
+        "POM.CommercialOrder"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_041_en",
+      "language": "en",
+      "question": "How many stores information about commercial orders records are there?",
+      "intent_id": "intent_041",
+      "db_name": "test1",
+      "schema": "POM",
+      "table": "CommercialOrder",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [POM].[CommercialOrder]",
+      "gold_tables": [
+        "POM.CommercialOrder"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_042_fa",
+      "language": "fa",
+      "question": "چند رکورد از اقلام فاکتور فروش مقدار مبلغ خالص ندارند؟",
+      "intent_id": "intent_042",
+      "db_name": "test1",
+      "schema": "POS",
+      "table": "InvoiceItem",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [POS].[InvoiceItem] WHERE [NetPrice] IS NULL",
+      "gold_tables": [
+        "POS.InvoiceItem"
+      ],
+      "gold_columns": [
+        "POS.InvoiceItem.NetPrice"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_042_en",
+      "language": "en",
+      "question": "How many invoice items table, containing details about each item in an invoice records have no net price value?",
+      "intent_id": "intent_042",
+      "db_name": "test1",
+      "schema": "POS",
+      "table": "InvoiceItem",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [POS].[InvoiceItem] WHERE [NetPrice] IS NULL",
+      "gold_tables": [
+        "POS.InvoiceItem"
+      ],
+      "gold_columns": [
+        "POS.InvoiceItem.NetPrice"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_043_fa",
+      "language": "fa",
+      "question": "مجموع نرخ در رکوردهای Bank Account چقدر است؟",
+      "intent_id": "intent_043",
+      "db_name": "test1",
+      "schema": "RPA",
+      "table": "BankAccount",
+      "reference_sql": "SELECT SUM([Rate]) AS [TotalValue] FROM [RPA].[BankAccount]",
+      "gold_tables": [
+        "RPA.BankAccount"
+      ],
+      "gold_columns": [
+        "RPA.BankAccount.Rate"
+      ],
+      "category": "aggregation",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_043_en",
+      "language": "en",
+      "question": "What is the total rate across bank account table, containing details about bank accounts?",
+      "intent_id": "intent_043",
+      "db_name": "test1",
+      "schema": "RPA",
+      "table": "BankAccount",
+      "reference_sql": "SELECT SUM([Rate]) AS [TotalValue] FROM [RPA].[BankAccount]",
+      "gold_tables": [
+        "RPA.BankAccount"
+      ],
+      "gold_columns": [
+        "RPA.BankAccount.Rate"
+      ],
+      "category": "aggregation",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_044_fa",
+      "language": "fa",
+      "question": "مجموع مبلغ در رکوردهای Addition Factor Item چقدر است؟",
+      "intent_id": "intent_044",
+      "db_name": "test1",
+      "schema": "SLS",
+      "table": "AdditionFactorItem",
+      "reference_sql": "SELECT SUM([Amount]) AS [TotalValue] FROM [SLS].[AdditionFactorItem]",
+      "gold_tables": [
+        "SLS.AdditionFactorItem"
+      ],
+      "gold_columns": [
+        "SLS.AdditionFactorItem.Amount"
+      ],
+      "category": "aggregation",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_044_en",
+      "language": "en",
+      "question": "What is the total amount across addition factor item?",
+      "intent_id": "intent_044",
+      "db_name": "test1",
+      "schema": "SLS",
+      "table": "AdditionFactorItem",
+      "reference_sql": "SELECT SUM([Amount]) AS [TotalValue] FROM [SLS].[AdditionFactorItem]",
+      "gold_tables": [
+        "SLS.AdditionFactorItem"
+      ],
+      "gold_columns": [
+        "SLS.AdditionFactorItem.Amount"
+      ],
+      "category": "aggregation",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_045_fa",
+      "language": "fa",
+      "question": "تعداد کل رکوردهای Abstract Product Operation Item چقدر است؟",
+      "intent_id": "intent_045",
+      "db_name": "test1",
+      "schema": "WKO",
+      "table": "AbstractProductOperationItem",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [WKO].[AbstractProductOperationItem]",
+      "gold_tables": [
+        "WKO.AbstractProductOperationItem"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_045_en",
+      "language": "en",
+      "question": "How many items of abstract product operations records are there?",
+      "intent_id": "intent_045",
+      "db_name": "test1",
+      "schema": "WKO",
+      "table": "AbstractProductOperationItem",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [WKO].[AbstractProductOperationItem]",
+      "gold_tables": [
+        "WKO.AbstractProductOperationItem"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_046_fa",
+      "language": "fa",
+      "question": "تعداد کل رکوردهای Account Topic چقدر است؟",
+      "intent_id": "intent_046",
+      "db_name": "test1",
+      "schema": "ACC",
+      "table": "AccountTopic",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [ACC].[AccountTopic]",
+      "gold_tables": [
+        "ACC.AccountTopic"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_046_en",
+      "language": "en",
+      "question": "How many account topic records are there?",
+      "intent_id": "intent_046",
+      "db_name": "test1",
+      "schema": "ACC",
+      "table": "AccountTopic",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [ACC].[AccountTopic]",
+      "gold_tables": [
+        "ACC.AccountTopic"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_047_fa",
+      "language": "fa",
+      "question": "۲۰ عنوان اول از طبقات دارایی را فهرست کن.",
+      "intent_id": "intent_047",
+      "db_name": "test1",
+      "schema": "AST",
+      "table": "AssetClass",
+      "reference_sql": "SELECT TOP 20 [AssetClassID], [Title] FROM [AST].[AssetClass] ORDER BY [Title]",
+      "gold_tables": [
+        "AST.AssetClass"
+      ],
+      "gold_columns": [
+        "AST.AssetClass.AssetClassID",
+        "AST.AssetClass.Title"
+      ],
+      "category": "listing",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_047_en",
+      "language": "en",
+      "question": "List the first 20 title values from asset class.",
+      "intent_id": "intent_047",
+      "db_name": "test1",
+      "schema": "AST",
+      "table": "AssetClass",
+      "reference_sql": "SELECT TOP 20 [AssetClassID], [Title] FROM [AST].[AssetClass] ORDER BY [Title]",
+      "gold_tables": [
+        "AST.AssetClass"
+      ],
+      "gold_columns": [
+        "AST.AssetClass.AssetClassID",
+        "AST.AssetClass.Title"
+      ],
+      "category": "listing",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_048_fa",
+      "language": "fa",
+      "question": "چند رکورد از رکوردهای Contract Agreement Item مقدار Tax Payer Contract Agreement Item Mapper Ref ندارند؟",
+      "intent_id": "intent_048",
+      "db_name": "test1",
+      "schema": "CNT",
+      "table": "ContractAgreementItem",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [CNT].[ContractAgreementItem] WHERE [TaxPayerContractAgreementItemMapperRef] IS NULL",
+      "gold_tables": [
+        "CNT.ContractAgreementItem"
+      ],
+      "gold_columns": [
+        "CNT.ContractAgreementItem.TaxPayerContractAgreementItemMapperRef"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_048_en",
+      "language": "en",
+      "question": "How many contract agreement items with operational details and pricing records have no tax payer contract agreement item mapper ref value?",
+      "intent_id": "intent_048",
+      "db_name": "test1",
+      "schema": "CNT",
+      "table": "ContractAgreementItem",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [CNT].[ContractAgreementItem] WHERE [TaxPayerContractAgreementItemMapperRef] IS NULL",
+      "gold_tables": [
+        "CNT.ContractAgreementItem"
+      ],
+      "gold_columns": [
+        "CNT.ContractAgreementItem.TaxPayerContractAgreementItemMapperRef"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_049_fa",
+      "language": "fa",
+      "question": "تعداد کل رکوردهای Cold Distribution Invoice چقدر است؟",
+      "intent_id": "intent_049",
+      "db_name": "test1",
+      "schema": "DST",
+      "table": "ColdDistributionInvoice",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [DST].[ColdDistributionInvoice]",
+      "gold_tables": [
+        "DST.ColdDistributionInvoice"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_049_en",
+      "language": "en",
+      "question": "How many cold distribution invoice information records are there?",
+      "intent_id": "intent_049",
+      "db_name": "test1",
+      "schema": "DST",
+      "table": "ColdDistributionInvoice",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [DST].[ColdDistributionInvoice]",
+      "gold_tables": [
+        "DST.ColdDistributionInvoice"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_050_fa",
+      "language": "fa",
+      "question": "چند رکورد از رکوردهای IDGeneration مقدار Last Id ندارند؟",
+      "intent_id": "intent_050",
+      "db_name": "test1",
+      "schema": "FMK",
+      "table": "IDGeneration",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [FMK].[IDGeneration] WHERE [LastId] IS NULL",
+      "gold_tables": [
+        "FMK.IDGeneration"
+      ],
+      "gold_columns": [
+        "FMK.IDGeneration.LastId"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_050_en",
+      "language": "en",
+      "question": "How many id generation records have no last id value?",
+      "intent_id": "intent_050",
+      "db_name": "test1",
+      "schema": "FMK",
+      "table": "IDGeneration",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [FMK].[IDGeneration] WHERE [LastId] IS NULL",
+      "gold_tables": [
+        "FMK.IDGeneration"
+      ],
+      "gold_columns": [
+        "FMK.IDGeneration.LastId"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_051_fa",
+      "language": "fa",
+      "question": "۲۰ کد اول از رکوردهای Calculation Formula را فهرست کن.",
+      "intent_id": "intent_051",
+      "db_name": "test1",
+      "schema": "GNR",
+      "table": "CalculationFormula",
+      "reference_sql": "SELECT TOP 20 [CalculationFormulaID], [Code] FROM [GNR].[CalculationFormula] ORDER BY [Code]",
+      "gold_tables": [
+        "GNR.CalculationFormula"
+      ],
+      "gold_columns": [
+        "GNR.CalculationFormula.CalculationFormulaID",
+        "GNR.CalculationFormula.Code"
+      ],
+      "category": "listing",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_051_en",
+      "language": "en",
+      "question": "List the first 20 code values from stores calculation formulas.",
+      "intent_id": "intent_051",
+      "db_name": "test1",
+      "schema": "GNR",
+      "table": "CalculationFormula",
+      "reference_sql": "SELECT TOP 20 [CalculationFormulaID], [Code] FROM [GNR].[CalculationFormula] ORDER BY [Code]",
+      "gold_tables": [
+        "GNR.CalculationFormula"
+      ],
+      "gold_columns": [
+        "GNR.CalculationFormula.CalculationFormulaID",
+        "GNR.CalculationFormula.Code"
+      ],
+      "category": "listing",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_052_fa",
+      "language": "fa",
+      "question": "تعداد کل رکوردهای Inventory Balancing Item چقدر است؟",
+      "intent_id": "intent_052",
+      "db_name": "test1",
+      "schema": "INV",
+      "table": "InventoryBalancingItem",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [INV].[InventoryBalancingItem]",
+      "gold_tables": [
+        "INV.InventoryBalancingItem"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_052_en",
+      "language": "en",
+      "question": "How many inventory balancing item details records are there?",
+      "intent_id": "intent_052",
+      "db_name": "test1",
+      "schema": "INV",
+      "table": "InventoryBalancingItem",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [INV].[InventoryBalancingItem]",
+      "gold_tables": [
+        "INV.InventoryBalancingItem"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_053_fa",
+      "language": "fa",
+      "question": "تعداد کل رکوردهای Management Report Grouping چقدر است؟",
+      "intent_id": "intent_053",
+      "db_name": "test1",
+      "schema": "MRP",
+      "table": "ManagementReportGrouping",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [MRP].[ManagementReportGrouping]",
+      "gold_tables": [
+        "MRP.ManagementReportGrouping"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_053_en",
+      "language": "en",
+      "question": "How many management report groupings records are there?",
+      "intent_id": "intent_053",
+      "db_name": "test1",
+      "schema": "MRP",
+      "table": "ManagementReportGrouping",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [MRP].[ManagementReportGrouping]",
+      "gold_tables": [
+        "MRP.ManagementReportGrouping"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_054_fa",
+      "language": "fa",
+      "question": "چند رکورد از رکوردهای Message Contact مقدار Contact Type ندارند؟",
+      "intent_id": "intent_054",
+      "db_name": "test1",
+      "schema": "MSG",
+      "table": "MessageContact",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [MSG].[MessageContact] WHERE [ContactType] IS NULL",
+      "gold_tables": [
+        "MSG.MessageContact"
+      ],
+      "gold_columns": [
+        "MSG.MessageContact.ContactType"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_054_en",
+      "language": "en",
+      "question": "How many message contact table records have no contact type value?",
+      "intent_id": "intent_054",
+      "db_name": "test1",
+      "schema": "MSG",
+      "table": "MessageContact",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [MSG].[MessageContact] WHERE [ContactType] IS NULL",
+      "gold_tables": [
+        "MSG.MessageContact"
+      ],
+      "gold_columns": [
+        "MSG.MessageContact.ContactType"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_055_fa",
+      "language": "fa",
+      "question": "تعداد کل رکوردهای Contract Element چقدر است؟",
+      "intent_id": "intent_055",
+      "db_name": "test1",
+      "schema": "PAY",
+      "table": "ContractElement",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [PAY].[ContractElement]",
+      "gold_tables": [
+        "PAY.ContractElement"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_055_en",
+      "language": "en",
+      "question": "How many stores information about contract elements records are there?",
+      "intent_id": "intent_055",
+      "db_name": "test1",
+      "schema": "PAY",
+      "table": "ContractElement",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [PAY].[ContractElement]",
+      "gold_tables": [
+        "PAY.ContractElement"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_056_fa",
+      "language": "fa",
+      "question": "چند رکورد از رکوردهای Commercial Order Item مقدار Row Number ندارند؟",
+      "intent_id": "intent_056",
+      "db_name": "test1",
+      "schema": "POM",
+      "table": "CommercialOrderItem",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [POM].[CommercialOrderItem] WHERE [RowNumber] IS NULL",
+      "gold_tables": [
+        "POM.CommercialOrderItem"
+      ],
+      "gold_columns": [
+        "POM.CommercialOrderItem.RowNumber"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_056_en",
+      "language": "en",
+      "question": "How many stores information about commercial order items records have no row number value?",
+      "intent_id": "intent_056",
+      "db_name": "test1",
+      "schema": "POM",
+      "table": "CommercialOrderItem",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [POM].[CommercialOrderItem] WHERE [RowNumber] IS NULL",
+      "gold_tables": [
+        "POM.CommercialOrderItem"
+      ],
+      "gold_columns": [
+        "POM.CommercialOrderItem.RowNumber"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_057_fa",
+      "language": "fa",
+      "question": "تعداد کل رکوردهای Quick Bar چقدر است؟",
+      "intent_id": "intent_057",
+      "db_name": "test1",
+      "schema": "POS",
+      "table": "QuickBar",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [POS].[QuickBar]",
+      "gold_tables": [
+        "POS.QuickBar"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_057_en",
+      "language": "en",
+      "question": "How many quick bar table, containing quick bar items records are there?",
+      "intent_id": "intent_057",
+      "db_name": "test1",
+      "schema": "POS",
+      "table": "QuickBar",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [POS].[QuickBar]",
+      "gold_tables": [
+        "POS.QuickBar"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_058_fa",
+      "language": "fa",
+      "question": "چند رکورد از رکوردهای Bank Account Balance مقدار Bank Account Ref ندارند؟",
+      "intent_id": "intent_058",
+      "db_name": "test1",
+      "schema": "RPA",
+      "table": "BankAccountBalance",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [RPA].[BankAccountBalance] WHERE [BankAccountRef] IS NULL",
+      "gold_tables": [
+        "RPA.BankAccountBalance"
+      ],
+      "gold_columns": [
+        "RPA.BankAccountBalance.BankAccountRef"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_058_en",
+      "language": "en",
+      "question": "How many bank account balance table, containing details about bank account balances records have no bank account ref value?",
+      "intent_id": "intent_058",
+      "db_name": "test1",
+      "schema": "RPA",
+      "table": "BankAccountBalance",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [RPA].[BankAccountBalance] WHERE [BankAccountRef] IS NULL",
+      "gold_tables": [
+        "RPA.BankAccountBalance"
+      ],
+      "gold_columns": [
+        "RPA.BankAccountBalance.BankAccountRef"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_059_fa",
+      "language": "fa",
+      "question": "۲۰ عنوان اول از رکوردهای Commission را فهرست کن.",
+      "intent_id": "intent_059",
+      "db_name": "test1",
+      "schema": "SLS",
+      "table": "Commission",
+      "reference_sql": "SELECT TOP 20 [CommissionId], [Title] FROM [SLS].[Commission] ORDER BY [Title]",
+      "gold_tables": [
+        "SLS.Commission"
+      ],
+      "gold_columns": [
+        "SLS.Commission.CommissionId",
+        "SLS.Commission.Title"
+      ],
+      "category": "listing",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_059_en",
+      "language": "en",
+      "question": "List the first 20 title values from commission.",
+      "intent_id": "intent_059",
+      "db_name": "test1",
+      "schema": "SLS",
+      "table": "Commission",
+      "reference_sql": "SELECT TOP 20 [CommissionId], [Title] FROM [SLS].[Commission] ORDER BY [Title]",
+      "gold_tables": [
+        "SLS.Commission"
+      ],
+      "gold_columns": [
+        "SLS.Commission.CommissionId",
+        "SLS.Commission.Title"
+      ],
+      "category": "listing",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_060_fa",
+      "language": "fa",
+      "question": "چند رکورد از رکوردهای Formula Bom Item مقدار Item Tracing Ref ندارند؟",
+      "intent_id": "intent_060",
+      "db_name": "test1",
+      "schema": "WKO",
+      "table": "FormulaBomItem",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [WKO].[FormulaBomItem] WHERE [ItemTracingRef] IS NULL",
+      "gold_tables": [
+        "WKO.FormulaBomItem"
+      ],
+      "gold_columns": [
+        "WKO.FormulaBomItem.ItemTracingRef"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_060_en",
+      "language": "en",
+      "question": "How many formula bom items records have no item tracing ref value?",
+      "intent_id": "intent_060",
+      "db_name": "test1",
+      "schema": "WKO",
+      "table": "FormulaBomItem",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [WKO].[FormulaBomItem] WHERE [ItemTracingRef] IS NULL",
+      "gold_tables": [
+        "WKO.FormulaBomItem"
+      ],
+      "gold_columns": [
+        "WKO.FormulaBomItem.ItemTracingRef"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_061_fa",
+      "language": "fa",
+      "question": "تعداد کل رکوردهای DL چقدر است؟",
+      "intent_id": "intent_061",
+      "db_name": "test1",
+      "schema": "ACC",
+      "table": "DL",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [ACC].[DL]",
+      "gold_tables": [
+        "ACC.DL"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_061_en",
+      "language": "en",
+      "question": "How many dl records are there?",
+      "intent_id": "intent_061",
+      "db_name": "test1",
+      "schema": "ACC",
+      "table": "DL",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [ACC].[DL]",
+      "gold_tables": [
+        "ACC.DL"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_062_fa",
+      "language": "fa",
+      "question": "۲۰ مورد آخر گروه‌های دارایی را بر اساس تاریخ ایجاد نمایش بده.",
+      "intent_id": "intent_062",
+      "db_name": "test1",
+      "schema": "AST",
+      "table": "AssetGroup",
+      "reference_sql": "SELECT TOP 20 [AssetGroupID], [CreationDate] FROM [AST].[AssetGroup] ORDER BY [CreationDate] DESC",
+      "gold_tables": [
+        "AST.AssetGroup"
+      ],
+      "gold_columns": [
+        "AST.AssetGroup.AssetGroupID",
+        "AST.AssetGroup.CreationDate"
+      ],
+      "category": "temporal_ordering",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_062_en",
+      "language": "en",
+      "question": "Show the latest 20 asset group records ordered by creation date.",
+      "intent_id": "intent_062",
+      "db_name": "test1",
+      "schema": "AST",
+      "table": "AssetGroup",
+      "reference_sql": "SELECT TOP 20 [AssetGroupID], [CreationDate] FROM [AST].[AssetGroup] ORDER BY [CreationDate] DESC",
+      "gold_tables": [
+        "AST.AssetGroup"
+      ],
+      "gold_columns": [
+        "AST.AssetGroup.AssetGroupID",
+        "AST.AssetGroup.CreationDate"
+      ],
+      "category": "temporal_ordering",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_063_fa",
+      "language": "fa",
+      "question": "چند رکورد از ضرایب قرارداد مقدار درصد ندارند؟",
+      "intent_id": "intent_063",
+      "db_name": "test1",
+      "schema": "CNT",
+      "table": "ContractCoefficientItem",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [CNT].[ContractCoefficientItem] WHERE [Percent] IS NULL",
+      "gold_tables": [
+        "CNT.ContractCoefficientItem"
+      ],
+      "gold_columns": [
+        "CNT.ContractCoefficientItem.Percent"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_063_en",
+      "language": "en",
+      "question": "How many contract coefficient items with percentage values records have no percent value?",
+      "intent_id": "intent_063",
+      "db_name": "test1",
+      "schema": "CNT",
+      "table": "ContractCoefficientItem",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [CNT].[ContractCoefficientItem] WHERE [Percent] IS NULL",
+      "gold_tables": [
+        "CNT.ContractCoefficientItem"
+      ],
+      "gold_columns": [
+        "CNT.ContractCoefficientItem.Percent"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_064_fa",
+      "language": "fa",
+      "question": "چند رکورد از رکوردهای Cold Distribution Returned Invoice مقدار Debt Collection List Unexecuted Act Reason Ref ندارند؟",
+      "intent_id": "intent_064",
+      "db_name": "test1",
+      "schema": "DST",
+      "table": "ColdDistributionReturnedInvoice",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [DST].[ColdDistributionReturnedInvoice] WHERE [DebtCollectionListUnexecutedActReasonRef] IS NULL",
+      "gold_tables": [
+        "DST.ColdDistributionReturnedInvoice"
+      ],
+      "gold_columns": [
+        "DST.ColdDistributionReturnedInvoice.DebtCollectionListUnexecutedActReasonRef"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_064_en",
+      "language": "en",
+      "question": "How many cold distribution returned invoice information records have no debt collection list unexecuted act reason ref value?",
+      "intent_id": "intent_064",
+      "db_name": "test1",
+      "schema": "DST",
+      "table": "ColdDistributionReturnedInvoice",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [DST].[ColdDistributionReturnedInvoice] WHERE [DebtCollectionListUnexecutedActReasonRef] IS NULL",
+      "gold_tables": [
+        "DST.ColdDistributionReturnedInvoice"
+      ],
+      "gold_columns": [
+        "DST.ColdDistributionReturnedInvoice.DebtCollectionListUnexecutedActReasonRef"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_065_fa",
+      "language": "fa",
+      "question": "تعداد کل رکوردهای Keyword چقدر است؟",
+      "intent_id": "intent_065",
+      "db_name": "test1",
+      "schema": "FMK",
+      "table": "Keyword",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [FMK].[Keyword]",
+      "gold_tables": [
+        "FMK.Keyword"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_065_en",
+      "language": "en",
+      "question": "How many keywords or actions records are there?",
+      "intent_id": "intent_065",
+      "db_name": "test1",
+      "schema": "FMK",
+      "table": "Keyword",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [FMK].[Keyword]",
+      "gold_tables": [
+        "FMK.Keyword"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_066_fa",
+      "language": "fa",
+      "question": "چند رکورد از رکوردهای Closing Operation مقدار Version ندارند؟",
+      "intent_id": "intent_066",
+      "db_name": "test1",
+      "schema": "GNR",
+      "table": "ClosingOperation",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [GNR].[ClosingOperation] WHERE [Version] IS NULL",
+      "gold_tables": [
+        "GNR.ClosingOperation"
+      ],
+      "gold_columns": [
+        "GNR.ClosingOperation.Version"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_066_en",
+      "language": "en",
+      "question": "How many stores closing operations records have no version value?",
+      "intent_id": "intent_066",
+      "db_name": "test1",
+      "schema": "GNR",
+      "table": "ClosingOperation",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [GNR].[ClosingOperation] WHERE [Version] IS NULL",
+      "gold_tables": [
+        "GNR.ClosingOperation"
+      ],
+      "gold_columns": [
+        "GNR.ClosingOperation.Version"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_067_fa",
+      "language": "fa",
+      "question": "۲۰ مورد آخر حواله‌های انبار را بر اساس تاریخ نمایش بده.",
+      "intent_id": "intent_067",
+      "db_name": "test1",
+      "schema": "INV",
+      "table": "InventoryDelivery",
+      "reference_sql": "SELECT TOP 20 [InventoryDeliveryID], [Date] FROM [INV].[InventoryDelivery] ORDER BY [Date] DESC",
+      "gold_tables": [
+        "INV.InventoryDelivery"
+      ],
+      "gold_columns": [
+        "INV.InventoryDelivery.InventoryDeliveryID",
+        "INV.InventoryDelivery.Date"
+      ],
+      "category": "temporal_ordering",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_067_en",
+      "language": "en",
+      "question": "Show the latest 20 inventory delivery details records ordered by date.",
+      "intent_id": "intent_067",
+      "db_name": "test1",
+      "schema": "INV",
+      "table": "InventoryDelivery",
+      "reference_sql": "SELECT TOP 20 [InventoryDeliveryID], [Date] FROM [INV].[InventoryDelivery] ORDER BY [Date] DESC",
+      "gold_tables": [
+        "INV.InventoryDelivery"
+      ],
+      "gold_columns": [
+        "INV.InventoryDelivery.InventoryDeliveryID",
+        "INV.InventoryDelivery.Date"
+      ],
+      "category": "temporal_ordering",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_068_fa",
+      "language": "fa",
+      "question": "چند رکورد از رکوردهای Management Report State مقدار عنوان ندارند؟",
+      "intent_id": "intent_068",
+      "db_name": "test1",
+      "schema": "MRP",
+      "table": "ManagementReportState",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [MRP].[ManagementReportState] WHERE [Title] IS NULL",
+      "gold_tables": [
+        "MRP.ManagementReportState"
+      ],
+      "gold_columns": [
+        "MRP.ManagementReportState.Title"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_068_en",
+      "language": "en",
+      "question": "How many management report states records have no title value?",
+      "intent_id": "intent_068",
+      "db_name": "test1",
+      "schema": "MRP",
+      "table": "ManagementReportState",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [MRP].[ManagementReportState] WHERE [Title] IS NULL",
+      "gold_tables": [
+        "MRP.ManagementReportState"
+      ],
+      "gold_columns": [
+        "MRP.ManagementReportState.Title"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_069_fa",
+      "language": "fa",
+      "question": "تعداد کل رکوردهای Outgoing Message چقدر است؟",
+      "intent_id": "intent_069",
+      "db_name": "test1",
+      "schema": "MSG",
+      "table": "OutgoingMessage",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [MSG].[OutgoingMessage]",
+      "gold_tables": [
+        "MSG.OutgoingMessage"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_069_en",
+      "language": "en",
+      "question": "How many stores information about outgoing messages records are there?",
+      "intent_id": "intent_069",
+      "db_name": "test1",
+      "schema": "MSG",
+      "table": "OutgoingMessage",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [MSG].[OutgoingMessage]",
+      "gold_tables": [
+        "MSG.OutgoingMessage"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_070_fa",
+      "language": "fa",
+      "question": "تعداد کل رکوردهای DLold چقدر است؟",
+      "intent_id": "intent_070",
+      "db_name": "test1",
+      "schema": "ACC",
+      "table": "DLold",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [ACC].[DLold]",
+      "gold_tables": [
+        "ACC.DLold"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_070_en",
+      "language": "en",
+      "question": "How many dl old records are there?",
+      "intent_id": "intent_070",
+      "db_name": "test1",
+      "schema": "ACC",
+      "table": "DLold",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [ACC].[DLold]",
+      "gold_tables": [
+        "ACC.DLold"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_071_fa",
+      "language": "fa",
+      "question": "مجموع مبلغ در رکوردهای Asset Related Purchase Invoice چقدر است؟",
+      "intent_id": "intent_071",
+      "db_name": "test1",
+      "schema": "AST",
+      "table": "AssetRelatedPurchaseInvoice",
+      "reference_sql": "SELECT SUM([Price]) AS [TotalValue] FROM [AST].[AssetRelatedPurchaseInvoice]",
+      "gold_tables": [
+        "AST.AssetRelatedPurchaseInvoice"
+      ],
+      "gold_columns": [
+        "AST.AssetRelatedPurchaseInvoice.Price"
+      ],
+      "category": "aggregation",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_071_en",
+      "language": "en",
+      "question": "What is the total price across asset related purchase invoice?",
+      "intent_id": "intent_071",
+      "db_name": "test1",
+      "schema": "AST",
+      "table": "AssetRelatedPurchaseInvoice",
+      "reference_sql": "SELECT SUM([Price]) AS [TotalValue] FROM [AST].[AssetRelatedPurchaseInvoice]",
+      "gold_tables": [
+        "AST.AssetRelatedPurchaseInvoice"
+      ],
+      "gold_columns": [
+        "AST.AssetRelatedPurchaseInvoice.Price"
+      ],
+      "category": "aggregation",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_072_fa",
+      "language": "fa",
+      "question": "چند رکورد از رکوردهای Contract Compromise Item مقدار تاریخ ندارند؟",
+      "intent_id": "intent_072",
+      "db_name": "test1",
+      "schema": "CNT",
+      "table": "ContractCompromiseItem",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [CNT].[ContractCompromiseItem] WHERE [Date] IS NULL",
+      "gold_tables": [
+        "CNT.ContractCompromiseItem"
+      ],
+      "gold_columns": [
+        "CNT.ContractCompromiseItem.Date"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_072_en",
+      "language": "en",
+      "question": "How many contract compromise items with dates and descriptions records have no date value?",
+      "intent_id": "intent_072",
+      "db_name": "test1",
+      "schema": "CNT",
+      "table": "ContractCompromiseItem",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [CNT].[ContractCompromiseItem] WHERE [Date] IS NULL",
+      "gold_tables": [
+        "CNT.ContractCompromiseItem"
+      ],
+      "gold_columns": [
+        "CNT.ContractCompromiseItem.Date"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_073_fa",
+      "language": "fa",
+      "question": "تعداد کل رکوردهای Customer Receipt Info چقدر است؟",
+      "intent_id": "intent_073",
+      "db_name": "test1",
+      "schema": "DST",
+      "table": "CustomerReceiptInfo",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [DST].[CustomerReceiptInfo]",
+      "gold_tables": [
+        "DST.CustomerReceiptInfo"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_073_en",
+      "language": "en",
+      "question": "How many information about customer receipts records are there?",
+      "intent_id": "intent_073",
+      "db_name": "test1",
+      "schema": "DST",
+      "table": "CustomerReceiptInfo",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [DST].[CustomerReceiptInfo]",
+      "gold_tables": [
+        "DST.CustomerReceiptInfo"
+      ],
+      "gold_columns": [],
+      "category": "count",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_074_fa",
+      "language": "fa",
+      "question": "چند رکورد از رکوردهای Keyword Locale مقدار Value ندارند؟",
+      "intent_id": "intent_074",
+      "db_name": "test1",
+      "schema": "FMK",
+      "table": "KeywordLocale",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [FMK].[KeywordLocale] WHERE [Value] IS NULL",
+      "gold_tables": [
+        "FMK.KeywordLocale"
+      ],
+      "gold_columns": [
+        "FMK.KeywordLocale.Value"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_074_en",
+      "language": "en",
+      "question": "How many localized keywords records have no value value?",
+      "intent_id": "intent_074",
+      "db_name": "test1",
+      "schema": "FMK",
+      "table": "KeywordLocale",
+      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [FMK].[KeywordLocale] WHERE [Value] IS NULL",
+      "gold_tables": [
+        "FMK.KeywordLocale"
+      ],
+      "gold_columns": [
+        "FMK.KeywordLocale.Value"
+      ],
+      "category": "null_check",
+      "difficulty": "easy",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_075_fa",
+      "language": "fa",
+      "question": "تعداد مراکز هزینه را به تفکیک نوع نمایش بده.",
+      "intent_id": "intent_075",
+      "db_name": "test1",
+      "schema": "GNR",
+      "table": "CostCenter",
+      "reference_sql": "SELECT [Type], COUNT_BIG(*) AS [RecordCount] FROM [GNR].[CostCenter] GROUP BY [Type] ORDER BY [RecordCount] DESC",
+      "gold_tables": [
+        "GNR.CostCenter"
+      ],
+      "gold_columns": [
+        "GNR.CostCenter.Type"
+      ],
+      "category": "grouping",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    },
+    {
+      "id": "intent_075_en",
+      "language": "en",
+      "question": "Show the number of cost center information records grouped by type.",
+      "intent_id": "intent_075",
+      "db_name": "test1",
+      "schema": "GNR",
+      "table": "CostCenter",
+      "reference_sql": "SELECT [Type], COUNT_BIG(*) AS [RecordCount] FROM [GNR].[CostCenter] GROUP BY [Type] ORDER BY [RecordCount] DESC",
+      "gold_tables": [
+        "GNR.CostCenter"
+      ],
+      "gold_columns": [
+        "GNR.CostCenter.Type"
+      ],
+      "category": "grouping",
+      "difficulty": "medium",
+      "review_status": "candidate",
+      "review_notes": ""
+    }
+  ]
+}
