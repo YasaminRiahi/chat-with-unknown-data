@@ -468,7 +468,7 @@ class RAGLayer(BaseLayer):
                 "id": f"{key[0]}.{key[1]}",
                 "retrieval_rank": rank,
                 "retrieval_score": round(float(score), 6),
-                "description": result.table_descriptions.get(key, ""),
+                "description": result.retrieval_table_description(*key),
                 "columns": self._schema_link_columns(
                     result.table_metadata.get(key, {}), question
                 ),
@@ -657,13 +657,12 @@ Relationships:
     def _items(self, result: IntrospectionResult) -> dict[str, dict[str, Any]]:
         items: dict[str, dict[str, Any]] = {}
         for (schema, table), metadata in result.table_metadata.items():
-            description = result.table_descriptions.get((schema, table), "")
+            description = result.retrieval_table_description(schema, table)
             column_lines = []
             for column in metadata.get("columns", []):
-                column_description = result.column_descriptions.get(
-                    (schema, table, column["name"]),
-                    column.get("comment") or column["name"],
-                )
+                column_description = result.retrieval_column_description(
+                    schema, table, column["name"]
+                ) or column.get("comment") or column["name"]
                 column_lines.append(f"{column['name']}: {column_description}")
                 column_text = (
                     f"Table {schema}.{table}. Column {column['name']}. "

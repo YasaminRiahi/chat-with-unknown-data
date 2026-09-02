@@ -28,7 +28,40 @@ class IntrospectionResult:
     table_metadata: dict[tuple[str, str], dict] = field(default_factory=dict)
     table_descriptions: dict[tuple[str, str], str] = field(default_factory=dict)
     column_descriptions: dict[tuple[str, str, str], str] = field(default_factory=dict)
+    localized_table_descriptions: dict[
+        tuple[str, str], dict[str, str]
+    ] = field(default_factory=dict)
+    localized_column_descriptions: dict[
+        tuple[str, str, str], dict[str, str]
+    ] = field(default_factory=dict)
     sensitive_tables: set[tuple[str, str]] = field(default_factory=set)
+
+    @staticmethod
+    def _localized_description(values: dict[str, str] | None) -> str:
+        """Render language-labelled text for multilingual retrieval."""
+        values = values or {}
+        parts = []
+        if values.get("en"):
+            parts.append(f"English: {values['en']}")
+        if values.get("fa"):
+            parts.append(f"Persian: {values['fa']}")
+        return "\n".join(parts)
+
+    def retrieval_table_description(self, schema: str, table: str) -> str:
+        key = (schema, table)
+        localized = self._localized_description(
+            self.localized_table_descriptions.get(key)
+        )
+        return localized or self.table_descriptions.get(key, "")
+
+    def retrieval_column_description(
+        self, schema: str, table: str, column: str,
+    ) -> str:
+        key = (schema, table, column)
+        localized = self._localized_description(
+            self.localized_column_descriptions.get(key)
+        )
+        return localized or self.column_descriptions.get(key, "")
 
     def get_full_schema_info(self) -> str:
         """

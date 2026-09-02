@@ -56,7 +56,10 @@ def _chat_operation(messages: list[dict[str, Any]]) -> str:
         return "self_correction"
     if "answer-generation layer" in combined:
         return "answer_generation"
-    if "You enrich database schemas for semantic table retrieval" in combined:
+    if (
+        "You enrich database schemas for semantic table retrieval" in combined
+        or "Translate existing English database schema enrichment" in combined
+    ):
         return "schema_enrichment"
     if "Select the smallest connected set of database tables" in combined:
         return "schema_linking"

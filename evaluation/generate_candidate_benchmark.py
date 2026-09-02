@@ -280,7 +280,11 @@ def main() -> None:
     entries = []
     for table_id, value in payload["tables"].items():
         schema, table = table_id.split(".", 1)
-        columns = list((value.get("column_descriptions") or {}).keys())
+        columns = list((
+            value.get("column_descriptions_en")
+            or value.get("column_descriptions")
+            or {}
+        ).keys())
         folded_name = table.casefold()
         if (
             schema in EXCLUDED_SCHEMAS
@@ -292,7 +296,9 @@ def main() -> None:
         entries.append({
             "schema": schema,
             "table": table,
-            "description": value.get("description", ""),
+            "description": (
+                value.get("description_en") or value.get("description", "")
+            ),
             "columns": columns,
         })
 
