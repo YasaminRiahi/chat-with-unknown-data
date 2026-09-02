@@ -12,24 +12,6 @@
   },
   "records": [
     {
-      "id": "intent_001_fa",
-      "language": "fa",
-      "question": "تعداد کل سرآیند اسناد حسابداری چقدر است؟",
-      "intent_id": "intent_001",
-      "db_name": "test1",
-      "schema": "ACC",
-      "table": "AccVchHdr",
-      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [ACC].[AccVchHdr]",
-      "gold_tables": [
-        "ACC.AccVchHdr"
-      ],
-      "gold_columns": [],
-      "category": "count",
-      "difficulty": "easy",
-      "review_status": "candidate",
-      "review_notes": ""
-    },
-    {
       "id": "intent_001_en",
       "language": "en",
       "question": "How many accounting voucher header records are there?",
@@ -48,27 +30,6 @@
       "review_notes": ""
     },
     {
-      "id": "intent_002_fa",
-      "language": "fa",
-      "question": "۲۰ مورد آخر رسیدهای تحصیل دارایی را بر اساس تاریخ نمایش بده.",
-      "intent_id": "intent_002",
-      "db_name": "test1",
-      "schema": "AST",
-      "table": "AcquisitionReceipt",
-      "reference_sql": "SELECT TOP 20 [AcquisitionReceiptID], [Date] FROM [AST].[AcquisitionReceipt] ORDER BY [Date] DESC",
-      "gold_tables": [
-        "AST.AcquisitionReceipt"
-      ],
-      "gold_columns": [
-        "AST.AcquisitionReceipt.AcquisitionReceiptID",
-        "AST.AcquisitionReceipt.Date"
-      ],
-      "category": "temporal_ordering",
-      "difficulty": "medium",
-      "review_status": "candidate",
-      "review_notes": ""
-    },
-    {
       "id": "intent_002_en",
       "language": "en",
       "question": "Show the latest 20 acquisition receipt records ordered by date.",
@@ -76,7 +37,7 @@
       "db_name": "test1",
       "schema": "AST",
       "table": "AcquisitionReceipt",
-      "reference_sql": "SELECT TOP 20 [AcquisitionReceiptID], [Date] FROM [AST].[AcquisitionReceipt] ORDER BY [Date] DESC",
+      "reference_sql": "SELECT TOP 20  * FROM [AST].[AcquisitionReceipt] ORDER BY [Date] DESC",
       "gold_tables": [
         "AST.AcquisitionReceipt"
       ],
@@ -85,26 +46,6 @@
         "AST.AcquisitionReceipt.Date"
       ],
       "category": "temporal_ordering",
-      "difficulty": "medium",
-      "review_status": "candidate",
-      "review_notes": ""
-    },
-    {
-      "id": "intent_003_fa",
-      "language": "fa",
-      "question": "تعداد رکوردهای Change Item را به تفکیک نوع نمایش بده.",
-      "intent_id": "intent_003",
-      "db_name": "test1",
-      "schema": "CNT",
-      "table": "ChangeItem",
-      "reference_sql": "SELECT [Type], COUNT_BIG(*) AS [RecordCount] FROM [CNT].[ChangeItem] GROUP BY [Type] ORDER BY [RecordCount] DESC",
-      "gold_tables": [
-        "CNT.ChangeItem"
-      ],
-      "gold_columns": [
-        "CNT.ChangeItem.Type"
-      ],
-      "category": "grouping",
       "difficulty": "medium",
       "review_status": "candidate",
       "review_notes": ""
@@ -125,26 +66,6 @@
         "CNT.ChangeItem.Type"
       ],
       "category": "grouping",
-      "difficulty": "medium",
-      "review_status": "candidate",
-      "review_notes": ""
-    },
-    {
-      "id": "intent_004_fa",
-      "language": "fa",
-      "question": "چند رکورد از رکوردهای Agreement مقدار عنوان ندارند؟",
-      "intent_id": "intent_004",
-      "db_name": "test1",
-      "schema": "DST",
-      "table": "Agreement",
-      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [DST].[Agreement] WHERE [Title] IS NULL",
-      "gold_tables": [
-        "DST.Agreement"
-      ],
-      "gold_columns": [
-        "DST.Agreement.Title"
-      ],
-      "category": "null_check",
       "difficulty": "easy",
       "review_status": "candidate",
       "review_notes": ""
@@ -170,24 +91,6 @@
       "review_notes": ""
     },
     {
-      "id": "intent_005_fa",
-      "language": "fa",
-      "question": "تعداد کل رکوردهای Extra Column Description چقدر است؟",
-      "intent_id": "intent_005",
-      "db_name": "test1",
-      "schema": "FMK",
-      "table": "ExtraColumnDescription",
-      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [FMK].[ExtraColumnDescription]",
-      "gold_tables": [
-        "FMK.ExtraColumnDescription"
-      ],
-      "gold_columns": [],
-      "category": "count",
-      "difficulty": "easy",
-      "review_status": "candidate",
-      "review_notes": ""
-    },
-    {
       "id": "intent_005_en",
       "language": "en",
       "question": "How many extra column descriptions records are there?",
@@ -198,24 +101,6 @@
       "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [FMK].[ExtraColumnDescription]",
       "gold_tables": [
         "FMK.ExtraColumnDescription"
-      ],
-      "gold_columns": [],
-      "category": "count",
-      "difficulty": "easy",
-      "review_status": "candidate",
-      "review_notes": ""
-    },
-    {
-      "id": "intent_006_fa",
-      "language": "fa",
-      "question": "تعداد کل صورتحساب‌ها چقدر است؟",
-      "intent_id": "intent_006",
-      "db_name": "test1",
-      "schema": "GNR",
-      "table": "Bill",
-      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [GNR].[Bill]",
-      "gold_tables": [
-        "GNR.Bill"
       ],
       "gold_columns": [],
       "category": "count",
@@ -242,27 +127,6 @@
       "review_notes": ""
     },
     {
-      "id": "intent_007_fa",
-      "language": "fa",
-      "question": "۲۰ عنوان اول از رکوردهای Compound Barcode را فهرست کن.",
-      "intent_id": "intent_007",
-      "db_name": "test1",
-      "schema": "INV",
-      "table": "CompoundBarcode",
-      "reference_sql": "SELECT TOP 20 [CompoundBarcodeID], [Title] FROM [INV].[CompoundBarcode] ORDER BY [Title]",
-      "gold_tables": [
-        "INV.CompoundBarcode"
-      ],
-      "gold_columns": [
-        "INV.CompoundBarcode.CompoundBarcodeID",
-        "INV.CompoundBarcode.Title"
-      ],
-      "category": "listing",
-      "difficulty": "easy",
-      "review_status": "candidate",
-      "review_notes": ""
-    },
-    {
       "id": "intent_007_en",
       "language": "en",
       "question": "List the first 20 title values from compound barcode.",
@@ -284,26 +148,6 @@
       "review_notes": ""
     },
     {
-      "id": "intent_008_fa",
-      "language": "fa",
-      "question": "چند رکورد از رکوردهای Item Transactions Fact مقدار تاریخ ندارند؟",
-      "intent_id": "intent_008",
-      "db_name": "test1",
-      "schema": "MRP",
-      "table": "ItemTransactionsFact",
-      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [MRP].[ItemTransactionsFact] WHERE [Date] IS NULL",
-      "gold_tables": [
-        "MRP.ItemTransactionsFact"
-      ],
-      "gold_columns": [
-        "MRP.ItemTransactionsFact.Date"
-      ],
-      "category": "null_check",
-      "difficulty": "easy",
-      "review_status": "candidate",
-      "review_notes": ""
-    },
-    {
       "id": "intent_008_en",
       "language": "en",
       "question": "How many item transactions fact records have no date value?",
@@ -317,26 +161,6 @@
       ],
       "gold_columns": [
         "MRP.ItemTransactionsFact.Date"
-      ],
-      "category": "null_check",
-      "difficulty": "easy",
-      "review_status": "candidate",
-      "review_notes": ""
-    },
-    {
-      "id": "intent_009_fa",
-      "language": "fa",
-      "question": "چند رکورد از رکوردهای Custom Contact مقدار تاریخ ایجاد ندارند؟",
-      "intent_id": "intent_009",
-      "db_name": "test1",
-      "schema": "MSG",
-      "table": "CustomContact",
-      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [MSG].[CustomContact] WHERE [CreationDate] IS NULL",
-      "gold_tables": [
-        "MSG.CustomContact"
-      ],
-      "gold_columns": [
-        "MSG.CustomContact.CreationDate"
       ],
       "category": "null_check",
       "difficulty": "easy",
@@ -364,26 +188,6 @@
       "review_notes": ""
     },
     {
-      "id": "intent_010_fa",
-      "language": "fa",
-      "question": "چند رکورد از رکوردهای Branch مقدار کد ندارند؟",
-      "intent_id": "intent_010",
-      "db_name": "test1",
-      "schema": "PAY",
-      "table": "Branch",
-      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [PAY].[Branch] WHERE [Code] IS NULL",
-      "gold_tables": [
-        "PAY.Branch"
-      ],
-      "gold_columns": [
-        "PAY.Branch.Code"
-      ],
-      "category": "null_check",
-      "difficulty": "easy",
-      "review_status": "candidate",
-      "review_notes": ""
-    },
-    {
       "id": "intent_010_en",
       "language": "en",
       "question": "How many stores information about branches records have no code value?",
@@ -404,24 +208,6 @@
       "review_notes": ""
     },
     {
-      "id": "intent_011_fa",
-      "language": "fa",
-      "question": "تعداد کل رکوردهای Bill Of Loading چقدر است؟",
-      "intent_id": "intent_011",
-      "db_name": "test1",
-      "schema": "POM",
-      "table": "BillOfLoading",
-      "reference_sql": "SELECT COUNT_BIG(*) AS [RecordCount] FROM [POM].[BillOfLoading]",
-      "gold_tables": [
-        "POM.BillOfLoading"
-      ],
-      "gold_columns": [],
-      "category": "count",
-      "difficulty": "easy",
-      "review_status": "candidate",
-      "review_notes": ""
-    },
-    {
       "id": "intent_011_en",
       "language": "en",
       "question": "How many stores information about bills of loading records are there?",
@@ -435,26 +221,6 @@
       ],
       "gold_columns": [],
       "category": "count",
-      "difficulty": "easy",
-      "review_status": "candidate",
-      "review_notes": ""
-    },
-    {
-      "id": "intent_012_fa",
-      "language": "fa",
-      "question": "چند رکورد از رکوردهای Cashier مقدار عنوان ندارند؟",
-      "intent_id": "intent_012",
-      "db_name": "test1",
-      "schema": "POS",
-      "table": "Cashier",
-      "reference_sql": "SELECT COUNT_BIG(*) AS [MissingCount] FROM [POS].[Cashier] WHERE [Title] IS NULL",
-      "gold_tables": [
-        "POS.Cashier"
-      ],
-      "gold_columns": [
-        "POS.Cashier.Title"
-      ],
-      "category": "null_check",
       "difficulty": "easy",
       "review_status": "candidate",
       "review_notes": ""
@@ -480,26 +246,6 @@
       "review_notes": ""
     },
     {
-      "id": "intent_013_fa",
-      "language": "fa",
-      "question": "تعداد رکوردهای Account Type را به تفکیک نوع نمایش بده.",
-      "intent_id": "intent_013",
-      "db_name": "test1",
-      "schema": "RPA",
-      "table": "AccountType",
-      "reference_sql": "SELECT [Type], COUNT_BIG(*) AS [RecordCount] FROM [RPA].[AccountType] GROUP BY [Type] ORDER BY [RecordCount] DESC",
-      "gold_tables": [
-        "RPA.AccountType"
-      ],
-      "gold_columns": [
-        "RPA.AccountType.Type"
-      ],
-      "category": "grouping",
-      "difficulty": "medium",
-      "review_status": "candidate",
-      "review_notes": ""
-    },
-    {
       "id": "intent_013_en",
       "language": "en",
       "question": "Show the number of account type table, containing details about account types records grouped by type.",
@@ -520,27 +266,6 @@
       "review_notes": ""
     },
     {
-      "id": "intent_014_fa",
-      "language": "fa",
-      "question": "۲۰ مورد آخر رکوردهای Scheduling را بر اساس تاریخ ایجاد نمایش بده.",
-      "intent_id": "intent_014",
-      "db_name": "test1",
-      "schema": "SCD",
-      "table": "Scheduling",
-      "reference_sql": "SELECT TOP 20 [SchedulingId], [CreationDate] FROM [SCD].[Scheduling] ORDER BY [CreationDate] DESC",
-      "gold_tables": [
-        "SCD.Scheduling"
-      ],
-      "gold_columns": [
-        "SCD.Scheduling.SchedulingId",
-        "SCD.Scheduling.CreationDate"
-      ],
-      "category": "temporal_ordering",
-      "difficulty": "medium",
-      "review_status": "candidate",
-      "review_notes": ""
-    },
-    {
       "id": "intent_014_en",
       "language": "en",
       "question": "Show the latest 20 scheduling records ordered by creation date.",
@@ -548,7 +273,7 @@
       "db_name": "test1",
       "schema": "SCD",
       "table": "Scheduling",
-      "reference_sql": "SELECT TOP 20 [SchedulingId], [CreationDate] FROM [SCD].[Scheduling] ORDER BY [CreationDate] DESC",
+      "reference_sql": "SELECT TOP 20 * FROM [SCD].[Scheduling] ORDER BY [CreationDate] DESC",
       "gold_tables": [
         "SCD.Scheduling"
       ],
@@ -558,27 +283,6 @@
       ],
       "category": "temporal_ordering",
       "difficulty": "medium",
-      "review_status": "candidate",
-      "review_notes": ""
-    },
-    {
-      "id": "intent_015_fa",
-      "language": "fa",
-      "question": "۲۰ عنوان اول از رکوردهای Addition Factor را فهرست کن.",
-      "intent_id": "intent_015",
-      "db_name": "test1",
-      "schema": "SLS",
-      "table": "AdditionFactor",
-      "reference_sql": "SELECT TOP 20 [AdditionFactorID], [Title] FROM [SLS].[AdditionFactor] ORDER BY [Title]",
-      "gold_tables": [
-        "SLS.AdditionFactor"
-      ],
-      "gold_columns": [
-        "SLS.AdditionFactor.AdditionFactorID",
-        "SLS.AdditionFactor.Title"
-      ],
-      "category": "listing",
-      "difficulty": "easy",
       "review_status": "candidate",
       "review_notes": ""
     },

@@ -326,6 +326,16 @@ def append_checkpoint(path: Path, record: dict) -> None:
         os.fsync(handle.fileno())
 
 
+def atomic_write_text(path: Path, content: str, *, encoding: str = "utf-8") -> None:
+    """Replace a report file only after its complete content reaches disk."""
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    with temporary.open("w", encoding=encoding) as handle:
+        handle.write(content)
+        handle.flush()
+        os.fsync(handle.fileno())
+    temporary.replace(path)
+
+
 def load_checkpoints(path: Path) -> dict[str, dict]:
     completed = {}
     if not path.exists():
@@ -420,7 +430,8 @@ def write_csv(path: Path, records: list[dict]) -> None:
         "correction_success", "r_ves_score", "end_to_end_ms", "llm_calls",
         "total_tokens", "error",
     ]
-    with path.open("w", encoding="utf-8-sig", newline="") as handle:
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    with temporary.open("w", encoding="utf-8-sig", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fields)
         writer.writeheader()
         for record in records:
@@ -447,6 +458,9 @@ def write_csv(path: Path, records: list[dict]) -> None:
                 "total_tokens": record.get("tokens", {}).get("total_tokens"),
                 "error": record.get("error"),
             })
+        handle.flush()
+        os.fsync(handle.fileno())
+    temporary.replace(path)
 
 
 def format_percent(value: Any) -> str:
@@ -516,13 +530,14 @@ code{{direction:ltr}}@media(max-width:650px){{.bar-row{{grid-template-columns:10
 <section><h2>سؤال‌های ناموفق ({len(failed)})</h2><table><thead><tr><th>ID</th><th>سؤال</th><th>خطا/نتیجه</th></tr></thead><tbody>{failed_rows}</tbody></table></section>
 <section><h2>فایل‌های همراه</h2><p><code>summary.json</code> خلاصه ماشینی، <code>per_question.csv</code> جزئیات و <code>checkpoint.jsonl</code> امکان ادامه اجرا را فراهم می‌کنند.</p></section>
 </main></body></html>"""
-    path.write_text(document, encoding="utf-8")
+    atomic_write_text(path, document)
 
 
 def write_reports(run_dir: Path, records: list[dict], manifest: dict) -> None:
     summary = make_summary(records, manifest)
-    (run_dir / "summary.json").write_text(
-        json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8"
+    atomic_write_text(
+        run_dir / "summary.json",
+        json.dumps(summary, ensure_ascii=False, indent=2),
     )
     write_csv(run_dir / "per_question.csv", records)
     write_html(run_dir / "report.html", summary, records)
@@ -728,6 +743,8 @@ def main() -> int:
     run_dir = run_dir.resolve()
     run_dir.mkdir(parents=True, exist_ok=True)
     manifest_path = run_dir / "manifest.json"
+    checkpoint_path = run_dir / "checkpoint.jsonl"
+    completed = load_checkpoints(checkpoint_path)
     manifest = {
         "evaluator_version": EVALUATOR_VERSION,
         "dataset": str(dataset),
@@ -738,18 +755,21 @@ def main() -> int:
         "created_at": utc_now(),
     }
     if manifest_path.exists():
-        existing = json.loads(manifest_path.read_text(encoding="utf-8"))
-        for key in ("evaluator_version", "dataset_sha256", "db_name", "db_type"):
-            if existing.get(key) != manifest.get(key):
-                raise RuntimeError(f"Resume manifest mismatch for {key}.")
-        manifest = existing
-    else:
-        manifest_path.write_text(
-            json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8"
-        )
-
-    checkpoint_path = run_dir / "checkpoint.jsonl"
-    completed = load_checkpoints(checkpoint_path)
+        try:
+            existing = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            if completed:
+                raise RuntimeError(
+                    "manifest.json is incomplete but checkpoint.jsonl contains "
+                    "completed questions. Restore the manifest or use a new run directory."
+                ) from exc
+            print("WARNING: incomplete manifest with no checkpoints; rebuilding it safely.")
+        else:
+            for key in ("evaluator_version", "dataset_sha256", "db_name", "db_type"):
+                if existing.get(key) != manifest.get(key):
+                    raise RuntimeError(f"Resume manifest mismatch for {key}.")
+            manifest = existing
+    atomic_write_text(manifest_path, json.dumps(manifest, ensure_ascii=False, indent=2))
     pipeline, manager, model_log = build_runtime(args, run_dir)
     setup_log_offset = model_log.stat().st_size if model_log.exists() else 0
     setup_started = time.perf_counter()
@@ -758,7 +778,7 @@ def main() -> int:
     manifest["setup_latency_ms"] = round((time.perf_counter() - setup_started) * 1000, 3)
     setup_calls, log_offset = load_model_calls(model_log, setup_log_offset)
     manifest["setup_tokens"] = token_summary(setup_calls)
-    manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
+    atomic_write_text(manifest_path, json.dumps(manifest, ensure_ascii=False, indent=2))
     capture = RetrievalCapture(pipeline.rag)
     spent_tokens = sum(r.get("tokens", {}).get("total_tokens", 0) for r in completed.values())
 
