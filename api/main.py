@@ -142,16 +142,24 @@ def handle_list_databases() -> str:
     active = f"\n\nCurrently active: **{active_db}**" if active_db else ""
     return f"Connected databases:\n\n{lines}{active}"
 
-def run_chat(user_message: str) -> str:
+def run_chat_detailed(user_message: str) -> dict:
     global active_db
+
+    def text_response(reply: str) -> dict:
+        return {
+            "reply": reply,
+            "sql": None,
+            "data": None,
+            "visualization": None,
+        }
 
     intent = detect_intent(user_message)
 
     if intent == "greeting":
-        return "Hi! Ask me a question about your connected database."
+        return text_response("Hi! Ask me a question about your connected database.")
 
     if intent == "list_databases":
-        return handle_list_databases()
+        return text_response(handle_list_databases())
 
     # Auto-select if only one DB connected
     if not active_db:
@@ -160,18 +168,27 @@ def run_chat(user_message: str) -> str:
             active_db = dbs[0]
         elif len(dbs) > 1:
             names = ", ".join(f"**{d}**" for d in dbs)
-            return f"Multiple databases connected: {names}. Which one should I query?"
+            return text_response(
+                f"Multiple databases connected: {names}. Which one should I query?"
+            )
 
     # Run pipeline if a DB is active
     if active_db:
         metadata_answer = pipeline.answer_metadata_question(user_message, active_db)
         if metadata_answer is not None:
-            return metadata_answer
+            return text_response(metadata_answer)
         result = pipeline.run(user_message, active_db)
         if result["success"]:
-            return result["answer"]
+            return {
+                "reply": result["answer"],
+                "sql": result["sql"],
+                "data": result["data"],
+                "visualization": result["visualization"],
+            }
         else:
-            return f"I couldn't process that request: {result.get('error')}"
+            return text_response(
+                f"I couldn't process that request: {result.get('error')}"
+            )
 
     # Build message list for LLM
     messages = [SystemMessage(content=build_system_prompt())]
@@ -183,7 +200,12 @@ def run_chat(user_message: str) -> str:
     messages.append(HumanMessage(content=user_message))
 
     response = llm.invoke(messages)
-    return response.content
+    return text_response(response.content)
+
+
+def run_chat(user_message: str) -> str:
+    """Backward-compatible text-only chat helper."""
+    return run_chat_detailed(user_message)["reply"]
 
 
 # ── Routes ────────────────────────────────────────────────────────────────────
@@ -242,10 +264,11 @@ def chat(req: ChatRequest):
         raise HTTPException(status_code=400, detail="Empty message")
 
     chat_history.append({"role": "user", "content": msg})
-    reply = run_chat(msg)
+    response = run_chat_detailed(msg)
+    reply = response["reply"]
     chat_history.append({"role": "assistant", "content": reply})
 
-    return {"reply": reply, "active_db": active_db}
+    return {**response, "active_db": active_db}
 
 @app.delete("/chat/history")
 def clear_history():

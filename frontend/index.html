@@ -246,7 +246,7 @@
   .messages::-webkit-scrollbar-track { background: transparent; }
   .messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
-  .message { display: flex; gap: 12px; max-width: 780px; }
+  .message { display: flex; gap: 12px; max-width: min(980px, 100%); }
   .message.user { flex-direction: row-reverse; align-self: flex-end; }
 
   .avatar {
@@ -265,7 +265,7 @@
     border-radius: 12px;
     font-size: 14px;
     line-height: 1.65;
-    max-width: 600px;
+    max-width: min(820px, calc(100vw - 370px));
   }
 
   .message.ai   .bubble { background: var(--surface); border: 1px solid var(--border); border-radius: 12px 12px 12px 4px; }
@@ -290,6 +290,88 @@
     margin: 8px 0;
   }
   .bubble pre code { background: none; padding: 0; }
+
+  /* Structured query results */
+  .visualization-card {
+    margin-top: 14px;
+    padding: 14px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+
+  .visualization-title {
+    margin-bottom: 12px;
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .chart-container {
+    position: relative;
+    width: min(700px, 70vw);
+    height: 320px;
+  }
+
+  .kpi-value {
+    padding: 8px 0 12px;
+    color: var(--accent);
+    font-size: clamp(28px, 5vw, 44px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+
+  .kpi-label { color: var(--text-muted); font-size: 12px; }
+
+  .data-details { margin-top: 12px; }
+  .data-details summary {
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 12px;
+    user-select: none;
+  }
+
+  .data-table-wrap {
+    max-width: 100%;
+    max-height: 300px;
+    margin-top: 10px;
+    overflow: auto;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+  }
+
+  .data-table th {
+    position: sticky;
+    top: 0;
+    background: var(--surface-2);
+    color: var(--accent);
+    font-weight: 600;
+    z-index: 1;
+  }
+
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table td { color: var(--text); }
+  .empty-result { color: var(--text-muted); font-size: 12px; }
+
+  @media (max-width: 760px) {
+    .sidebar { display: none; }
+    .bubble { max-width: calc(100vw - 76px); }
+    .chart-container { width: calc(100vw - 130px); height: 260px; }
+  }
 
   /* SQL block */
   .sql-block {
@@ -472,6 +554,7 @@
 
 <div class="toast" id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <script>
 const API = "http://localhost:8000";
 
@@ -650,7 +733,7 @@ async function sendMessage() {
     if (data.error) {
       appendMessage("ai", `⚠ ${data.error}`);
     } else {
-      appendMessage("ai", data.reply);
+      appendMessage("ai", data.reply, data);
       if (data.active_db !== activeDb) {
         activeDb = data.active_db;
         renderDatabases();
@@ -671,7 +754,7 @@ function hideWelcome() {
   if (w) w.style.display = "none";
 }
 
-function appendMessage(role, text) {
+function appendMessage(role, text, structured = null) {
   const container = document.getElementById("messages");
   const div       = document.createElement("div");
   div.className   = `message ${role}`;
@@ -680,7 +763,166 @@ function appendMessage(role, text) {
     <div class="bubble">${renderText(text)}</div>
   `;
   container.appendChild(div);
+  if (role === "ai" && structured?.data) {
+    renderVisualization(div.querySelector(".bubble"), structured.data, structured.visualization);
+  }
   container.scrollTop = container.scrollHeight;
+}
+
+function renderVisualization(bubble, data, spec) {
+  const columns = Array.isArray(data.columns) ? data.columns : [];
+  const rows = Array.isArray(data.rows) ? data.rows : [];
+  const visualization = spec || {
+    type: "table", title: "Query result", category_column: null, value_columns: []
+  };
+
+  const card = document.createElement("div");
+  card.className = "visualization-card";
+
+  const title = document.createElement("div");
+  title.className = "visualization-title";
+  title.textContent = visualization.title || "Query result";
+  card.appendChild(title);
+
+  let primaryRendered = false;
+
+  if (!rows.length || !columns.length) {
+    const empty = document.createElement("div");
+    empty.className = "empty-result";
+    empty.textContent = "The query returned no rows.";
+    card.appendChild(empty);
+  } else if (visualization.type === "kpi") {
+    renderKpi(card, rows, visualization);
+    primaryRendered = Boolean(visualization.value_columns?.length);
+  } else if (["line", "bar"].includes(visualization.type) && window.Chart) {
+    renderChart(card, rows, visualization);
+    primaryRendered = Boolean(
+      visualization.category_column && visualization.value_columns?.length
+    );
+  }
+
+  if (rows.length && columns.length) {
+    const details = document.createElement("details");
+    details.className = "data-details";
+    details.open = visualization.type === "table" || !primaryRendered;
+
+    const summary = document.createElement("summary");
+    summary.textContent = `View data (${formatNumber(rows.length)} rows)`;
+    details.appendChild(summary);
+    details.appendChild(buildDataTable(columns, rows));
+    card.appendChild(details);
+  }
+
+  bubble.appendChild(card);
+}
+
+function renderKpi(card, rows, spec) {
+  const valueColumn = spec.value_columns?.[0];
+  if (!valueColumn) return;
+
+  const value = document.createElement("div");
+  value.className = "kpi-value";
+  value.textContent = formatValue(rows[0]?.[valueColumn]);
+
+  const label = document.createElement("div");
+  label.className = "kpi-label";
+  label.textContent = valueColumn;
+
+  card.appendChild(value);
+  card.appendChild(label);
+}
+
+function renderChart(card, rows, spec) {
+  const category = spec.category_column;
+  const valueColumns = Array.isArray(spec.value_columns) ? spec.value_columns : [];
+  if (!category || !valueColumns.length) return;
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "chart-container";
+  const canvas = document.createElement("canvas");
+  wrapper.appendChild(canvas);
+  card.appendChild(wrapper);
+
+  const colors = ["#6c8cff", "#34d399", "#fbbf24", "#f87171", "#c084fc"];
+  new Chart(canvas, {
+    type: spec.type,
+    data: {
+      labels: rows.map(row => formatValue(row[category])),
+      datasets: valueColumns.map((column, index) => ({
+        label: column,
+        data: rows.map(row => row[column]),
+        borderColor: colors[index % colors.length],
+        backgroundColor: `${colors[index % colors.length]}99`,
+        borderWidth: 2,
+        tension: 0.25,
+      })),
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: "index", intersect: false },
+      plugins: {
+        legend: { labels: { color: "#e8eaf0" } },
+      },
+      scales: {
+        x: {
+          ticks: { color: "#9ca3af", maxRotation: 45, minRotation: 0 },
+          grid: { color: "#2e334755" },
+        },
+        y: {
+          beginAtZero: spec.type === "bar",
+          ticks: {
+            color: "#9ca3af",
+            callback: value => formatNumber(value),
+          },
+          grid: { color: "#2e3347" },
+        },
+      },
+    },
+  });
+}
+
+function buildDataTable(columns, rows) {
+  const wrapper = document.createElement("div");
+  wrapper.className = "data-table-wrap";
+  const table = document.createElement("table");
+  table.className = "data-table";
+
+  const thead = document.createElement("thead");
+  const headerRow = document.createElement("tr");
+  columns.forEach(column => {
+    const th = document.createElement("th");
+    th.textContent = column;
+    headerRow.appendChild(th);
+  });
+  thead.appendChild(headerRow);
+
+  const tbody = document.createElement("tbody");
+  rows.forEach(row => {
+    const tr = document.createElement("tr");
+    columns.forEach(column => {
+      const td = document.createElement("td");
+      td.textContent = formatValue(row[column]);
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+
+  table.appendChild(thead);
+  table.appendChild(tbody);
+  wrapper.appendChild(table);
+  return wrapper;
+}
+
+function formatValue(value) {
+  if (value === null || value === undefined) return "—";
+  if (typeof value === "number") return formatNumber(value);
+  if (typeof value === "boolean") return value ? "Yes" : "No";
+  return String(value);
+}
+
+function formatNumber(value) {
+  return new Intl.NumberFormat(undefined, { maximumFractionDigits: 4 }).format(value);
 }
 
 function renderText(text) {

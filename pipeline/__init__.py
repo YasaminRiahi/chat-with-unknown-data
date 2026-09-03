@@ -14,6 +14,7 @@ from pipeline.rag.reranker          import CrossEncoderReranker
 from pipeline.sql_generation.layer  import SQLGenerationLayer
 from pipeline.self_correction.layer import SelfCorrectionLayer
 from pipeline.answer_generation.layer import AnswerGenerationLayer
+from pipeline.visualization.layer import VisualizationLayer
 
 
 class Pipeline:
@@ -47,6 +48,7 @@ class Pipeline:
         self.sql_generation = SQLGenerationLayer(llm, embeddings, db_manager)
         self.self_correction = SelfCorrectionLayer(llm, embeddings, db_manager)
         self.answer_generation = AnswerGenerationLayer(llm, embeddings, db_manager)
+        self.visualization = VisualizationLayer()
 
         # Cache: {db_name: IntrospectionResult}
         self._introspection_cache: dict = {}
@@ -131,15 +133,22 @@ class Pipeline:
             # Layer 6
             answer = self.answer_generation.run(question, final_sql, result)
 
+            # Layer 7 - presentation metadata only; never mutates SQL or rows.
+            visualization = self.visualization.run(question, result)
+            columns = list(result[0].keys()) if result else []
+
             return {
                 "success": True, "sql": final_sql, "result": result,
-                "answer": answer, "error": None,
+                "data": {"columns": columns, "rows": result},
+                "answer": answer, "visualization": visualization,
+                "error": None,
             }
 
         except Exception as e:
             return {
                 "success": False, "sql": None, "result": None,
-                "answer": None, "error": str(e),
+                "data": None, "answer": None, "visualization": None,
+                "error": str(e),
             }
 
     def clear_cache(self, db_name: str = None):
