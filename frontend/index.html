@@ -8,575 +8,432 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg:         #0f1117;
-    --surface:    #1a1d27;
-    --surface-2:  #222636;
-    --border:     #2e3347;
-    --text:       #e8eaf0;
-    --text-muted: #6b7280;
-    --accent:     #6c8cff;
-    --accent-dim: #1e2a4a;
-    --success:    #34d399;
-    --danger:     #f87171;
-    --radius:     10px;
-    --font:       -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    --mono:       "JetBrains Mono", "Fira Code", monospace;
+    color-scheme: dark;
+    --bg: #050d13;
+    --panel: #0a1721;
+    --panel-2: #102631;
+    --panel-3: #203942;
+    --border: #2a434c;
+    --text: #f4efe7;
+    --muted: #b7b1a5;
+    --title: #fff9ef;
+    --accent: #e5b0a0;
+    --blue: #748da4;
+    --amber: #eac8ab;
+    --rose: #d28378;
+    --violet: #a9afb4;
+    --green: #a6b7a1;
+    --danger: #d28378;
+    --on-accent: #0b1822;
+    --brand-1: #2d4f56;
+    --brand-2: #d28378;
+    --brand-3: #748da4;
+    --brand-text: #fff3e3;
+    --metric-1: #e5b0a0;
+    --metric-2: #748da4;
+    --metric-3: #d28378;
+    --soft: rgba(229, 176, 160, 0.14);
+    --shadow: 0 18px 48px rgba(3, 10, 15, 0.34);
+    --radius: 8px;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
+  }
+
+  body.light {
+    color-scheme: light;
+    --bg: #fffdf8;
+    --panel: #fffaf1;
+    --panel-2: #f8f4ec;
+    --panel-3: #eee7dc;
+    --border: #ddd4c4;
+    --text: #0f2c3d;
+    --muted: #6e4e3d;
+    --title: #0f2c3d;
+    --accent: #2d4f56;
+    --blue: #748da4;
+    --amber: #c4936a;
+    --rose: #d28378;
+    --violet: #a3917b;
+    --green: #547a6e;
+    --danger: #d28378;
+    --on-accent: #fff3e3;
+    --brand-1: #2d4f56;
+    --brand-2: #d28378;
+    --brand-3: #748da4;
+    --brand-text: #fff3e3;
+    --metric-1: #2d4f56;
+    --metric-2: #d28378;
+    --metric-3: #748da4;
+    --soft: rgba(45, 79, 86, 0.12);
+    --shadow: 0 10px 25px -5px rgba(15, 44, 61, 0.10), 0 8px 10px -6px rgba(15, 44, 61, 0.06);
   }
 
   body {
+    height: 100vh;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at top left, rgba(210, 131, 120, 0.08), transparent 32%),
+      radial-gradient(circle at bottom right, rgba(116, 141, 164, 0.09), transparent 34%),
+      var(--bg);
+    color: var(--text);
     font-family: var(--font);
-    background:  var(--bg);
-    color:       var(--text);
-    height:      100vh;
-    display:     flex;
-    overflow:    hidden;
   }
 
-  /* ── Sidebar ── */
-  .sidebar {
-    width: 280px;
-    min-width: 280px;
-    background: var(--surface);
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    padding: 20px 16px;
-    gap: 20px;
+  body.light {
+    background:
+      radial-gradient(circle at top left, rgba(234, 200, 171, 0.14), transparent 28%),
+      radial-gradient(circle at bottom right, rgba(226, 229, 222, 0.30), transparent 34%),
+      var(--bg);
   }
 
-  .sidebar-logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--border);
+  button, input, select, textarea { font: inherit; }
+  button { color: inherit; }
+
+  .app {
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 280px minmax(440px, 1fr) 390px;
+    gap: 16px;
+    padding: 16px;
   }
 
-  .logo-icon {
-    width: 32px; height: 32px;
-    background: var(--accent);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px;
-  }
-
-  .logo-text { font-size: 15px; font-weight: 600; letter-spacing: -0.3px; }
-  .logo-sub  { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
-
-  .section-label {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 8px;
-  }
-
-  /* Database list */
-  .db-list { display: flex; flex-direction: column; gap: 6px; }
-
-  .db-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 10px;
-    border-radius: var(--radius);
-    border: 1px solid transparent;
-    cursor: pointer;
-    transition: all 0.15s;
-    position: relative;
-  }
-
-  .db-item:hover         { background: var(--surface-2); border-color: var(--border); }
-  .db-item.active        { background: var(--accent-dim); border-color: var(--accent); }
-  .db-item.active .db-name { color: var(--accent); }
-
-  .db-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--success);
-    flex-shrink: 0;
-  }
-
-  .db-name  { font-size: 13px; font-weight: 500; flex: 1; truncate: ellipsis; }
-  .db-type  { font-size: 10px; color: var(--text-muted); font-family: var(--mono); }
-
-  .db-remove {
-    opacity: 0;
-    background: none;
-    border: none;
-    color: var(--danger);
-    cursor: pointer;
-    font-size: 14px;
-    padding: 2px 4px;
-    border-radius: 4px;
-    transition: opacity 0.15s;
-    line-height: 1;
-  }
-  .db-item:hover .db-remove { opacity: 1; }
-
-  .no-db {
-    font-size: 12px;
-    color: var(--text-muted);
-    text-align: center;
-    padding: 12px 0;
-  }
-
-  /* Add database form */
-  .add-db-toggle {
-    width: 100%;
-    padding: 8px;
-    background: none;
-    border: 1px dashed var(--border);
-    border-radius: var(--radius);
-    color: var(--text-muted);
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.15s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-  }
-  .add-db-toggle:hover { border-color: var(--accent); color: var(--accent); }
-
-  .add-db-form {
-    display: none;
-    flex-direction: column;
-    gap: 8px;
-    padding: 12px;
-    background: var(--surface-2);
-    border-radius: var(--radius);
+  .sidebar, .workspace, .chat-panel {
+    min-height: 0;
     border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: color-mix(in srgb, var(--panel) 94%, transparent);
+    box-shadow: var(--shadow);
+    overflow: hidden;
   }
+
+  .sidebar { display: flex; flex-direction: column; gap: 18px; padding: 18px; overflow: auto; }
+  .brand { display: flex; align-items: center; gap: 11px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+  .brand-mark { width: 38px; height: 38px; display: grid; place-items: center; border-radius: var(--radius); background: linear-gradient(135deg, var(--brand-1), var(--brand-2), var(--brand-3)); color: var(--brand-text); }
+  .brand-title { color: var(--title); font-size: 15px; font-weight: 750; }
+  .brand-subtitle { margin-top: 2px; color: var(--muted); font-size: 11px; }
+  .section-label { margin-bottom: 9px; color: var(--muted); font-size: 11px; font-weight: 750; letter-spacing: 0.08em; text-transform: uppercase; }
+
+  .source-card, .metric, .chart-shell, .kpi-card, .table-wrap, .sql-block { border: 1px solid var(--border); border-radius: var(--radius); background: var(--panel); }
+  .source-card { padding: 12px; background: var(--panel-2); }
+  .source-top { display: flex; align-items: center; justify-content: space-between; color: var(--muted); font-size: 12px; }
+  .source-name { margin-top: 8px; overflow: hidden; color: var(--title); font-size: 18px; font-weight: 760; text-overflow: ellipsis; white-space: nowrap; }
+
+  .db-list, .sample-list { display: flex; flex-direction: column; gap: 8px; }
+  .db-item { width: 100%; display: grid; grid-template-columns: 10px minmax(0, 1fr) auto auto; align-items: center; gap: 8px; padding: 10px; border: 1px solid transparent; border-radius: var(--radius); background: transparent; cursor: pointer; text-align: left; }
+  .db-item:hover, .sample-question:hover { border-color: var(--accent); background: var(--panel-2); }
+  .db-item.active { border-color: var(--accent); background: var(--soft); }
+  .db-dot { width: 8px; height: 8px; border-radius: 999px; background: var(--green); }
+  .db-name { overflow: hidden; color: var(--title); font-size: 13px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+  .db-type { color: var(--muted); font-family: var(--mono); font-size: 10px; }
+  .db-remove { width: 24px; height: 24px; border: 1px solid var(--border); border-radius: 6px; background: var(--panel-2); color: var(--danger); cursor: pointer; opacity: 0; }
+  .db-item:hover .db-remove { opacity: 1; }
+  .no-db { color: var(--muted); font-size: 12px; text-align: center; padding: 12px 0; }
+
+  .add-db-toggle, .sample-question, .icon-btn, .send-btn, .btn { border-radius: var(--radius); cursor: pointer; transition: border-color 0.15s, background 0.15s, transform 0.15s; }
+  .add-db-toggle { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px; border: 1px dashed var(--border); background: transparent; color: var(--muted); }
+  .add-db-toggle:hover { border-color: var(--accent); color: var(--accent); }
+  .add-db-form { display: none; flex-direction: column; gap: 9px; padding: 12px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--panel-2); }
   .add-db-form.open { display: flex; }
 
-  .form-input {
-    width: 100%;
-    padding: 7px 10px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--text);
-    font-size: 12px;
-    font-family: var(--font);
-    outline: none;
-    transition: border-color 0.15s;
-  }
-  .form-input:focus { border-color: var(--accent); }
-  .form-input::placeholder { color: var(--text-muted); }
+  .form-input, .form-select, .chat-input { width: 100%; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg); color: var(--text); outline: none; }
+  .form-input, .form-select { padding: 9px 10px; font-size: 12px; }
+  .form-input:focus, .form-select:focus, .chat-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--soft); }
+  .form-input::placeholder, .chat-input::placeholder { color: var(--muted); }
+  .form-row { display: flex; gap: 8px; }
+  .form-hint { color: var(--muted); font-family: var(--mono); font-size: 10px; line-height: 1.5; }
+  .btn { min-height: 34px; padding: 8px 12px; border: 1px solid var(--border); background: transparent; color: var(--muted); font-size: 12px; font-weight: 700; }
+  .btn-primary { flex: 1; border-color: transparent; background: var(--accent); color: var(--on-accent); }
+  .sample-question { padding: 10px; border: 1px solid var(--border); background: var(--panel-2); color: var(--text); font-size: 12px; line-height: 1.45; text-align: left; }
 
-  .form-select {
-    width: 100%;
-    padding: 7px 10px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--text);
-    font-size: 12px;
-    outline: none;
-    cursor: pointer;
-  }
+  .workspace { display: grid; grid-template-rows: auto auto minmax(0, 1fr); }
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 18px 20px; border-bottom: 1px solid var(--border); }
+  .page-title { color: var(--title); font-size: 22px; font-weight: 800; }
+  .page-subtitle { margin-top: 4px; color: var(--muted); font-size: 13px; }
+  .topbar-actions { display: flex; align-items: center; gap: 9px; }
+  .icon-btn { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid var(--border); background: var(--panel-2); color: var(--muted); }
+  .icon-btn:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
 
-  .form-row { display: flex; gap: 6px; }
+  .metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--border); background: color-mix(in srgb, var(--panel-2) 55%, transparent); }
+  .metric { min-width: 0; padding: 12px; position: relative; overflow: hidden; }
+  .metric::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 4px; background: var(--metric-1); }
+  .metric:nth-child(2)::before { background: var(--metric-2); }
+  .metric:nth-child(3)::before { background: var(--metric-3); }
+  .metric-label { color: var(--muted); font-size: 11px; font-weight: 750; letter-spacing: 0.06em; text-transform: uppercase; }
+  .metric-value { margin-top: 8px; overflow: hidden; color: var(--title); font-size: 18px; font-weight: 780; text-overflow: ellipsis; white-space: nowrap; }
 
-  .btn {
-    padding: 7px 14px;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    border: none;
-    transition: all 0.15s;
-    font-family: var(--font);
-  }
-  .btn-primary  { background: var(--accent); color: #fff; flex: 1; }
-  .btn-primary:hover { filter: brightness(1.1); }
-  .btn-ghost    { background: none; border: 1px solid var(--border); color: var(--text-muted); }
-  .btn-ghost:hover  { border-color: var(--text-muted); color: var(--text); }
+  .insights { min-height: 0; overflow: auto; padding: 20px; }
+  .empty-board { min-height: 100%; display: grid; place-items: center; text-align: center; }
+  .empty-content { max-width: 420px; }
+  .empty-icon { width: 54px; height: 54px; display: grid; place-items: center; margin: 0 auto 16px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--panel-2); color: var(--accent); }
+  .empty-content h2 { color: var(--title); font-size: 20px; font-weight: 780; }
+  .empty-content p { margin-top: 9px; color: var(--muted); font-size: 14px; line-height: 1.65; }
 
-  .form-hint { font-size: 10px; color: var(--text-muted); line-height: 1.5; }
+  .viz-card { display: grid; gap: 14px; }
+  .viz-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
+  .viz-title { color: var(--title); font-size: 18px; font-weight: 780; }
+  .viz-caption { margin-top: 6px; color: var(--muted); font-size: 13px; line-height: 1.55; }
+  .viz-tools { display: flex; align-items: center; gap: 8px; }
+  .viz-badge, .tool-btn { padding: 7px 9px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--panel-2); color: var(--accent); font-size: 11px; font-weight: 780; text-transform: uppercase; }
+  .tool-btn { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); cursor: pointer; text-transform: none; }
+  .tool-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-  /* ── Main chat area ── */
-  .chat-area {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-  }
+  .chart-shell { min-height: 390px; padding: 16px; }
+  .chart-container { position: relative; width: 100%; height: 360px; }
+  .kpi-card { min-height: 220px; display: grid; align-content: center; padding: 26px; background: linear-gradient(135deg, var(--soft), transparent), var(--panel); }
+  .kpi-value { color: var(--title); font-size: 44px; font-weight: 850; }
+  .kpi-label { margin-top: 8px; color: var(--muted); font-size: 13px; }
 
-  .chat-header {
-    padding: 16px 24px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
+  .data-details summary { width: fit-content; padding: 8px 10px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--panel-2); color: var(--muted); cursor: pointer; font-size: 12px; user-select: none; }
+  .table-wrap { max-width: 100%; max-height: 360px; margin-top: 10px; overflow: auto; }
+  .data-table { width: 100%; border-collapse: collapse; font-size: 12px; white-space: nowrap; }
+  .data-table th, .data-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); text-align: left; }
+  .data-table th { position: sticky; top: 0; z-index: 1; border-bottom-color: color-mix(in srgb, var(--accent) 38%, var(--border)); background: color-mix(in srgb, var(--panel-3) 72%, var(--panel)); color: var(--title); font-weight: 750; }
+  body.light .data-table th { border-bottom-color: color-mix(in srgb, var(--rose) 35%, var(--border)); background: linear-gradient(135deg, color-mix(in srgb, var(--rose) 16%, var(--panel-2)), color-mix(in srgb, var(--amber) 14%, var(--panel-2))); }
+  .sql-block { max-height: 150px; overflow: auto; padding: 12px; border-left: 3px solid var(--accent); color: var(--accent); font-family: var(--mono); font-size: 12px; line-height: 1.55; white-space: pre; }
 
-  .active-db-badge {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 10px;
-    background: var(--accent-dim);
-    border: 1px solid var(--accent);
-    border-radius: 20px;
-    font-size: 12px;
-    color: var(--accent);
-    font-weight: 500;
-  }
-
-  .no-active-badge {
-    font-size: 13px;
-    color: var(--text-muted);
-  }
-
-  /* Messages */
-  .messages {
-    flex: 1;
-    overflow-y: auto;
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    scroll-behavior: smooth;
-  }
-
-  .messages::-webkit-scrollbar       { width: 4px; }
-  .messages::-webkit-scrollbar-track { background: transparent; }
-  .messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-
-  .message { display: flex; gap: 12px; max-width: min(980px, 100%); }
+  .chat-panel { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
+  .chat-header { padding: 16px; border-bottom: 1px solid var(--border); }
+  .chat-title-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .chat-title { color: var(--title); font-size: 15px; font-weight: 780; }
+  .active-db-badge, .no-active-badge { display: inline-flex; align-items: center; gap: 7px; margin-top: 12px; padding: 7px 9px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--panel-2); color: var(--muted); font-size: 12px; }
+  .active-db-badge { color: var(--green); }
+  .active-db-badge::before { content: ""; width: 7px; height: 7px; border-radius: 999px; background: var(--green); }
+  .messages { min-height: 0; display: flex; flex-direction: column; gap: 14px; overflow: auto; padding: 16px; scroll-behavior: smooth; }
+  .message { display: flex; gap: 10px; max-width: 100%; }
   .message.user { flex-direction: row-reverse; align-self: flex-end; }
-
-  .avatar {
-    width: 32px; height: 32px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 13px; font-weight: 600;
-    flex-shrink: 0;
-  }
-
-  .avatar.ai   { background: var(--accent); color: #fff; }
-  .avatar.user { background: var(--surface-2); border: 1px solid var(--border); color: var(--text-muted); }
-
-  .bubble {
-    padding: 12px 16px;
-    border-radius: 12px;
-    font-size: 14px;
-    line-height: 1.65;
-    max-width: min(820px, calc(100vw - 370px));
-  }
-
-  .message.ai   .bubble { background: var(--surface); border: 1px solid var(--border); border-radius: 12px 12px 12px 4px; }
-  .message.user .bubble { background: var(--accent-dim); border: 1px solid var(--accent); color: var(--text); border-radius: 12px 12px 4px 12px; }
-
-  /* Markdown-ish rendering */
-  .bubble strong { font-weight: 600; }
-  .bubble code {
-    font-family: var(--mono);
-    font-size: 12px;
-    background: var(--bg);
-    padding: 1px 5px;
-    border-radius: 4px;
-    color: var(--accent);
-  }
-  .bubble pre {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 12px;
-    overflow-x: auto;
-    margin: 8px 0;
-  }
-  .bubble pre code { background: none; padding: 0; }
-
-  /* Structured query results */
-  .visualization-card {
-    margin-top: 14px;
-    padding: 14px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-  }
-
-  .visualization-title {
-    margin-bottom: 12px;
-    color: var(--text);
-    font-size: 13px;
-    font-weight: 600;
-  }
-
-  .chart-container {
-    position: relative;
-    width: min(700px, 70vw);
-    height: 320px;
-  }
-
-  .kpi-value {
-    padding: 8px 0 12px;
-    color: var(--accent);
-    font-size: clamp(28px, 5vw, 44px);
-    font-weight: 700;
-    letter-spacing: -0.03em;
-  }
-
-  .kpi-label { color: var(--text-muted); font-size: 12px; }
-
-  .data-details { margin-top: 12px; }
-  .data-details summary {
-    color: var(--text-muted);
-    cursor: pointer;
-    font-size: 12px;
-    user-select: none;
-  }
-
-  .data-table-wrap {
-    max-width: 100%;
-    max-height: 300px;
-    margin-top: 10px;
-    overflow: auto;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-  }
-
-  .data-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12px;
-    white-space: nowrap;
-  }
-
-  .data-table th,
-  .data-table td {
-    padding: 8px 10px;
-    border-bottom: 1px solid var(--border);
-    text-align: left;
-  }
-
-  .data-table th {
-    position: sticky;
-    top: 0;
-    background: var(--surface-2);
-    color: var(--accent);
-    font-weight: 600;
-    z-index: 1;
-  }
-
-  .data-table tr:last-child td { border-bottom: none; }
-  .data-table td { color: var(--text); }
-  .empty-result { color: var(--text-muted); font-size: 12px; }
-
-  @media (max-width: 760px) {
-    .sidebar { display: none; }
-    .bubble { max-width: calc(100vw - 76px); }
-    .chart-container { width: calc(100vw - 130px); height: 260px; }
-  }
-
-  /* SQL block */
-  .sql-block {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--accent);
-    border-radius: 6px;
-    padding: 10px 14px;
-    font-family: var(--mono);
-    font-size: 12px;
-    color: #a5b4fc;
-    margin: 8px 0;
-    overflow-x: auto;
-  }
-
-  /* Typing indicator */
+  .avatar { width: 30px; height: 30px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 999px; background: var(--panel-2); color: var(--muted); font-size: 11px; font-weight: 800; }
+  .avatar.ai { background: linear-gradient(135deg, var(--brand-1), var(--brand-2)); color: var(--brand-text); }
+  .bubble { max-width: 300px; padding: 11px 13px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--panel-2); color: var(--text); font-size: 13px; line-height: 1.62; }
+  .message.user .bubble { border-color: var(--accent); background: var(--soft); }
+  .bubble strong { font-weight: 750; }
+  .bubble code { padding: 1px 5px; border-radius: 5px; background: var(--bg); color: var(--accent); font-family: var(--mono); font-size: 12px; }
+  .input-bar { display: flex; align-items: flex-end; gap: 10px; padding: 14px 16px 16px; border-top: 1px solid var(--border); background: var(--panel); }
+  .chat-input { min-height: 46px; max-height: 140px; padding: 12px 13px; resize: none; line-height: 1.5; }
+  .send-btn { width: 46px; height: 46px; flex: 0 0 auto; display: grid; place-items: center; border: 1px solid transparent; background: linear-gradient(135deg, var(--brand-1), var(--brand-2)); color: var(--brand-text); }
+  .send-btn:disabled { opacity: 0.45; cursor: not-allowed; }
   .typing { display: flex; align-items: center; gap: 4px; padding: 4px 0; }
-  .typing span {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--text-muted);
-    animation: bounce 1.2s infinite;
-  }
+  .typing span { width: 6px; height: 6px; border-radius: 999px; background: var(--muted); animation: bounce 1.2s infinite; }
   .typing span:nth-child(2) { animation-delay: 0.2s; }
   .typing span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce { 0%, 80%, 100% { transform: translateY(0); opacity: 0.45; } 40% { transform: translateY(-6px); opacity: 1; } }
 
-  @keyframes bounce {
-    0%, 80%, 100% { transform: translateY(0); opacity: 0.5; }
-    40%            { transform: translateY(-6px); opacity: 1; }
+  .toast { position: fixed; right: 24px; bottom: 24px; z-index: 20; padding: 11px 14px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--panel); color: var(--text); box-shadow: var(--shadow); font-size: 13px; opacity: 0; pointer-events: none; transform: translateY(8px); transition: opacity 0.2s, transform 0.2s; }
+  .toast.show { opacity: 1; transform: translateY(0); }
+  .toast.error { border-color: var(--danger); color: var(--danger); }
+
+  .sidebar::-webkit-scrollbar, .insights::-webkit-scrollbar, .messages::-webkit-scrollbar, .table-wrap::-webkit-scrollbar { width: 6px; height: 6px; }
+  .sidebar::-webkit-scrollbar-track, .insights::-webkit-scrollbar-track, .messages::-webkit-scrollbar-track, .table-wrap::-webkit-scrollbar-track { background: transparent; }
+  .sidebar::-webkit-scrollbar-thumb, .insights::-webkit-scrollbar-thumb, .messages::-webkit-scrollbar-thumb, .table-wrap::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
+
+  @media (max-width: 1180px) {
+    .app { height: auto; min-height: 100vh; grid-template-columns: 1fr; overflow: auto; }
+    body { overflow: auto; }
+    .bubble { max-width: min(720px, calc(100vw - 96px)); }
+    .chat-panel { min-height: 520px; }
   }
 
-  /* Welcome state */
-  .welcome {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    color: var(--text-muted);
-    text-align: center;
-    padding: 40px;
+  @media (max-width: 780px) {
+    .app { padding: 10px; gap: 10px; }
+    .topbar, .viz-header { flex-direction: column; align-items: stretch; }
+    .metrics { grid-template-columns: 1fr; }
+    .chart-container { height: 280px; }
   }
-  .welcome-icon { font-size: 40px; }
-  .welcome h2   { font-size: 18px; font-weight: 600; color: var(--text); }
-  .welcome p    { font-size: 14px; max-width: 400px; line-height: 1.6; }
-
-  /* Input bar */
-  .input-bar {
-    padding: 16px 24px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    gap: 10px;
-    align-items: flex-end;
-  }
-
-  .chat-input {
-    flex: 1;
-    padding: 12px 16px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--text);
-    font-size: 14px;
-    font-family: var(--font);
-    outline: none;
-    resize: none;
-    min-height: 44px;
-    max-height: 160px;
-    line-height: 1.5;
-    transition: border-color 0.15s;
-  }
-  .chat-input:focus     { border-color: var(--accent); }
-  .chat-input::placeholder { color: var(--text-muted); }
-
-  .send-btn {
-    width: 44px; height: 44px;
-    background: var(--accent);
-    border: none;
-    border-radius: var(--radius);
-    color: #fff;
-    font-size: 18px;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    transition: all 0.15s;
-  }
-  .send-btn:hover    { filter: brightness(1.1); }
-  .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-  /* Toast */
-  .toast {
-    position: fixed;
-    bottom: 24px; right: 24px;
-    padding: 10px 16px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    opacity: 0;
-    transition: opacity 0.2s;
-    pointer-events: none;
-    z-index: 100;
-  }
-  .toast.success { background: #064e3b; border: 1px solid var(--success); color: var(--success); }
-  .toast.error   { background: #450a0a; border: 1px solid var(--danger);  color: var(--danger); }
-  .toast.show    { opacity: 1; }
 </style>
 </head>
 <body>
-
-<!-- ── Sidebar ─────────────────────────────────────────────────── -->
-<aside class="sidebar">
-  <div class="sidebar-logo">
-    <div class="logo-icon">🗄</div>
-    <div>
-      <div class="logo-text">Conversation with Data</div>
-      <div class="logo-sub">Sepidaar Intelligence Layer</div>
-    </div>
-  </div>
-
-  <div>
-    <div class="section-label">Connected Databases</div>
-    <div class="db-list" id="dbList">
-      <div class="no-db">No databases connected</div>
-    </div>
-  </div>
-
-  <div>
-    <button class="add-db-toggle" id="addToggle" onclick="toggleAddForm()">
-      + Add database
-    </button>
-
-    <div class="add-db-form" id="addForm">
-      <input class="form-input" id="dbName" placeholder="Name  (e.g. accounting_prod)" />
-      <select class="form-select" id="dbType">
-        <option value="sqlite">SQLite</option>
-        <option value="postgresql">PostgreSQL</option>
-        <option value="mysql">MySQL / MariaDB</option>
-        <option value="mssql">SQL Server (MSSQL)</option>
-      </select>
-      <input class="form-input" id="dbConn"
-             placeholder="Connection string" />
-      <div class="form-hint" id="connHint">
-        sqlite:///./path/to/file.db
-      </div>
-      <div class="form-row">
-        <button class="btn btn-ghost" onclick="toggleAddForm()">Cancel</button>
-        <button class="btn btn-primary" onclick="addDatabase()">Connect</button>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark"><i data-lucide="database-zap"></i></div>
+      <div>
+        <div class="brand-title">Conversation with Data</div>
+        <div class="brand-subtitle">Sepidaar Intelligence Layer</div>
       </div>
     </div>
-  </div>
-</aside>
 
-<!-- ── Chat area ───────────────────────────────────────────────── -->
-<main class="chat-area">
-  <header class="chat-header">
-    <div id="activeDbBadge" class="no-active-badge">No database selected</div>
-  </header>
+    <section>
+      <div class="section-label">Active source</div>
+      <div class="source-card">
+        <div class="source-top">
+          <span>Database</span>
+          <i data-lucide="activity" width="15" height="15"></i>
+        </div>
+        <div class="source-name" id="sourceName">No database</div>
+      </div>
+    </section>
 
-  <div class="messages" id="messages">
-    <div class="welcome" id="welcome">
-      <div class="welcome-icon">💬</div>
-      <h2>Ask anything about your data</h2>
-      <p>Connect a database using the sidebar, then ask questions in plain English.
-         No SQL knowledge needed.</p>
+    <section>
+      <div class="section-label">Connected databases</div>
+      <div class="db-list" id="dbList"><div class="no-db">No databases connected</div></div>
+    </section>
+
+    <section>
+      <button class="add-db-toggle" id="addToggle" onclick="toggleAddForm()">
+        <i data-lucide="plus" width="16" height="16"></i>
+        Add database
+      </button>
+      <div class="add-db-form" id="addForm">
+        <input class="form-input" id="dbName" placeholder="Name (e.g. accounting_prod)" />
+        <select class="form-select" id="dbType">
+          <option value="sqlite">SQLite</option>
+          <option value="postgresql">PostgreSQL</option>
+          <option value="mysql">MySQL / MariaDB</option>
+          <option value="mssql">SQL Server (MSSQL)</option>
+        </select>
+        <input class="form-input" id="dbConn" placeholder="Connection string" />
+        <div class="form-hint" id="connHint">sqlite:///./path/to/file.db</div>
+        <div class="form-row">
+          <button class="btn" onclick="toggleAddForm()">Cancel</button>
+          <button class="btn btn-primary" onclick="addDatabase()">Connect</button>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-label">Sample questions</div>
+      <div class="sample-list">
+        <button class="sample-question" onclick="useSample(this)">Show the number of acquisition receipt records grouped by year.</button>
+        <button class="sample-question" onclick="useSample(this)">Show the number of cost center information records grouped by type.</button>
+        <button class="sample-question" onclick="useSample(this)">Show the latest 20 acquisition receipt records ordered by date.</button>
+      </div>
+    </section>
+  </aside>
+
+  <main class="workspace">
+    <header class="topbar">
+      <div>
+        <h1 class="page-title">Analytics dashboard</h1>
+        <p class="page-subtitle">Ask questions in plain language. Review charts, tables, SQL, and answers in one place.</p>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme"><i data-lucide="sun-moon"></i></button>
+      </div>
+    </header>
+
+    <section class="metrics">
+      <div class="metric">
+        <div class="metric-label">Visualization</div>
+        <div class="metric-value" id="metricViz">-</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Rows</div>
+        <div class="metric-value" id="metricRows">0</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Columns</div>
+        <div class="metric-value" id="metricColumns">0</div>
+      </div>
+    </section>
+
+    <section class="insights" id="insightBoard">
+      <div class="empty-board">
+        <div class="empty-content">
+          <div class="empty-icon"><i data-lucide="bar-chart-3"></i></div>
+          <h2>Your dashboard is ready</h2>
+          <p>Your next analytical answer will appear here as a chart, KPI, or table with the raw result underneath.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <aside class="chat-panel">
+    <header class="chat-header">
+      <div class="chat-title-row">
+        <div class="chat-title">Chat with data</div>
+        <i data-lucide="message-square-text" width="18" height="18"></i>
+      </div>
+      <div id="activeDbBadge" class="no-active-badge">No database selected</div>
+    </header>
+
+    <div class="messages" id="messages">
+      <div class="message ai">
+        <div class="avatar ai">AI</div>
+        <div class="bubble">Connect a database, then ask a question. Charts and tables will open in the dashboard panel.</div>
+      </div>
     </div>
-  </div>
 
-  <div class="input-bar">
-    <textarea class="chat-input" id="chatInput"
-              placeholder="Ask a question about your data…"
-              rows="1"
-              onkeydown="handleKey(event)"
-              oninput="autoResize(this)"></textarea>
-    <button class="send-btn" id="sendBtn" onclick="sendMessage()" title="Send">
-      ➤
-    </button>
-  </div>
-</main>
+    <div class="input-bar">
+      <textarea class="chat-input" id="chatInput"
+                placeholder="Ask a question about your data..."
+                rows="1"
+                onkeydown="handleKey(event)"
+                oninput="autoResize(this)"></textarea>
+      <button class="send-btn" id="sendBtn" onclick="sendMessage()" title="Send">
+        <i data-lucide="send-horizontal"></i>
+      </button>
+    </div>
+  </aside>
+</div>
 
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script>
-const API = "http://localhost:8000";
+const localHosts = new Set(["", "localhost", "127.0.0.1"]);
+const API = localHosts.has(window.location.hostname) && window.location.port !== "8000"
+  ? "http://localhost:8000"
+  : window.location.origin;
 
-let activeDb  = null;
+let activeDb = null;
 let databases = [];
-let waiting   = false;
+let waiting = false;
+let activeChart = null;
+let latestSql = "";
 
-// ── Init ────────────────────────────────────────────────────────────────────
+const chartPalettes = {
+  dark: [
+    "#e5b0a0", "#748da4", "#d28378", "#a6b7a1", "#eac8ab", "#a9afb4",
+    "#c4936a", "#547a6e", "#c2c3a8", "#f4d3c0", "#8e8e6c", "#6e4e3d",
+  ],
+  light: [
+    "#2d4f56", "#d28378", "#748da4", "#547a6e", "#c4936a", "#8e8e6c",
+    "#a3917b", "#e5b0a0", "#6e4e3d", "#a9afb4", "#c2c3a8", "#eac8ab",
+  ],
+};
+
+const barChartPalettes = {
+  dark: [
+    "#748da4", "#d28378", "#547a6e", "#c4936a", "#2d4f56", "#e5b0a0",
+    "#8e8e6c", "#eac8ab", "#6e4e3d", "#c2c3a8", "#a9afb4", "#a6b7a1",
+  ],
+  light: [
+    "#2d4f56", "#d28378", "#748da4", "#c4936a", "#547a6e", "#e5b0a0",
+    "#8e8e6c", "#eac8ab", "#6e4e3d", "#c2c3a8", "#a3917b", "#a6b7a1",
+  ],
+};
+
 async function init() {
+  initTheme();
+  renderIcons();
   try {
-    const res  = await fetch(`${API}/databases`);
+    const res = await fetch(`${API}/databases`);
     const data = await res.json();
     databases = data.databases || [];
-    activeDb  = data.active    || null;
+    activeDb = data.active || null;
     renderDatabases();
     renderActiveDb();
   } catch (e) {
-    // Server not running yet — that's fine on first open
+    showToast("Cannot reach the server. Make sure the backend is running.", "error");
   }
 }
 
-// ── Database rendering ───────────────────────────────────────────────────────
+function initTheme() {
+  const saved = localStorage.getItem("dashboard-theme");
+  if (saved === "light") document.body.classList.add("light");
+}
+
+function toggleTheme() {
+  document.body.classList.toggle("light");
+  localStorage.setItem("dashboard-theme", document.body.classList.contains("light") ? "light" : "dark");
+  if (activeChart) refreshChartTheme(activeChart);
+  renderIcons();
+}
+
+function renderIcons() {
+  if (window.lucide) window.lucide.createIcons();
+}
+
 function renderDatabases() {
   const list = document.getElementById("dbList");
   if (databases.length === 0) {
@@ -584,42 +441,43 @@ function renderDatabases() {
     return;
   }
   list.innerHTML = databases.map(db => `
-    <div class="db-item ${db.name === activeDb ? "active" : ""}"
-         onclick="activateDb('${db.name}')">
-      <div class="db-dot"></div>
-      <span class="db-name">${db.name}</span>
-      <span class="db-type">${db.type}</span>
-      <button class="db-remove" onclick="removeDb(event,'${db.name}')" title="Remove">✕</button>
-    </div>
+    <button class="db-item ${db.name === activeDb ? "active" : ""}" onclick="activateDb('${escapeForAttribute(db.name)}')">
+      <span class="db-dot"></span>
+      <span class="db-name">${escapeHtml(db.name)}</span>
+      <span class="db-type">${escapeHtml(db.type || "")}</span>
+      <span class="db-remove" onclick="removeDb(event,'${escapeForAttribute(db.name)}')" title="Remove">x</span>
+    </button>
   `).join("");
 }
 
 function renderActiveDb() {
   const badge = document.getElementById("activeDbBadge");
+  const source = document.getElementById("sourceName");
   if (activeDb) {
     badge.className = "active-db-badge";
-    badge.innerHTML = `<span style="width:7px;height:7px;border-radius:50%;background:#34d399;display:inline-block"></span> ${activeDb}`;
+    badge.textContent = activeDb;
+    source.textContent = activeDb;
   } else {
     badge.className = "no-active-badge";
     badge.textContent = "No database selected";
+    source.textContent = "No database";
   }
 }
 
-// ── Add database ─────────────────────────────────────────────────────────────
 function toggleAddForm() {
-  const form   = document.getElementById("addForm");
+  const form = document.getElementById("addForm");
   const toggle = document.getElementById("addToggle");
-  const open   = form.classList.toggle("open");
+  const open = form.classList.toggle("open");
   toggle.style.display = open ? "none" : "flex";
+  renderIcons();
 }
 
-// Update connection string hint based on selected type
 document.getElementById("dbType").addEventListener("change", e => {
   const hints = {
-    sqlite:     "sqlite:///./path/to/file.db",
+    sqlite: "sqlite:///./path/to/file.db",
     postgresql: "postgresql://user:pass@localhost:5432/dbname",
-    mysql:      "mysql+pymysql://user:pass@localhost/dbname",
-    mssql:      "mssql+pyodbc://sa:password@localhost/dbname?driver=ODBC+Driver+17+for+SQL+Server",
+    mysql: "mysql+pymysql://user:pass@localhost/dbname",
+    mssql: "mssql+pyodbc://sa:password@localhost/dbname?driver=ODBC+Driver+17+for+SQL+Server",
   };
   document.getElementById("connHint").textContent = hints[e.target.value] || "";
 });
@@ -629,44 +487,48 @@ async function addDatabase() {
   const type = document.getElementById("dbType").value;
   const conn = document.getElementById("dbConn").value.trim();
 
-  if (!name || !conn) { showToast("Name and connection string required", "error"); return; }
+  if (!name || !conn) {
+    showToast("Name and connection string are required.", "error");
+    return;
+  }
 
   try {
-    const res  = await fetch(`${API}/databases`, {
+    const res = await fetch(`${API}/databases`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, type, connection_string: conn }),
     });
     const data = await res.json();
-
-    if (!res.ok) { showToast(data.error || "Connection failed", "error"); return; }
+    if (!res.ok) {
+      showToast(data.error || "Connection failed.", "error");
+      return;
+    }
 
     activeDb = data.active;
     await refreshDatabases();
     toggleAddForm();
-
     document.getElementById("dbName").value = "";
     document.getElementById("dbConn").value = "";
-    showToast(`Connected to ${name}`, "success");
+    showToast(`Connected to ${name}.`);
   } catch (e) {
-    showToast("Server unreachable — is main.py running?", "error");
+    showToast("Server unreachable. Make sure the backend is running.", "error");
   }
 }
 
 async function activateDb(name) {
   try {
-    const res  = await fetch(`${API}/databases/activate`, {
+    const res = await fetch(`${API}/databases/activate`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name }),
     });
     const data = await res.json();
-    activeDb   = data.active;
+    activeDb = data.active;
     renderDatabases();
     renderActiveDb();
-    showToast(`Switched to ${name}`, "success");
+    showToast(`Switched to ${name}.`);
   } catch (e) {
-    showToast("Could not switch database", "error");
+    showToast("Could not switch database.", "error");
   }
 }
 
@@ -674,26 +536,32 @@ async function removeDb(event, name) {
   event.stopPropagation();
   if (!confirm(`Remove "${name}"?`)) return;
   try {
-    const res  = await fetch(`${API}/databases/${name}`, { method: "DELETE" });
+    const res = await fetch(`${API}/databases/${encodeURIComponent(name)}`, { method: "DELETE" });
     const data = await res.json();
-    activeDb   = data.active;
+    activeDb = data.active;
     await refreshDatabases();
-    showToast(`Removed ${name}`, "success");
+    showToast(`Removed ${name}.`);
   } catch (e) {
-    showToast("Could not remove database", "error");
+    showToast("Could not remove database.", "error");
   }
 }
 
 async function refreshDatabases() {
-  const res  = await fetch(`${API}/databases`);
+  const res = await fetch(`${API}/databases`);
   const data = await res.json();
-  databases  = data.databases || [];
-  activeDb   = data.active    || null;
+  databases = data.databases || [];
+  activeDb = data.active || null;
   renderDatabases();
   renderActiveDb();
 }
 
-// ── Chat ─────────────────────────────────────────────────────────────────────
+function useSample(button) {
+  const input = document.getElementById("chatInput");
+  input.value = button.textContent.trim();
+  autoResize(input);
+  input.focus();
+}
+
 function handleKey(e) {
   if (e.key === "Enter" && !e.shiftKey) {
     e.preventDefault();
@@ -703,16 +571,15 @@ function handleKey(e) {
 
 function autoResize(el) {
   el.style.height = "auto";
-  el.style.height = Math.min(el.scrollHeight, 160) + "px";
+  el.style.height = Math.min(el.scrollHeight, 140) + "px";
 }
 
 async function sendMessage() {
   if (waiting) return;
   const input = document.getElementById("chatInput");
-  const text  = input.value.trim();
+  const text = input.value.trim();
   if (!text) return;
 
-  hideWelcome();
   appendMessage("user", text);
   input.value = "";
   input.style.height = "auto";
@@ -721,19 +588,25 @@ async function sendMessage() {
   setWaiting(true);
 
   try {
-    const res  = await fetch(`${API}/chat`, {
+    const res = await fetch(`${API}/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message: text }),
     });
     const data = await res.json();
-
     removeTyping(typingId);
 
     if (data.error) {
-      appendMessage("ai", `⚠ ${data.error}`);
+      appendMessage("ai", `Warning: ${data.error}`);
     } else {
-      appendMessage("ai", data.reply, data);
+      if (data.data) {
+        renderVisualization(data.data, data.visualization, data.reply, data.sql);
+        if ((data.visualization?.type || "table") !== "table") {
+          appendMessage("ai", data.reply || "Done.");
+        }
+      } else {
+        appendMessage("ai", data.reply || "Done.");
+      }
       if (data.active_db !== activeDb) {
         activeDb = data.active_db;
         renderDatabases();
@@ -742,53 +615,70 @@ async function sendMessage() {
     }
   } catch (e) {
     removeTyping(typingId);
-    appendMessage("ai", "Cannot reach the server. Make sure `python main.py` is running.");
+    appendMessage("ai", "Cannot reach the server. Make sure the backend is running.");
   }
 
   setWaiting(false);
 }
 
-// ── Message rendering ────────────────────────────────────────────────────────
-function hideWelcome() {
-  const w = document.getElementById("welcome");
-  if (w) w.style.display = "none";
-}
-
-function appendMessage(role, text, structured = null) {
+function appendMessage(role, text) {
   const container = document.getElementById("messages");
-  const div       = document.createElement("div");
-  div.className   = `message ${role}`;
-  div.innerHTML   = `
-    <div class="avatar ${role}">${role === "ai" ? "AI" : "U"}</div>
-    <div class="bubble">${renderText(text)}</div>
-  `;
+  const div = document.createElement("div");
+  div.className = `message ${role}`;
+
+  const avatar = document.createElement("div");
+  avatar.className = `avatar ${role}`;
+  avatar.textContent = role === "ai" ? "AI" : "U";
+
+  const bubble = document.createElement("div");
+  bubble.className = "bubble";
+  bubble.innerHTML = renderText(text);
+
+  div.appendChild(avatar);
+  div.appendChild(bubble);
   container.appendChild(div);
-  if (role === "ai" && structured?.data) {
-    renderVisualization(div.querySelector(".bubble"), structured.data, structured.visualization);
-  }
   container.scrollTop = container.scrollHeight;
 }
 
-function renderVisualization(bubble, data, spec) {
+function renderVisualization(data, spec, answer, sql) {
   const columns = Array.isArray(data.columns) ? data.columns : [];
   const rows = Array.isArray(data.rows) ? data.rows : [];
-  const visualization = spec || {
-    type: "table", title: "Query result", category_column: null, value_columns: []
-  };
+  const visualization = spec || { type: "table", title: "Query result", category_column: null, value_columns: [] };
+  latestSql = sql || "";
 
-  const card = document.createElement("div");
-  card.className = "visualization-card";
+  if (activeChart) {
+    activeChart.destroy();
+    activeChart = null;
+  }
 
-  const title = document.createElement("div");
-  title.className = "visualization-title";
-  title.textContent = visualization.title || "Query result";
-  card.appendChild(title);
+  updateMetrics(visualization.type, rows.length, columns.length);
+
+  const board = document.getElementById("insightBoard");
+  board.innerHTML = "";
+
+  const card = document.createElement("article");
+  card.className = "viz-card";
+
+  const header = document.createElement("div");
+  header.className = "viz-header";
+  header.innerHTML = `
+    <div>
+      <div class="viz-title">${escapeHtml(visualization.title || "Query result")}</div>
+      ${visualization.type === "table" ? "" : `<div class="viz-caption">${renderText(answer || "Result generated from your question.")}</div>`}
+    </div>
+    <div class="viz-tools">
+      <button class="tool-btn" onclick="downloadChart()" title="Download chart"><i data-lucide="download" width="14" height="14"></i>Chart</button>
+      <button class="tool-btn" onclick="copySql()" title="Copy SQL"><i data-lucide="copy" width="14" height="14"></i>SQL</button>
+      <div class="viz-badge">${escapeHtml(visualization.type || "table")}</div>
+    </div>
+  `;
+  card.appendChild(header);
 
   let primaryRendered = false;
 
   if (!rows.length || !columns.length) {
     const empty = document.createElement("div");
-    empty.className = "empty-result";
+    empty.className = "chart-shell empty-result";
     empty.textContent = "The query returned no rows.";
     card.appendChild(empty);
   } else if (visualization.type === "kpi") {
@@ -796,40 +686,46 @@ function renderVisualization(bubble, data, spec) {
     primaryRendered = Boolean(visualization.value_columns?.length);
   } else if (["line", "bar"].includes(visualization.type) && window.Chart) {
     renderChart(card, rows, visualization);
-    primaryRendered = Boolean(
-      visualization.category_column && visualization.value_columns?.length
-    );
+    primaryRendered = Boolean(visualization.category_column && visualization.value_columns?.length);
   }
 
   if (rows.length && columns.length) {
-    const details = document.createElement("details");
-    details.className = "data-details";
-    details.open = visualization.type === "table" || !primaryRendered;
+    if (visualization.type === "table") {
+      card.appendChild(buildDataTable(columns, rows));
+    } else {
+      const details = document.createElement("details");
+      details.className = "data-details";
+      details.open = !primaryRendered;
 
-    const summary = document.createElement("summary");
-    summary.textContent = `View data (${formatNumber(rows.length)} rows)`;
-    details.appendChild(summary);
-    details.appendChild(buildDataTable(columns, rows));
-    card.appendChild(details);
+      const summary = document.createElement("summary");
+      summary.textContent = `View data (${formatNumber(rows.length)} rows)`;
+      details.appendChild(summary);
+      details.appendChild(buildDataTable(columns, rows));
+      card.appendChild(details);
+    }
   }
 
-  bubble.appendChild(card);
+  if (sql) {
+    const sqlBlock = document.createElement("pre");
+    sqlBlock.className = "sql-block";
+    sqlBlock.textContent = sql;
+    card.appendChild(sqlBlock);
+  }
+
+  board.appendChild(card);
+  renderIcons();
 }
 
 function renderKpi(card, rows, spec) {
   const valueColumn = spec.value_columns?.[0];
   if (!valueColumn) return;
-
-  const value = document.createElement("div");
-  value.className = "kpi-value";
-  value.textContent = formatValue(rows[0]?.[valueColumn]);
-
-  const label = document.createElement("div");
-  label.className = "kpi-label";
-  label.textContent = valueColumn;
-
-  card.appendChild(value);
-  card.appendChild(label);
+  const panel = document.createElement("div");
+  panel.className = "kpi-card";
+  panel.innerHTML = `
+    <div class="kpi-value">${escapeHtml(formatValue(rows[0]?.[valueColumn]))}</div>
+    <div class="kpi-label">${escapeHtml(valueColumn)}</div>
+  `;
+  card.appendChild(panel);
 }
 
 function renderChart(card, rows, spec) {
@@ -837,24 +733,34 @@ function renderChart(card, rows, spec) {
   const valueColumns = Array.isArray(spec.value_columns) ? spec.value_columns : [];
   if (!category || !valueColumns.length) return;
 
+  const shell = document.createElement("div");
+  shell.className = "chart-shell";
   const wrapper = document.createElement("div");
   wrapper.className = "chart-container";
   const canvas = document.createElement("canvas");
   wrapper.appendChild(canvas);
-  card.appendChild(wrapper);
+  shell.appendChild(wrapper);
+  card.appendChild(shell);
 
-  const colors = ["#6c8cff", "#34d399", "#fbbf24", "#f87171", "#c084fc"];
-  new Chart(canvas, {
+  const palette = currentPalette();
+  const gridColor = cssVar("--border");
+  const textColor = cssVar("--muted");
+  const titleColor = cssVar("--title");
+
+  activeChart = new Chart(canvas, {
     type: spec.type,
     data: {
       labels: rows.map(row => formatValue(row[category])),
       datasets: valueColumns.map((column, index) => ({
         label: column,
         data: rows.map(row => row[column]),
-        borderColor: colors[index % colors.length],
-        backgroundColor: `${colors[index % colors.length]}99`,
+        borderColor: chartColorSet(palette, rows.length, index, spec.type, 1),
+        backgroundColor: chartColorSet(palette, rows.length, index, spec.type, spec.type === "bar" ? 0.72 : 0.18),
+        pointBackgroundColor: palette[index % palette.length],
+        pointBorderColor: titleColor,
         borderWidth: 2,
-        tension: 0.25,
+        tension: 0.28,
+        fill: spec.type === "line",
       })),
     },
     options: {
@@ -862,29 +768,51 @@ function renderChart(card, rows, spec) {
       maintainAspectRatio: false,
       interaction: { mode: "index", intersect: false },
       plugins: {
-        legend: { labels: { color: "#e8eaf0" } },
+        legend: { labels: { color: titleColor, boxWidth: 14, boxHeight: 14 } },
+        tooltip: {
+          backgroundColor: cssVar("--panel-2"),
+          titleColor,
+          bodyColor: titleColor,
+          borderColor: gridColor,
+          borderWidth: 1,
+        },
       },
       scales: {
-        x: {
-          ticks: { color: "#9ca3af", maxRotation: 45, minRotation: 0 },
-          grid: { color: "#2e334755" },
-        },
-        y: {
-          beginAtZero: spec.type === "bar",
-          ticks: {
-            color: "#9ca3af",
-            callback: value => formatNumber(value),
-          },
-          grid: { color: "#2e3347" },
-        },
+        x: { ticks: { color: textColor, maxRotation: 45, minRotation: 0 }, grid: { color: hexToRgba(gridColor, 0.45) } },
+        y: { beginAtZero: spec.type === "bar", ticks: { color: textColor, callback: value => formatNumber(value) }, grid: { color: gridColor } },
       },
     },
   });
 }
 
+function refreshChartTheme(chart) {
+  const palette = currentPalette();
+  const gridColor = cssVar("--border");
+  const textColor = cssVar("--muted");
+  const titleColor = cssVar("--title");
+  chart.data.datasets.forEach((dataset, index) => {
+    const color = palette[index % palette.length];
+    const pointCount = Array.isArray(dataset.data) ? dataset.data.length : 1;
+    dataset.borderColor = chartColorSet(palette, pointCount, index, chart.config.type, 1);
+    dataset.backgroundColor = chartColorSet(palette, pointCount, index, chart.config.type, chart.config.type === "bar" ? 0.72 : 0.18);
+    dataset.pointBackgroundColor = color;
+    dataset.pointBorderColor = titleColor;
+  });
+  chart.options.plugins.legend.labels.color = titleColor;
+  chart.options.plugins.tooltip.backgroundColor = cssVar("--panel-2");
+  chart.options.plugins.tooltip.titleColor = titleColor;
+  chart.options.plugins.tooltip.bodyColor = titleColor;
+  chart.options.plugins.tooltip.borderColor = gridColor;
+  chart.options.scales.x.ticks.color = textColor;
+  chart.options.scales.x.grid.color = hexToRgba(gridColor, 0.45);
+  chart.options.scales.y.ticks.color = textColor;
+  chart.options.scales.y.grid.color = gridColor;
+  chart.update();
+}
+
 function buildDataTable(columns, rows) {
   const wrapper = document.createElement("div");
-  wrapper.className = "data-table-wrap";
+  wrapper.className = "table-wrap";
   const table = document.createElement("table");
   table.className = "data-table";
 
@@ -914,36 +842,39 @@ function buildDataTable(columns, rows) {
   return wrapper;
 }
 
-function formatValue(value) {
-  if (value === null || value === undefined) return "—";
-  if (typeof value === "number") return formatNumber(value);
-  if (typeof value === "boolean") return value ? "Yes" : "No";
-  return String(value);
+function downloadChart() {
+  if (!activeChart) {
+    showToast("There is no chart to download.", "error");
+    return;
+  }
+  const link = document.createElement("a");
+  link.download = "query-chart.png";
+  link.href = activeChart.toBase64Image();
+  link.click();
 }
 
-function formatNumber(value) {
-  return new Intl.NumberFormat(undefined, { maximumFractionDigits: 4 }).format(value);
+async function copySql() {
+  if (!latestSql) {
+    showToast("There is no SQL to copy.", "error");
+    return;
+  }
+  await navigator.clipboard.writeText(latestSql);
+  showToast("SQL copied.");
 }
 
-function renderText(text) {
-  // Very basic markdown-ish rendering
-  return text
-    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-    .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-    .replace(/`([^`]+)`/g, "<code>$1</code>")
-    .replace(/\n/g, "<br>");
+function updateMetrics(type, rows, columns) {
+  document.getElementById("metricViz").textContent = type || "table";
+  document.getElementById("metricRows").textContent = formatNumber(rows);
+  document.getElementById("metricColumns").textContent = formatNumber(columns);
 }
 
 function appendTyping() {
-  const id        = "typing-" + Date.now();
+  const id = "typing-" + Date.now();
   const container = document.getElementById("messages");
-  const div       = document.createElement("div");
-  div.id          = id;
-  div.className   = "message ai";
-  div.innerHTML   = `
-    <div class="avatar ai">AI</div>
-    <div class="bubble"><div class="typing"><span></span><span></span><span></span></div></div>
-  `;
+  const div = document.createElement("div");
+  div.id = id;
+  div.className = "message ai";
+  div.innerHTML = '<div class="avatar ai">AI</div><div class="bubble"><div class="typing"><span></span><span></span><span></span></div></div>';
   container.appendChild(div);
   container.scrollTop = container.scrollHeight;
   return id;
@@ -956,19 +887,82 @@ function removeTyping(id) {
 
 function setWaiting(val) {
   waiting = val;
-  document.getElementById("sendBtn").disabled    = val;
-  document.getElementById("chatInput").disabled  = val;
+  document.getElementById("sendBtn").disabled = val;
+  document.getElementById("chatInput").disabled = val;
 }
 
-// ── Toast ────────────────────────────────────────────────────────────────────
 function showToast(msg, type = "success") {
-  const t      = document.getElementById("toast");
-  t.textContent = msg;
-  t.className  = `toast ${type} show`;
-  setTimeout(() => t.classList.remove("show"), 2800);
+  const toast = document.getElementById("toast");
+  toast.textContent = msg;
+  toast.className = `toast ${type} show`;
+  setTimeout(() => toast.classList.remove("show"), 2800);
 }
 
-// ── Boot ─────────────────────────────────────────────────────────────────────
+function formatValue(value) {
+  if (value === null || value === undefined) return "-";
+  if (typeof value === "number") return formatNumber(value);
+  if (typeof value === "boolean") return value ? "Yes" : "No";
+  return String(value);
+}
+
+function formatNumber(value) {
+  return new Intl.NumberFormat(undefined, { maximumFractionDigits: 4 }).format(value);
+}
+
+function renderText(text) {
+  return escapeHtml(String(text || ""))
+    .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+    .replace(/`([^`]+)`/g, "<code>$1</code>")
+    .replace(/\n/g, "<br>");
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function escapeForAttribute(value) {
+  return escapeHtml(value).replace(/\\/g, "\\\\");
+}
+
+function cssVar(name) {
+  return getComputedStyle(document.body).getPropertyValue(name).trim();
+}
+
+function currentPalette() {
+  return document.body.classList.contains("light") ? chartPalettes.light : chartPalettes.dark;
+}
+
+function currentBarPalette() {
+  return document.body.classList.contains("light") ? barChartPalettes.light : barChartPalettes.dark;
+}
+
+function chartColorSet(palette, count, datasetIndex, chartType, alpha) {
+  if (chartType !== "bar") {
+    return hexToRgba(palette[datasetIndex % palette.length], alpha);
+  }
+  const barPalette = currentBarPalette();
+  return Array.from({ length: count }, (_, index) => {
+    const color = barPalette[(index + datasetIndex * 3) % barPalette.length];
+    return hexToRgba(color, alpha);
+  });
+}
+
+function hexToRgba(color, alpha) {
+  if (!color || !color.startsWith("#")) return color;
+  const clean = color.slice(1);
+  const full = clean.length === 3 ? clean.split("").map(ch => ch + ch).join("") : clean;
+  const value = parseInt(full, 16);
+  const red = (value >> 16) & 255;
+  const green = (value >> 8) & 255;
+  const blue = value & 255;
+  return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+}
+
 init();
 </script>
 </body>
