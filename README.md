@@ -103,6 +103,33 @@ uvicorn api.main:app --reload --port 8000
 
 Then open `frontend/index.html` in your browser.
 
+## Run with Docker
+
+Keep Ollama running on the host and make sure the embedding model is available:
+
+```bash
+ollama pull bge-m3
+docker compose up --build -d
+```
+
+Open http://localhost:25796. The published port is bound to localhost only, so it
+is not directly exposed to the LAN or internet. A local FRP client can forward
+`127.0.0.1:25796` when remote access is configured.
+
+The application connects to databases supplied through its UI; it does not use
+an internal application database, so Compose intentionally does not create a
+PostgreSQL or MySQL service. From inside the container, databases running on the
+host must use `host.docker.internal` rather than `localhost` in their connection
+strings.
+
+Useful commands:
+
+```bash
+docker compose ps
+docker compose logs -f api
+docker compose down
+```
+
 ## API docs
 
 FastAPI auto-generates docs at: http://localhost:8000/docs

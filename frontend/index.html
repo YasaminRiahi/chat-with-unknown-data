@@ -370,10 +370,9 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script>
-const localHosts = new Set(["", "localhost", "127.0.0.1"]);
-const API = localHosts.has(window.location.hostname) && window.location.port !== "8000"
-  ? "http://localhost:8000"
-  : window.location.origin;
+// Use the same origin when served by Docker/nginx (locally or through FRP).
+// Retain the localhost API fallback when this file is opened directly.
+const API = window.location.protocol === "file:" ? "http://localhost:8000" : window.location.origin;
 
 let activeDb = null;
 let databases = [];
