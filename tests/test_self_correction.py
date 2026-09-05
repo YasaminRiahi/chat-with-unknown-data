@@ -135,6 +135,20 @@ class SelfCorrectionTests(unittest.TestCase):
         self.assertEqual(database.execute_query.call_count, 4)
         self.assertEqual(llm.invoke.call_count, 3)
 
+    def test_mutation_sql_is_rejected_before_execution(self):
+        database = Mock()
+        llm = Mock()
+        layer = SelfCorrectionLayer(llm, None, database)
+
+        with self.assertRaisesRegex(RuntimeError, "Only read-only SELECT"):
+            layer.run(
+                "SELECT 1; INSERT INTO [GNR].[CostCenter] ([Type]) VALUES (2);",
+                "test1", "question", "schema", max_retries=3,
+            )
+
+        database.execute_query.assert_not_called()
+        llm.invoke.assert_not_called()
+
 
 if __name__ == "__main__":
     unittest.main()

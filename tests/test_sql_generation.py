@@ -18,6 +18,26 @@ class SQLGenerationPromptTests(unittest.TestCase):
         self.assertIn(">= '20190331' AND < '20190401'", prompt)
         self.assertIn("with an hour and minute, the entire minute", prompt)
 
+    def test_generated_mutation_after_select_is_rejected(self):
+        llm = MagicMock()
+        llm.invoke.return_value.content = (
+            "SELECT 1; INSERT INTO [GNR].[CostCenter] ([Type]) VALUES (2);"
+        )
+        layer = SQLGenerationLayer(llm, None, None)
+
+        with self.assertRaisesRegex(RuntimeError, "Only read-only SELECT"):
+            layer.run("Insert a new cost center", "CREATE TABLE [GNR].[CostCenter] (...)")
+
+    def test_generated_plain_insert_is_rejected(self):
+        llm = MagicMock()
+        llm.invoke.return_value.content = (
+            "INSERT INTO [GNR].[CostCenter] ([Type]) VALUES (2);"
+        )
+        layer = SQLGenerationLayer(llm, None, None)
+
+        with self.assertRaisesRegex(RuntimeError, "Only read-only SELECT"):
+            layer.run("Insert a new cost center", "CREATE TABLE [GNR].[CostCenter] (...)")
+
 
 if __name__ == "__main__":
     unittest.main()

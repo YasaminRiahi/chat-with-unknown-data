@@ -142,6 +142,127 @@ def handle_list_databases() -> str:
     active = f"\n\nCurrently active: **{active_db}**" if active_db else ""
     return f"Connected databases:\n\n{lines}{active}"
 
+def is_data_mutation_request(message: str) -> bool:
+    mutation_words = (
+        r"insert|update|delete|merge|drop|alter|truncate|"
+        r"\u0627\u0636\u0627\u0641\u0647|"
+        r"\u0627\u06cc\u062c\u0627\u062f|"
+        r"\u0628\u0633\u0627\u0632|"
+        r"\u0628\u0633\u0627\u0632\u06cc\u062f|"
+        r"\u0648\u06cc\u0631\u0627\u06cc\u0634|"
+        r"\u062a\u063a\u06cc\u06cc\u0631|"
+        r"\u062d\u0630\u0641|"
+        r"\u067e\u0627\u06a9"
+    )
+    data_words = (
+        r"record|row|entry|table|database|cost\s*center|voucher|receipt|"
+        r"\u0631\u06a9\u0648\u0631\u062f|"
+        r"\u0631\u062f\u06cc\u0641|"
+        r"\u062c\u062f\u0648\u0644|"
+        r"\u062f\u06cc\u062a\u0627\u0628\u06cc\u0633|"
+        r"\u067e\u0627\u06cc\u06af\u0627\u0647|"
+        r"\u0645\u0631\u06a9\u0632\s*\u0647\u0632\u06cc\u0646\u0647|"
+        r"\u0633\u0646\u062f|"
+        r"\u0631\u0633\u06cc\u062f"
+    )
+    field_words = (
+        r"type|code|title|name|number|date|"
+        r"\u0646\u0648\u0639|"
+        r"\u06a9\u062f|"
+        r"\u0639\u0646\u0648\u0627\u0646|"
+        r"\u0646\u0627\u0645|"
+        r"\u0634\u0645\u0627\u0631\u0647|"
+        r"\u062a\u0627\u0631\u06cc\u062e"
+    )
+
+    direct_dml = re.search(
+        mutation_words,
+        message,
+        re.IGNORECASE,
+    )
+    if direct_dml and re.search(data_words, message, re.IGNORECASE):
+        return True
+
+    write_intent = re.search(
+        r"(?:\b(add|create|edit|modify|remove)\b|"
+        r"\u0627\u0636\u0627\u0641\u0647|\u0627\u06cc\u062c\u0627\u062f|"
+        r"\u0648\u06cc\u0631\u0627\u06cc\u0634|\u062a\u063a\u06cc\u06cc\u0631|\u062d\u0630\u0641|"
+        r"\u067e\u0627\u06a9).*"
+        rf"(?:{data_words})",
+        message,
+        re.IGNORECASE,
+    )
+    field_assignment = re.search(
+        rf"(?:\bwith\s+(?:type|code|title|name|number|date)\b|(?:{field_words}))",
+        message,
+        re.IGNORECASE,
+    )
+    return bool(write_intent and field_assignment)
+
+def is_persian_text(message: str) -> bool:
+    return bool(re.search(r"[\u0600-\u06ff]", str(message or "")))
+
+def read_only_message(message: str = "") -> str:
+    if is_persian_text(message):
+        return (
+            "این داشبورد فقط خواندنی است؛ بنابراین نمی‌توانم رکورد جدید اضافه کنم، "
+            "داده‌ای را ویرایش کنم یا چیزی را حذف کنم. می‌توانی سؤال‌های تحلیلی "
+            "بپرسی، خلاصه بگیری یا رکوردهای موجود را مشاهده کنی."
+        )
+    return (
+        "This dashboard is read-only, so I cannot add, update, or delete "
+        "database records. You can ask analytical questions, request summaries, "
+        "or view existing records."
+    )
+
+def friendly_error_message(error: object, user_message: str = "") -> str:
+    """Convert low-level API/SQL errors into user-facing text."""
+    raw = str(error or "").strip()
+    lowered = raw.lower()
+
+    read_only_error_signals = [
+        "only read-only select",
+        "insert",
+        "update",
+        "delete",
+        "drop",
+        "alter",
+        "background on this error",
+        "sqlalche.me",
+    ]
+    if any(signal in lowered for signal in read_only_error_signals):
+        return read_only_message(user_message or raw)
+
+    model_error_signals = [
+        "403",
+        "forbidden",
+        "401",
+        "unauthorized",
+        "invalid api key",
+        "model",
+        "rate limit",
+        "quota",
+        "permission",
+    ]
+    if any(signal in lowered for signal in model_error_signals):
+        return (
+            "I could not generate the answer right now because the AI service "
+            "is not available or the selected model is not accessible. "
+            "Please check the model/API settings or try again in a moment."
+        )
+
+    data_error_signals = ["sql", "syntax", "no such table", "no such column", "database"]
+    if any(signal in lowered for signal in data_error_signals):
+        return (
+            "I could not run this data question successfully. "
+            "Please try rephrasing it or check that the selected database has the required tables and columns."
+        )
+
+    return (
+        "I could not process that request right now. "
+        "Please try again or rephrase the question."
+    )
+
 def run_chat_detailed(user_message: str) -> dict:
     global active_db
 
@@ -174,21 +295,22 @@ def run_chat_detailed(user_message: str) -> dict:
 
     # Run pipeline if a DB is active
     if active_db:
-        metadata_answer = pipeline.answer_metadata_question(user_message, active_db)
-        if metadata_answer is not None:
-            return text_response(metadata_answer)
-        result = pipeline.run(user_message, active_db)
-        if result["success"]:
-            return {
-                "reply": result["answer"],
-                "sql": result["sql"],
-                "data": result["data"],
-                "visualization": result["visualization"],
-            }
-        else:
-            return text_response(
-                f"I couldn't process that request: {result.get('error')}"
-            )
+        try:
+            metadata_answer = pipeline.answer_metadata_question(user_message, active_db)
+            if metadata_answer is not None:
+                return text_response(metadata_answer)
+            result = pipeline.run(user_message, active_db)
+            if result["success"]:
+                return {
+                    "reply": result["answer"],
+                    "sql": result["sql"],
+                    "data": result["data"],
+                    "visualization": result["visualization"],
+                }
+            else:
+                return text_response(friendly_error_message(result.get("error"), user_message))
+        except Exception as exc:
+            return text_response(friendly_error_message(exc, user_message))
 
     # Build message list for LLM
     messages = [SystemMessage(content=build_system_prompt())]
@@ -199,8 +321,11 @@ def run_chat_detailed(user_message: str) -> dict:
             messages.append(AIMessage(content=turn["content"]))
     messages.append(HumanMessage(content=user_message))
 
-    response = llm.invoke(messages)
-    return text_response(response.content)
+    try:
+        response = llm.invoke(messages)
+        return text_response(response.content)
+    except Exception as exc:
+        return text_response(friendly_error_message(exc, user_message))
 
 
 def run_chat(user_message: str) -> str:

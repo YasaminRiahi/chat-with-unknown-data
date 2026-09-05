@@ -32,8 +32,15 @@ class VisualizationLayer:
         r"\u062d\u062f\u0627\u0642\u0644|\u062d\u062f\u0627\u06a9\u062b\u0631|\u0628\u0647\s*\u062a\u0641\u06a9\u06cc\u06a9)",
         re.IGNORECASE,
     )
+    DIRECT_ANSWER_PATTERN = re.compile(
+        r"\b(when|what|which|who|where|how\s+much|how\s+many)\b|"
+        r"(?:\u0686\u0647\s*\u0632\u0645\u0627\u0646\u06cc|\u06a9\u06cc|\u0686\u0647\s*\u0648\u0642\u062a|"
+        r"\u0686\u06cc\u0633\u062a|\u06a9\u062f\u0627\u0645|\u0686\u0642\u062f\u0631|\u0686\u0646\u062f)",
+        re.IGNORECASE,
+    )
     MAX_CHART_COLUMNS = 4
     MAX_VALUE_SERIES = 3
+    MAX_SUMMARY_COLUMNS = 4
 
     def run(self, question: str, rows: list[dict[str, Any]]) -> dict[str, Any]:
         """Return presentation metadata without mutating SQL or result rows."""
@@ -59,18 +66,36 @@ class VisualizationLayer:
         category_columns = [
             column for column in columns if column not in numeric_columns
         ]
+        is_record_list = bool(self.RECORD_LIST_PATTERN.search(question))
+        is_aggregate = bool(self.AGGREGATE_PATTERN.search(question))
+        is_direct_answer = bool(self.DIRECT_ANSWER_PATTERN.search(question))
 
-        if len(rows) == 1 and len(columns) == 1 and numeric_columns:
+        # A single returned cell is best read as a direct answer, even when the
+        # value is a date or text. The UI labels this as "Summary value".
+        if len(rows) == 1 and len(columns) == 1:
             return {
                 **base,
                 "type": "kpi",
-                "value_columns": [numeric_columns[0]],
+                "value_columns": [columns[0]],
+            }
+
+        # A narrow one-row result usually answers a specific lookup question
+        # better as summary fields than as a table. Keep explicit record/list
+        # requests as tables because users asked for row-level detail.
+        if (
+            len(rows) == 1
+            and len(columns) <= self.MAX_SUMMARY_COLUMNS
+            and not is_record_list
+            and (is_direct_answer or is_aggregate)
+        ):
+            return {
+                **base,
+                "type": "kpi",
+                "value_columns": columns,
             }
 
         # Detail/list queries are better represented as tables. Wide records
         # usually mix unrelated IDs, flags, and amounts on incompatible scales.
-        is_record_list = bool(self.RECORD_LIST_PATTERN.search(question))
-        is_aggregate = bool(self.AGGREGATE_PATTERN.search(question))
         if (is_record_list and not is_aggregate) or len(columns) > self.MAX_CHART_COLUMNS:
             return base
 

@@ -15,6 +15,7 @@ TODO improvements:
 import re
 from langchain_core.messages import HumanMessage
 from pipeline.base import BaseLayer
+from pipeline.sql_safety import contains_forbidden_sql, ensure_read_only_sql
 
 
 class SQLGenerationLayer(BaseLayer):
@@ -25,8 +26,10 @@ class SQLGenerationLayer(BaseLayer):
         sql = re.sub(r"^(?:SELECT\s+){2,}", "SELECT ", sql, flags=re.IGNORECASE)
         match = re.search(r"\b(SELECT|WITH)\b[\s\S]+", sql, re.IGNORECASE)
         if not match:
+            if contains_forbidden_sql(sql):
+                ensure_read_only_sql(sql)
             raise RuntimeError("The model did not return a read-only SQL query.")
-        return match.group(0).strip()
+        return ensure_read_only_sql(match.group(0).strip())
 
     def run(self, question: str, schema_text: str) -> str:
         """
@@ -47,6 +50,10 @@ Generate a T-SQL query for Microsoft SQL Server.
 - Output ONLY the SQL query. Nothing else.
 - No explanations, no comments, no markdown, no other languages.
 - First word MUST be SELECT.
+- The query MUST be read-only. Never generate INSERT, UPDATE, DELETE, MERGE,
+  DROP, ALTER, TRUNCATE, EXEC, CREATE, GRANT, REVOKE, DBCC, BACKUP, or RESTORE.
+- Return one SELECT query only; do not append a second statement after a
+  semicolon.
 - Use square brackets for schema and table names: [ACC].[Account]
 - Use TOP instead of LIMIT: SELECT TOP 100 ...
 - Use table aliases for readability.

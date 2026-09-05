@@ -18,6 +18,37 @@ class VisualizationLayerTests(unittest.TestCase):
         self.assertIsNone(result["category_column"])
         self.assertEqual(rows, [{"TotalSales": 125000}])
 
+    def test_single_date_value_uses_summary_value(self):
+        rows = [{"CreationDate": "2020-08-09T18:31:47"}]
+
+        result = self.layer.run(
+            "When was the general ledger voucher created?",
+            rows,
+        )
+
+        self.assertEqual(result["type"], "kpi")
+        self.assertEqual(result["value_columns"], ["CreationDate"])
+        self.assertIsNone(result["category_column"])
+
+    def test_single_row_direct_lookup_uses_summary_values(self):
+        rows = [{
+            "CreationDate": "2020-08-09T18:31:47",
+            "VoucherNumber": "1",
+            "Status": "Final",
+        }]
+
+        result = self.layer.run(
+            "What is the creation date, voucher number, and status?",
+            rows,
+        )
+
+        self.assertEqual(result["type"], "kpi")
+        self.assertEqual(
+            result["value_columns"],
+            ["CreationDate", "VoucherNumber", "Status"],
+        )
+        self.assertIsNone(result["category_column"])
+
     def test_temporal_category_uses_line_chart(self):
         rows = [
             {"Year": 2024, "TotalSales": 100},
@@ -76,6 +107,21 @@ class VisualizationLayerTests(unittest.TestCase):
 
         result = self.layer.run(
             "Show the latest 20 acquisition receipt records ordered by date.",
+            rows,
+        )
+
+        self.assertEqual(result["type"], "table")
+        self.assertEqual(result["value_columns"], [])
+
+    def test_single_record_listing_stays_table(self):
+        rows = [{
+            "AcquisitionReceiptID": 8001,
+            "Number": 12,
+            "Date": date(2026, 5, 13),
+        }]
+
+        result = self.layer.run(
+            "Show the latest acquisition receipt record ordered by date.",
             rows,
         )
 

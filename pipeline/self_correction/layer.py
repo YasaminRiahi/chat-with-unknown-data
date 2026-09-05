@@ -22,6 +22,7 @@ from sqlalchemy import inspect
 from sqlalchemy.sql.sqltypes import String
 
 from pipeline.base import BaseLayer
+from pipeline.sql_safety import contains_forbidden_sql, ensure_read_only_sql
 
 
 class SelfCorrectionLayer(BaseLayer):
@@ -53,8 +54,10 @@ class SelfCorrectionLayer(BaseLayer):
         sql = re.sub(r"^(?:SELECT\s+){2,}", "SELECT ", sql, flags=re.IGNORECASE)
         match = re.search(r"\b(SELECT|WITH)\b[\s\S]+", sql, re.IGNORECASE)
         if not match:
+            if contains_forbidden_sql(sql):
+                ensure_read_only_sql(sql)
             raise RuntimeError("The model did not return a corrected read-only query.")
-        return match.group(0).strip()
+        return ensure_read_only_sql(match.group(0).strip())
 
     def run(self, sql: str, db_name: str, original_question: str,
             schema_text: str, max_retries: int = MAX_RETRIES) -> tuple[list[dict], str]:
@@ -79,6 +82,7 @@ class SelfCorrectionLayer(BaseLayer):
         attempted_sql = {sql.strip()}
 
         for attempt in range(max_retries + 1):
+            ensure_read_only_sql(sql)
             try:
                 result = self.db_manager.execute_query(db_name, sql)
                 if result:
