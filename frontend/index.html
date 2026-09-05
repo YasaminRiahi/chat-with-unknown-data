@@ -153,17 +153,17 @@
   .icon-btn { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid var(--border); background: var(--panel-2); color: var(--muted); }
   .icon-btn:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
 
-  .metrics { display: grid; grid-template-columns: minmax(150px, 1.35fr) minmax(86px, 0.8fr) minmax(100px, 0.85fr); gap: 10px; padding: 14px 20px; border-bottom: 1px solid var(--border); background: color-mix(in srgb, var(--panel-2) 55%, transparent); }
-  .metric { min-width: 0; padding: 12px 10px 12px 14px; position: relative; overflow: hidden; }
+  .metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--border); background: color-mix(in srgb, var(--panel-2) 55%, transparent); }
+  .metric { min-width: 0; padding: 12px 14px; position: relative; overflow: hidden; }
   .metric::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 4px; background: var(--metric-1); }
   .metric:nth-child(2)::before { background: var(--metric-2); }
   .metric:nth-child(3)::before { background: var(--metric-3); }
-  .metric-label { overflow: hidden; color: var(--muted); font-size: 10px; font-weight: 750; letter-spacing: 0.045em; text-transform: uppercase; text-overflow: ellipsis; white-space: nowrap; }
+  .metric-label { color: var(--muted); font-size: 11px; font-weight: 750; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; }
   .metric-value {
     margin-top: 8px;
     overflow: hidden;
     color: var(--title);
-    font-size: clamp(13px, 1.25vw, 18px);
+    font-size: 18px;
     font-weight: 780;
     letter-spacing: -0.02em;
     text-overflow: ellipsis;
@@ -404,15 +404,22 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script>
-// Use the same origin when served by Docker/nginx (locally or through FRP).
-// Retain the localhost API fallback when this file is opened directly.
-const API = window.location.protocol === "file:" ? "http://localhost:8000" : window.location.origin;
+// Use the local API while developing, even if the frontend is opened through
+// Live Server/Vite on another port. In deployment, nginx/proxy serves API and
+// frontend from the same origin.
+const isLocalFrontend = ["file:", "http:", "https:"].includes(window.location.protocol) &&
+  ["", "localhost", "127.0.0.1"].includes(window.location.hostname);
+const API = window.location.protocol === "file:" || isLocalFrontend
+  ? "http://localhost:8000"
+  : window.location.origin;
 
 let activeDb = null;
 let databases = [];
 let waiting = false;
 let activeChart = null;
 let latestSql = "";
+let latestData = null;
+let latestVisualization = null;
 
 const chartPalettes = {
   dark: [
@@ -717,6 +724,8 @@ function renderVisualization(data, spec, answer, sql) {
   const rows = Array.isArray(data.rows) ? data.rows : [];
   const visualization = spec || { type: "table", title: "Query result", category_column: null, value_columns: [] };
   latestSql = sql || "";
+  latestData = { columns, rows };
+  latestVisualization = visualization;
 
   if (activeChart) {
     activeChart.destroy();
@@ -739,7 +748,7 @@ function renderVisualization(data, spec, answer, sql) {
       ${visualization.type === "table" ? "" : `<div class="viz-caption">${renderText(answer || "Result generated from your question.")}</div>`}
     </div>
     <div class="viz-tools">
-      <button class="tool-btn" onclick="downloadChart()" title="Download chart"><i data-lucide="download" width="14" height="14"></i>Chart</button>
+      <button class="tool-btn" onclick="downloadOutput()" title="Download output"><i data-lucide="download" width="14" height="14"></i>Download output</button>
       <button class="tool-btn" onclick="copySql()" title="Copy SQL"><i data-lucide="copy" width="14" height="14"></i>SQL</button>
       <div class="viz-badge">${escapeHtml(displayVizType(visualization.type || "table"))}</div>
     </div>
@@ -919,15 +928,74 @@ function buildDataTable(columns, rows) {
   return wrapper;
 }
 
+function downloadOutput() {
+  const type = latestVisualization?.type || "table";
+
+  if (["line", "bar"].includes(type) && activeChart) {
+    downloadChart();
+    return;
+  }
+
+  downloadDataCsv();
+}
+
 function downloadChart() {
   if (!activeChart) {
     showToast("There is no chart to download.", "error");
     return;
   }
   const link = document.createElement("a");
-  link.download = "query-chart.png";
+  const title = latestVisualization?.title || displayVizType(latestVisualization?.type || "chart");
+  link.download = `${safeFileName(title)}.png`;
   link.href = activeChart.toBase64Image();
   link.click();
+  showToast("Chart downloaded.");
+}
+
+function downloadDataCsv() {
+  const columns = latestData?.columns || [];
+  const rows = latestData?.rows || [];
+
+  if (!columns.length || !rows.length) {
+    showToast("There is no table data to download.", "error");
+    return;
+  }
+
+  const csv = toCsv(columns, rows);
+  const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  const title = latestVisualization?.title || displayVizType(latestVisualization?.type || "result");
+
+  link.download = `${safeFileName(title)}.csv`;
+  link.href = url;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+  showToast("CSV downloaded.");
+}
+
+function toCsv(columns, rows) {
+  const header = columns.map(csvCell).join(",");
+  const body = rows.map(row => columns.map(column => csvCell(row[column])).join(","));
+  return [header, ...body].join("\r\n");
+}
+
+function csvCell(value) {
+  if (value === null || value === undefined) return "";
+  const text = String(value);
+  const escaped = text.replace(/"/g, '""');
+  return /[",\n\r]/.test(escaped) ? `"${escaped}"` : escaped;
+}
+
+function safeFileName(value) {
+  return String(value || "query-result")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9\u0600-\u06ff]+/gi, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 80) || "query-result";
 }
 
 async function copySql() {
