@@ -69,28 +69,41 @@ class Pipeline:
     def answer_metadata_question(self, question: str, db_name: str) -> str | None:
         """Answer structural questions without embeddings, SQL, or a chat model."""
         lowered = question.casefold()
-        asks_count = bool(re.search(r"\b(how many|number of|count)\b", lowered))
-        asks_names = bool(re.search(r"\b(list|name|show)\b", lowered))
-        asks_schema_names = asks_names or bool(
-            re.search(r"\b(what are|which)\b.*\bschemas?\b", lowered)
-        )
-        asks_table_names = asks_names or bool(
-            re.search(r"\bwhat are\b.*\btables?\b", lowered)
-            or re.search(r"\bwhich tables?\s+(are|exist)\b", lowered)
-        )
 
-        if re.search(r"\b(schemas?)\b", lowered) and (asks_count or asks_schema_names):
+        def structural_intent(target: str) -> str | None:
+            """Return count/list only when the metadata noun is the request target."""
+            plural = rf"{target}s?"
+            qualifiers = r"(?:all\s+|the\s+|user\s+|database\s+)*"
+            count_patterns = (
+                rf"\bhow many\s+{qualifiers}{plural}\b",
+                rf"\b(?:the\s+)?number of\s+{qualifiers}{plural}\b",
+                rf"\bcount\s+{qualifiers}{plural}\b",
+            )
+            list_patterns = (
+                rf"\b(?:list|name)\s+{qualifiers}{plural}\b",
+                rf"\bshow(?: me)?\s+{qualifiers}{plural}\b",
+                rf"\b(?:what|which)\s+(?:are\s+)?{qualifiers}{plural}\b",
+            )
+            if any(re.search(pattern, lowered) for pattern in count_patterns):
+                return "count"
+            if any(re.search(pattern, lowered) for pattern in list_patterns):
+                return "list"
+            return None
+
+        schema_intent = structural_intent("schema")
+        if schema_intent:
             result = self.ensure_introspection(db_name)
-            if asks_count:
+            if schema_intent == "count":
                 return f"There are {len(result.schemas)} schemas."
             return "\n".join(result.schemas) if result.schemas else "No user schemas were found."
 
-        if re.search(r"\b(columns?|fields?)\b", lowered):
+        column_intent = structural_intent("column") or structural_intent("field")
+        if column_intent:
             result = self.ensure_introspection(db_name)
             table_key = self._qualified_table(question, result)
             if table_key:
                 columns = result.get_columns(*table_key)
-                if asks_count:
+                if column_intent == "count":
                     return (
                         f"{table_key[0]}.{table_key[1]} has {len(columns)} columns."
                     )
@@ -98,10 +111,11 @@ class Pipeline:
                     return "\n".join(column["name"] for column in columns)
                 return f"No columns were found for {table_key[0]}.{table_key[1]}."
 
-        if re.search(r"\b(tables?)\b", lowered) and (asks_count or asks_table_names):
+        table_intent = structural_intent("table")
+        if table_intent:
             result = self.ensure_introspection(db_name)
             tables = result.get_all_table_names()
-            if asks_count:
+            if table_intent == "count":
                 return f"There are {len(tables)} tables."
             return "\n".join(tables) if tables else "No user tables were found."
 
