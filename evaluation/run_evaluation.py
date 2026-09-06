@@ -533,6 +533,212 @@ code{{direction:ltr}}@media(max-width:650px){{.bar-row{{grid-template-columns:10
     atomic_write_text(path, document)
 
 
+def _report_number(value: Any, digits: int = 1) -> str:
+    if value is None:
+        return "—"
+    if isinstance(value, int):
+        return f"{value:,}"
+    if isinstance(value, float):
+        return f"{value:,.{digits}f}"
+    return str(value)
+
+
+def _render_report_template(template: str, values: dict[str, str]) -> str:
+    rendered = template
+    for key, value in values.items():
+        rendered = rendered.replace("{{" + key + "}}", value)
+    return rendered
+
+
+def _report_metric_card(label: str, value: str, color: str) -> str:
+    return (
+        f'<article class="card" style="--card-color:{color}">'
+        f'<span>{html.escape(label)}</span><b>{html.escape(value)}</b></article>'
+    )
+
+
+def _report_bar_chart(title: str, groups: dict[str, dict], metric: str) -> str:
+    palette = [
+        "#748da4", "#d28378", "#a6b7a1", "#c4936a",
+        "#e5b0a0", "#547a6e", "#eac8ab", "#8e8e6c",
+    ]
+    bars = []
+    for index, (name, values) in enumerate(groups.items()):
+        value = values.get(metric)
+        if value is None:
+            continue
+        width = max(0, min(100, float(value) * 100))
+        safe_name = html.escape(name)
+        bars.append(
+            f'<div class="bar-row" style="--bar-color:{palette[index % len(palette)]}">'
+            f'<span class="bar-name" title="{safe_name}">{safe_name}</span>'
+            f'<div class="track"><i style="width:{width:.1f}%"></i></div>'
+            f'<b class="bar-value">{width:.1f}%</b></div>'
+        )
+    body = "".join(bars) or '<p class="empty">No data available.</p>'
+    return f'<article class="section"><h2>{html.escape(title)}</h2>{body}</article>'
+
+
+def _report_vertical_chart(title: str, groups: dict[str, dict], metric: str) -> str:
+    palette = [
+        "#748da4", "#d28378", "#a6b7a1", "#c4936a",
+        "#e5b0a0", "#547a6e", "#eac8ab", "#8e8e6c",
+    ]
+    bars = []
+    for index, (name, values) in enumerate(groups.items()):
+        value = values.get(metric)
+        if value is None:
+            continue
+        height = max(0, min(100, float(value) * 100))
+        safe_name = html.escape(name)
+        bars.append(
+            f'<div class="vertical-item" style="--bar-color:{palette[index % len(palette)]}">'
+            f'<div class="vertical-track"><i style="height:{height:.1f}%"></i></div>'
+            f'<div class="vertical-value">{height:.1f}%</div>'
+            f'<div class="vertical-name" title="{safe_name}">{safe_name}</div>'
+            '</div>'
+        )
+    body = (
+        f'<div class="vertical-chart">{"".join(bars)}</div>'
+        if bars else '<p class="empty">No data available.</p>'
+    )
+    return f'<article class="section"><h2>{html.escape(title)}</h2>{body}</article>'
+
+
+def _report_metric_bars(title: str, metrics: list[tuple[str, Any]]) -> str:
+    groups = {
+        label: {"value": value}
+        for label, value in metrics
+    }
+    return _report_bar_chart(title, groups, "value")
+
+
+def _report_distribution_block(title: str, records: list[dict], field: str, color_offset: int = 0) -> str:
+    palette = [
+        "#748da4", "#d28378", "#a6b7a1", "#c4936a",
+        "#e5b0a0", "#547a6e", "#eac8ab", "#8e8e6c",
+    ]
+    total = len(records)
+    counts = Counter(str(record.get(field) or "unknown") for record in records)
+    if not total or not counts:
+        body = '<p class="empty">No data available.</p>'
+    else:
+        rows = []
+        for index, (name, count) in enumerate(sorted(counts.items())):
+            percent = count / total * 100
+            color = palette[(index + color_offset) % len(palette)]
+            safe_name = html.escape(name)
+            rows.append(
+                f'<div class="distribution-row" style="--bar-color:{color}">'
+                f'<span title="{safe_name}">{safe_name}</span>'
+                f'<b>{percent:.1f}%</b>'
+                f'<div class="mini-track"><i style="width:{percent:.1f}%"></i></div>'
+                '</div>'
+            )
+        body = "".join(rows)
+    return f'<div class="distribution"><h3>{html.escape(title)}</h3>{body}</div>'
+
+
+def _report_dataset_profile(records: list[dict]) -> str:
+    content = "".join([
+        _report_distribution_block("Difficulty mix", records, "difficulty", 0),
+        _report_distribution_block("Category mix", records, "category", 2),
+        _report_distribution_block("Language mix", records, "language", 4),
+    ])
+    return (
+        '<article class="section wide">'
+        '<h2>Dataset composition</h2>'
+        f'<div class="distribution-grid">{content}</div>'
+        '</article>'
+    )
+
+
+def _report_missed_items(items: list[tuple[str, int]]) -> str:
+    if not items:
+        return '<p class="empty">No missed items recorded.</p>'
+    chips = [
+        f'<span class="chip"><span>{html.escape(name)}</span><b>{count}</b></span>'
+        for name, count in items
+    ]
+    return f'<div class="chips">{"".join(chips)}</div>'
+
+
+def write_html(path: Path, summary: dict, records: list[dict]) -> None:
+    metrics = summary["metrics"]
+    palette = ["#748da4", "#d28378", "#a6b7a1", "#c4936a", "#e5b0a0", "#547a6e"]
+    cards = [
+        ("Valid SQL Rate", format_percent(metrics["final_valid_sql_rate"])),
+        ("Table Recall", format_percent(metrics["table_recall"])),
+        ("Column Recall", format_percent(metrics["column_recall"])),
+        ("Correction Gain", format_percent(metrics["correction_gain"])),
+        ("Correction Success", format_percent(metrics["self_correction_success_rate"])),
+        ("R-VES", "—" if metrics["r_ves"] is None else f'{metrics["r_ves"]:.2f}'),
+        ("Median E2E", f'{metrics["end_to_end_latency_ms"]["median"] or 0:.1f} ms'),
+        ("Average Tokens", f'{metrics["average_tokens"] or 0:,.0f}'),
+        ("Average LLM Calls", f'{metrics["average_llm_calls"] or 0:.2f}'),
+    ]
+    failed = [r for r in records if not r.get("metrics", {}).get("final_ex")]
+    if failed:
+        failed_rows = "".join(
+            "<tr>"
+            f"<td>{html.escape(r['id'])}</td>"
+            f"<td>{html.escape(str(r.get('question', '')))}</td>"
+            f"<td>{html.escape(str(r.get('category') or '—'))}</td>"
+            f"<td>{html.escape(str(r.get('difficulty') or '—'))}</td>"
+            f"<td>{html.escape(str(r.get('error') or 'Wrong result'))}</td>"
+            "</tr>"
+            for r in failed[:100]
+        )
+        failed_table = (
+            '<div class="table-wrap"><table><thead><tr>'
+            '<th>ID</th><th>Question</th><th>Category</th><th>Difficulty</th><th>Error / result</th>'
+            f'</tr></thead><tbody>{failed_rows}</tbody></table></div>'
+        )
+    else:
+        failed_table = '<p class="empty">All questions passed successfully.</p>'
+
+    template = Path(__file__).with_name("report_template.html").read_text(encoding="utf-8")
+    final_accuracy = metrics["final_execution_accuracy"]
+    initial_accuracy = metrics["initial_execution_accuracy"]
+    gain = (final_accuracy or 0) - (initial_accuracy or 0)
+    score_note = (
+        f"Initial execution accuracy was {format_percent(initial_accuracy)}. "
+        f"Self-correction changed the final score by {format_percent(gain)} across "
+        f"{len(records)} completed questions."
+    )
+    document = _render_report_template(template, {
+        "title": "Text-to-SQL Evaluation Report",
+        "generated_at": html.escape(summary["generated_at"]),
+        "completed_questions": _report_number(len(records), digits=0),
+        "primary_score": format_percent(final_accuracy),
+        "score_note": html.escape(score_note),
+        "metric_cards": "".join(
+            _report_metric_card(label, value, palette[index % len(palette)])
+            for index, (label, value) in enumerate(cards)
+        ),
+        "dataset_profile": _report_dataset_profile(records),
+        "performance_summary": _report_metric_bars("Performance summary", [
+            ("Initial execution accuracy", initial_accuracy),
+            ("Final execution accuracy", final_accuracy),
+            ("Final valid SQL rate", metrics["final_valid_sql_rate"]),
+            ("Table recall", metrics["table_recall"]),
+            ("Column recall", metrics["column_recall"]),
+        ]),
+        "charts": "\n".join([
+            _report_bar_chart("Execution Accuracy by Language", summary["by_language"], "execution_accuracy"),
+            _report_vertical_chart("Execution Accuracy by Category", summary["by_category"], "execution_accuracy"),
+            _report_vertical_chart("Execution Accuracy by Difficulty", summary["by_difficulty"], "execution_accuracy"),
+            _report_bar_chart("Table Recall by Category", summary["by_category"], "table_recall"),
+            _report_bar_chart("Column Recall by Category", summary["by_category"], "column_recall"),
+        ]),
+        "missed_tables": _report_missed_items(summary["most_missed_tables"]),
+        "missed_columns": _report_missed_items(summary["most_missed_columns"]),
+        "failed_count": _report_number(len(failed), digits=0),
+        "failed_table": failed_table,
+    })
+    atomic_write_text(path, document)
+
+
 def write_reports(run_dir: Path, records: list[dict], manifest: dict) -> None:
     summary = make_summary(records, manifest)
     atomic_write_text(
@@ -571,8 +777,6 @@ def build_runtime(args: argparse.Namespace, run_dir: Path) -> tuple[Pipeline, Da
         embedding_cache_dir=settings.embedding_cache_dir,
         llm_enrichment_enabled=settings.llm_enrichment_enabled,
         enrichment_batch_size=settings.enrichment_batch_size,
-        reranker_enabled=settings.reranker_enabled,
-        reranker_model=settings.reranker_model,
         schema_linking_enabled=settings.schema_linking_enabled,
     )
     return pipeline, manager, model_log

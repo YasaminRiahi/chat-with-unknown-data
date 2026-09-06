@@ -1,9 +1,1 @@
-﻿id,language,category,difficulty,initial_sql,final_sql,initial_ex,final_ex,initial_valid_sql,final_valid_sql,table_recall,table_precision,column_recall,correction_attempted,correction_success,r_ves_score,end_to_end_ms,llm_calls,total_tokens,error
-intent_001_fa,fa,count,easy,SELECT COUNT(*) AS TotalCount FROM [RPA].[ReceiptHeader] AS rh,SELECT COUNT(*) AS TotalCount FROM [RPA].[ReceiptHeader] AS rh,0,0,1,1,0.0,0.0,,False,False,0.0,21862.174,4,5426,
-intent_001_en,en,count,easy,SELECT COUNT(*) AS RecordCount FROM [ACC].[AccVchHdr] AS ah,SELECT COUNT(*) AS RecordCount FROM [ACC].[AccVchHdr] AS ah,1,1,1,1,1.0,1.0,,False,False,100.0,17077.287,4,4786,
-intent_002_fa,fa,temporal_ordering,medium,"SELECT TOP 20 ar.* 
-FROM [AST].[AcquisitionReceipt] AS ar 
-ORDER BY ar.[Date] DESC","SELECT TOP 20 ar.* 
-FROM [AST].[AcquisitionReceipt] AS ar 
-ORDER BY ar.[Date] DESC",0,0,1,1,1.0,1.0,1.0,False,False,0.0,59937.005,4,8912,
-intent_002_en,en,temporal_ordering,medium,SELECT TOP 20 * FROM [AST].[AcquisitionReceipt] AS ar ORDER BY ar.[Date] DESC,SELECT TOP 20 * FROM [AST].[AcquisitionReceipt] AS ar ORDER BY ar.[Date] DESC,0,0,1,1,1.0,1.0,1.0,False,False,0.0,64830.403,4,8858,
+﻿

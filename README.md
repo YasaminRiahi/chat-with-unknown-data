@@ -68,16 +68,12 @@ non-ASCII values.
 
 Retrieval is hybrid: dense BGE-M3 cosine results and local BM25 lexical results
 are combined with Reciprocal Rank Fusion for both tables and columns. The best
-30 table candidates are then scored by the multilingual
-`BAAI/bge-reranker-v2-m3` cross-encoder before the existing dynamic table
-selection and foreign-key expansion run. The reranker is downloaded lazily by
-`sentence-transformers` on the first full retrieval. Set
-`RERANKER_ENABLED=false` to retain hybrid retrieval without downloading or
-running the reranker, or change `RERANKER_MODEL` to another compatible
-cross-encoder.
+40 table candidates are then narrowed by deterministic identifier/relationship
+rules before dynamic table selection and foreign-key expansion run. This keeps
+retrieval lightweight and avoids an additional cross-encoder dependency.
 
 Table retrieval prints `[RAG][Trace]` lines for the dense, BM25, fused,
-model-reranked, and rule-adjusted rankings, followed by the final threshold and
+and rule-adjusted rankings, followed by the final threshold and
 its survivors. These traces make it possible to identify the exact stage where
 a required table drops out during retrieval evaluation.
 

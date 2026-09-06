@@ -106,57 +106,6 @@ class HybridRetrievalTests(unittest.TestCase):
         self.assertEqual(fused[0][0]["table"], "CustomerAccountArchive")
         self.assertEqual(fused[0][1], 1.0)
 
-    def test_model_reranker_reorders_candidates(self):
-        class FakeReranker:
-            @staticmethod
-            def score_pairs(pairs):
-                return [0.1, 0.9]
-
-        rag = RAGLayer.__new__(RAGLayer)
-        rag.reranker = FakeReranker()
-        account = self.index.items["table:dbo.Account"]
-        archive = self.index.items["table:dbo.CustomerAccountArchive"]
-        ranked, applied = rag._model_rerank(
-            "find archived accounts", [(account, 1.0), (archive, 0.9)]
-        )
-        self.assertTrue(applied)
-        self.assertEqual(ranked[0][0]["table"], "CustomerAccountArchive")
-
-    def test_low_reranker_scores_do_not_use_cosine_threshold(self):
-        class FakeReranker:
-            @staticmethod
-            def score_pairs(pairs):
-                return [0.292058, 0.123024, 0.071387, 0.048274]
-
-        rag = RAGLayer(None, None, None, reranker=FakeReranker())
-        candidates = [
-            ({"kind": "table", "schema": "ACC", "table": name, "text": name}, score)
-            for name, score in [
-                ("GLVoucher", 1.0),
-                ("GLVoucherItem", 0.9),
-                ("Bill", 0.8),
-                ("Voucher", 0.7),
-            ]
-        ]
-
-        class FakeIndex:
-            @staticmethod
-            def scores(query_vector, kind):
-                return candidates
-
-            @staticmethod
-            def lexical_scores(question, kind):
-                return candidates
-
-        selected = rag._select_tables(
-            "voucher totals", IntrospectionResult(), FakeIndex(), []
-        )
-
-        self.assertEqual(
-            selected,
-            [("ACC", "GLVoucher"), ("ACC", "GLVoucherItem"), ("ACC", "Bill")],
-        )
-
     def test_schema_linker_selects_related_tables_as_a_group(self):
         class FakeLLM:
             @staticmethod

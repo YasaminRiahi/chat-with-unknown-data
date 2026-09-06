@@ -179,12 +179,6 @@
 - کاربرد در پروژه: بازیابی lexical و تطابق دقیق identifierهای جدول و ستون.
 - DOI: <https://doi.org/10.1561/1500000019>
 
-### 22. BGE Reranker v2 M3
-
-- مدل cross-encoder چندزبانه مورد استفاده در لایه RAG پروژه.
-- کاربرد در پروژه: reranking کاندیداهای بازیابی‌شده پیش از انتخاب نهایی schema.
-- Model Card: <https://huggingface.co/BAAI/bge-reranker-v2-m3>
-
 ## ۵. منابع روش‌شناسی ارزیابی
 
 ### 23. Test-suite Accuracy
@@ -337,13 +331,12 @@ Correction Success Rate = corrected failures / attempted corrections
 
 ## ۹. آزمایش‌های Ablation پیشنهادی
 
-| آزمایش | Dense | BM25 | RRF | Reranker | Enrichment | Correction |
-|---|---:|---:|---:|---:|---:|---:|
-| Dense baseline | ✓ | — | — | — | — | — |
-| Hybrid retrieval | ✓ | ✓ | ✓ | — | — | — |
-| Hybrid + reranker | ✓ | ✓ | ✓ | ✓ | — | — |
-| Full retrieval | ✓ | ✓ | ✓ | ✓ | ✓ | — |
-| Complete pipeline | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| آزمایش | Dense | BM25 | RRF | Enrichment | Correction |
+|---|---:|---:|---:|---:|---:|
+| Dense baseline | ✓ | — | — | — | — |
+| Hybrid retrieval | ✓ | ✓ | ✓ | — | — |
+| Full retrieval | ✓ | ✓ | ✓ | ✓ | — |
+| Complete pipeline | ✓ | ✓ | ✓ | ✓ | ✓ |
 
 برای هر حالت حداقل EX، R-VES، Table Recall@8، Column Recall، Valid SQL Rate،
 end-to-end latency و متوسط مصرف token گزارش شود. این آزمایش‌ها نشان می‌دهند

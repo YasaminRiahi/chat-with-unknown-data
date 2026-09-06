@@ -267,8 +267,6 @@ class _PersistentEmbeddingIndex:
 
 class RAGLayer(BaseLayer):
     MAX_TABLES = 8
-    MIN_RERANKED_TABLES = 3
-    RERANKER_RELATIVE_THRESHOLD = 0.25
     MAX_FK_EXPANSION = 4
     TABLE_RERANK_CANDIDATES = 24
     ALL_COLUMNS_TABLE_LIMIT = 30
@@ -279,7 +277,7 @@ class RAGLayer(BaseLayer):
     BASE_ENTITY_MARGIN = 0.05
     BASE_ENTITY_BONUS = 0.03
     DERIVATIVE_TABLE_PENALTY = 0.015
-    FUSION_CANDIDATES = 30
+    FUSION_CANDIDATES = 40
     RRF_K = 60
     SCHEMA_LINK_CANDIDATES = 12
     MAX_SCHEMA_LINK_COLUMNS = 12
@@ -299,13 +297,12 @@ class RAGLayer(BaseLayer):
         print(f"[RAG][Trace] {stage}: {rendered}")
     def __init__(
         self, llm, embeddings, db_manager,
-        cache_dir: str = ".cache/embeddings", reranker=None,
+        cache_dir: str = ".cache/embeddings",
         schema_linking_enabled: bool = True,
     ):
         super().__init__(llm, embeddings, db_manager)
         self.cache_dir = Path(cache_dir)
         self.indexes: dict[str, _PersistentEmbeddingIndex] = {}
-        self.reranker = reranker
         self.schema_linking_enabled = schema_linking_enabled
 
     @classmethod
@@ -327,29 +324,6 @@ class RAGLayer(BaseLayer):
             return []
         maximum = ranked[0][1]
         return [(item, score / maximum) for item, score in ranked]
-
-    def _model_rerank(
-        self, question: str, scored: list[tuple[dict[str, Any], float]],
-    ) -> tuple[list[tuple[dict[str, Any], float]], bool]:
-        if (
-            self.reranker is None
-            or not getattr(self.reranker, "enabled", True)
-            or not scored
-        ):
-            return scored, False
-        candidates = scored[:self.FUSION_CANDIDATES]
-        try:
-            scores = self.reranker.score_pairs([
-                (question, item["text"]) for item, _ in candidates
-            ])
-        except Exception as exc:
-            print(f"[RAG] WARNING - reranker unavailable ({exc}); using fused ranking")
-            return scored, False
-        reranked = sorted(
-            ((item, float(score)) for (item, _), score in zip(candidates, scores)),
-            key=lambda match: match[1], reverse=True,
-        )
-        return reranked + scored[self.FUSION_CANDIDATES:], True
 
     @classmethod
     def _schema_link_columns(
@@ -713,12 +687,10 @@ Relationships:
         lexical = index.lexical_scores(
             question, kind="table"
         )[:self.FUSION_CANDIDATES]
-        self._log_table_ranking("Dense top 30", dense)
-        self._log_table_ranking("BM25 top 30", lexical)
+        self._log_table_ranking(f"Dense top {self.FUSION_CANDIDATES}", dense)
+        self._log_table_ranking(f"BM25 top {self.FUSION_CANDIDATES}", lexical)
         scored = self._fuse_scores(dense, lexical)[:self.FUSION_CANDIDATES]
-        self._log_table_ranking("RRF fused top 30", scored)
-        scored, model_reranked = self._model_rerank(question, scored)
-        self._log_table_ranking("Model-reranked top 30", scored)
+        self._log_table_ranking(f"RRF fused top {self.FUSION_CANDIDATES}", scored)
         scored = scored[:self.TABLE_RERANK_CANDIDATES]
         scored = self._rerank_table_scores(question, scored)
         linked = self._llm_schema_link(question, scored, result)
@@ -728,33 +700,6 @@ Relationships:
         self._log_table_ranking("Rule-adjusted top 8", scored, limit=self.MAX_TABLES)
         if not scored:
             return []
-        if model_reranked:
-            # Cross-encoder outputs are relevance scores, not cosine
-            # similarities. Their absolute scale varies by question, so the
-            # hybrid-retrieval cutoff must not be applied to them. Keep a
-            # small recall floor and then any additional candidates that are
-            # reasonably close to the best raw reranker score.
-            best_score = scored[0][1]
-            relative_threshold = (
-                best_score * self.RERANKER_RELATIVE_THRESHOLD
-                if best_score > 0 else best_score
-            )
-            keep_count = self.MIN_RERANKED_TABLES
-            while (
-                keep_count < len(scored)
-                and scored[keep_count][1] >= relative_threshold
-            ):
-                keep_count += 1
-            selected = [
-                (item["schema"], item["table"])
-                for item, _ in scored[:keep_count]
-            ]
-            print(
-                f"[RAG][Trace] Reranker selection: top-{keep_count} "
-                f"(minimum={self.MIN_RERANKED_TABLES}, "
-                f"relative-threshold={relative_threshold:.6f})"
-            )
-            return selected
 
         threshold = max(self.MIN_SIMILARITY, scored[0][1] - self.TABLE_SCORE_WINDOW)
         selected = [
