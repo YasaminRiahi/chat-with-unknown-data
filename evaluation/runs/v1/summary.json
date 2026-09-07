@@ -1,0 +1,182 @@
+{
+  "generated_at": "2026-09-07T02:56:07.230399+00:00",
+  "manifest": {
+    "evaluator_version": 2,
+    "dataset": "E:\\B Project\\chat-with-unknown-data\\evaluation\\datasets\\questions_all.json",
+    "dataset_sha256": "7318522753288c6460e410f24e100b14272264cf18ceca40ebcdd78235d1e993",
+    "db_name": "test1",
+    "db_type": "mssql",
+    "timing_repeats": 5,
+    "created_at": "2026-09-06T19:07:48.017267+00:00",
+    "setup_latency_ms": 6917.404,
+    "setup_tokens": {
+      "by_operation": {}
+    },
+    "dataset_updated_at": "2026-09-07T02:49:27.776697+00:00"
+  },
+  "completed_questions": 30,
+  "metrics": {
+    "initial_execution_accuracy": 0.9,
+    "final_execution_accuracy": 0.9,
+    "initial_valid_sql_rate": 1.0,
+    "final_valid_sql_rate": 1.0,
+    "table_recall": 0.95,
+    "table_precision": 0.908333,
+    "column_recall": 0.946667,
+    "self_correction_success_rate": 0.0,
+    "correction_gain": 0.0,
+    "r_ves": 87.713955,
+    "end_to_end_latency_ms": {
+      "count": 30,
+      "mean": 46298.028,
+      "median": 51682.115,
+      "p90": 62801.478,
+      "p95": 67425.542,
+      "min": 10614.029,
+      "max": 70397.241
+    },
+    "final_sql_latency_ms": {
+      "count": 30,
+      "mean": 16.595,
+      "median": 13.896,
+      "p90": 34.374,
+      "p95": 38.166,
+      "min": 2.217,
+      "max": 52.332
+    },
+    "total_llm_calls": 119,
+    "average_llm_calls": 3.967,
+    "total_tokens": 211692,
+    "average_tokens": 7056.4
+  },
+  "by_language": {
+    "en": {
+      "questions": 15,
+      "execution_accuracy": 0.933333,
+      "valid_sql_rate": 1.0,
+      "table_recall": 1.0,
+      "column_recall": 1.0
+    },
+    "fa": {
+      "questions": 15,
+      "execution_accuracy": 0.866667,
+      "valid_sql_rate": 1.0,
+      "table_recall": 0.9,
+      "column_recall": 0.893333
+    }
+  },
+  "by_category": {
+    "account": {
+      "questions": 2,
+      "execution_accuracy": 1.0,
+      "valid_sql_rate": 1.0,
+      "table_recall": 1.0,
+      "column_recall": 1.0
+    },
+    "account-element": {
+      "questions": 2,
+      "execution_accuracy": 1.0,
+      "valid_sql_rate": 1.0,
+      "table_recall": 1.0,
+      "column_recall": 1.0
+    },
+    "account_overview": {
+      "questions": 1,
+      "execution_accuracy": 1.0,
+      "valid_sql_rate": 1.0,
+      "table_recall": 1.0,
+      "column_recall": 1.0
+    },
+    "aggregation": {
+      "questions": 16,
+      "execution_accuracy": 0.9375,
+      "valid_sql_rate": 1.0,
+      "table_recall": 0.9375,
+      "column_recall": 0.9375
+    },
+    "analytics": {
+      "questions": 2,
+      "execution_accuracy": 1.0,
+      "valid_sql_rate": 1.0,
+      "table_recall": 1.0,
+      "column_recall": 1.0
+    },
+    "detail": {
+      "questions": 1,
+      "execution_accuracy": 1.0,
+      "valid_sql_rate": 1.0,
+      "table_recall": 1.0,
+      "column_recall": 1.0
+    },
+    "financial": {
+      "questions": 4,
+      "execution_accuracy": 0.5,
+      "valid_sql_rate": 1.0,
+      "table_recall": 0.875,
+      "column_recall": 0.85
+    },
+    "listing": {
+      "questions": 2,
+      "execution_accuracy": 1.0,
+      "valid_sql_rate": 1.0,
+      "table_recall": 1.0,
+      "column_recall": 1.0
+    }
+  },
+  "by_difficulty": {
+    "easy": {
+      "questions": 21,
+      "execution_accuracy": 0.904762,
+      "valid_sql_rate": 1.0,
+      "table_recall": 0.952381,
+      "column_recall": 0.952381
+    },
+    "medium": {
+      "questions": 9,
+      "execution_accuracy": 0.888889,
+      "valid_sql_rate": 1.0,
+      "table_recall": 0.944444,
+      "column_recall": 0.933333
+    }
+  },
+  "most_missed_tables": [
+    [
+      "rpa.bank",
+      1
+    ],
+    [
+      "rpa.receiptcheque",
+      1
+    ],
+    [
+      "ast.asset",
+      1
+    ]
+  ],
+  "most_missed_columns": [
+    [
+      "rpa.bank.title",
+      1
+    ],
+    [
+      "rpa.bank.title_en",
+      1
+    ],
+    [
+      "rpa.receiptcheque.amount",
+      1
+    ],
+    [
+      "ast.asset.assetid",
+      1
+    ],
+    [
+      "ast.asset.plaquenumber",
+      1
+    ],
+    [
+      "ast.asset.title",
+      1
+    ]
+  ]
+}

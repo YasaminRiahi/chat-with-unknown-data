@@ -466,6 +466,7 @@ Use this record schema:
   "category": "...",
   "tags": ["..."],
   "difficulty": "easy|medium|hard|very_hard",
+  "order_sensitive": false,
   "expected_empty": false,
   "review_status": "candidate|needs_revision",
   "review_notes": ""

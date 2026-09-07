@@ -40,7 +40,7 @@ from api.model_logging import LoggedChatModel, LoggedOllamaEmbeddings, ModelCall
 from pipeline import Pipeline
 
 
-EVALUATOR_VERSION = 1
+EVALUATOR_VERSION = 2
 READ_ONLY_START = re.compile(r"^\s*(?:SELECT\b|WITH\b)", re.IGNORECASE)
 FORBIDDEN_SQL = re.compile(
     r"\b(?:INSERT|UPDATE|DELETE|MERGE|DROP|ALTER|TRUNCATE|EXEC(?:UTE)?|"
@@ -116,13 +116,39 @@ def normalized_rows(rows: list[dict], ordered: bool) -> list[str]:
     return normalized if ordered else sorted(normalized)
 
 
+ORDER_REQUEST_PATTERN = re.compile(
+    r"\b(?:order(?:ed)?|sort(?:ed)?)\s+by\b|"
+    r"\b(?:ascending|descending|highest|lowest|latest|earliest|newest|oldest)\b|"
+    r"\b(?:first|last|top|bottom)\s+\d+\b|\bmost\s+recent\b|"
+    r"به\s*ترتیب|مرتب|صعودی|نزولی|بیشترین|کمترین|بالاترین|پایین[‌ ]?ترین|"
+    r"جدیدترین|قدیمی[‌ ]?ترین|آخرین|اولین|برتر",
+    re.IGNORECASE,
+)
+
+
+def question_requests_order(question: str) -> bool:
+    """Return whether row ordering/ranking is explicitly part of the request."""
+    return bool(ORDER_REQUEST_PATTERN.search(str(question or "")))
+
+
+def record_order_sensitive(record: dict) -> bool:
+    """Use an explicit benchmark override, otherwise infer from the question."""
+    explicit = record.get("order_sensitive")
+    if isinstance(explicit, bool):
+        return explicit
+    return question_requests_order(record.get("question", ""))
+
+
 def results_equal(reference: list[dict] | None, predicted: list[dict] | None,
-                  reference_sql: str) -> bool:
+                  reference_sql: str, *, order_sensitive: bool | None = None) -> bool:
     if reference is None or predicted is None:
         return False
     if reference and predicted and len(reference[0]) != len(predicted[0]):
         return False
-    ordered = bool(re.search(r"\bORDER\s+BY\b", reference_sql, re.IGNORECASE))
+    ordered = (
+        bool(re.search(r"\bORDER\s+BY\b", reference_sql, re.IGNORECASE))
+        if order_sensitive is None else order_sensitive
+    )
     return normalized_rows(reference, ordered) == normalized_rows(predicted, ordered)
 
 
@@ -314,6 +340,8 @@ def load_dataset(path: Path) -> list[dict]:
             raise ValueError(f"Duplicate record id: {record['id']}")
         if not safe_sql(record["reference_sql"]):
             raise ValueError(f"Reference SQL is not read-only: {record['id']}")
+        if "order_sensitive" in record and not isinstance(record["order_sensitive"], bool):
+            raise ValueError(f"order_sensitive must be boolean: {record['id']}")
         seen.add(record["id"])
     return records
 
@@ -461,6 +489,93 @@ def write_csv(path: Path, records: list[dict]) -> None:
         handle.flush()
         os.fsync(handle.fileno())
     temporary.replace(path)
+
+
+def make_debug_records(records: list[dict]) -> list[dict]:
+    """Return the small, stable diagnostic view used by debug artifacts."""
+    debug_records = []
+    for record in records:
+        metrics = record.get("metrics", {})
+        retrieval = record.get("retrieval", {})
+        debug_records.append({
+            "id": record.get("id"),
+            "question": record.get("question"),
+            "reference_sql": record.get("reference_sql"),
+            "final_generated_sql": record.get("final_sql"),
+            "error": record.get("error"),
+            "ex": metrics.get("final_ex"),
+            "table_recall": metrics.get("table_recall"),
+            "table_precision": metrics.get("table_precision"),
+            "column_recall": metrics.get("column_recall"),
+            "retrieved_tables": retrieval.get("retrieved_tables", []),
+            "retrieved_columns": retrieval.get("retrieved_columns", []),
+        })
+    return debug_records
+
+
+def write_debug_html(path: Path, records: list[dict]) -> None:
+    """Write a self-contained question debugger from checkpoint records."""
+    payload = json.dumps(
+        make_debug_records(records), ensure_ascii=False, separators=(",", ":")
+    )
+    # Prevent arbitrary question/SQL text from terminating the inline script.
+    payload = (
+        payload.replace("&", "\\u0026")
+        .replace("<", "\\u003c")
+        .replace(">", "\\u003e")
+        .replace("\u2028", "\\u2028")
+        .replace("\u2029", "\\u2029")
+    )
+    document = """<!doctype html>
+<html lang="en" dir="ltr" data-theme="dark"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Evaluation Debugger</title>
+<style>
+:root{color-scheme:dark;--bg:#090d16;--panel:#111827;--panel-2:#1f2937;--panel-3:#374151;--border:rgba(169,175,180,.16);--text:#e2e8f0;--muted:#94a3b8;--title:#fff3e3;--accent:#748da4;--terracotta:#d28378;--sage:#a6b7a1;--sand:#eac8ab;--good:#8db9a8;--bad:#e19a91;--warn:#e0b27c;--code:#090d16;--shadow:0 24px 70px rgba(0,0,0,.32);--radius:22px;--font:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+html[data-theme="light"]{color-scheme:light;--bg:#fff7ec;--panel:#fff3e3;--panel-2:#f4d3c0;--panel-3:#eac8ab;--border:rgba(163,145,123,.28);--text:#2d4f56;--muted:#6e4e3d;--title:#0f2c3d;--good:#547a6e;--bad:#a6534c;--warn:#946834;--code:#17212b;--shadow:0 18px 48px rgba(110,78,61,.12)}
+*{box-sizing:border-box}body{min-height:100vh;margin:0;background:radial-gradient(circle at 8% 0%,rgba(116,141,164,.18),transparent 30%),radial-gradient(circle at 92% 12%,rgba(210,131,120,.13),transparent 28%),radial-gradient(circle at 50% 100%,rgba(166,183,161,.10),transparent 28%),var(--bg);color:var(--text);font:14px/1.5 var(--font)}
+main{width:min(1180px,calc(100% - 32px));margin:auto;padding:28px 0 42px}.toolbar,.panel{background:color-mix(in srgb,var(--panel) 92%,transparent);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;box-shadow:0 12px 30px rgba(0,0,0,.10)}
+.toolbar{position:relative;overflow:hidden;padding:28px;background:linear-gradient(145deg,color-mix(in srgb,var(--panel) 92%,transparent),color-mix(in srgb,var(--panel-2) 82%,transparent));box-shadow:var(--shadow)}.toolbar:before{content:"";position:absolute;inset:0 0 auto;height:5px;background:linear-gradient(90deg,var(--accent),var(--terracotta),var(--sage),#c4936a)}
+.hero-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:start}.eyebrow{color:var(--accent);font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}h1{margin:9px 0 4px;color:var(--title);font-size:clamp(27px,4vw,42px);line-height:1.15}.muted{color:var(--muted)}
+.theme-toggle{border:1px solid var(--border);border-radius:999px;background:var(--panel-2);color:var(--text);cursor:pointer;font-weight:800;padding:10px 14px;white-space:nowrap}.controls{display:grid;grid-template-columns:minmax(220px,1fr) auto;gap:10px;margin-top:20px}
+select,button{font:inherit;padding:11px 13px;border:1px solid var(--border);border-radius:10px;background:var(--panel-2);color:var(--text)}button{cursor:pointer}select:focus,button:focus{outline:2px solid var(--accent);outline-offset:2px}.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px;background:transparent;border:0;box-shadow:none;padding:0}
+.metric{min-height:105px;border:1px solid var(--border);border-radius:var(--radius);padding:17px;background:color-mix(in srgb,var(--panel) 92%,transparent);box-shadow:0 12px 30px rgba(0,0,0,.10);position:relative;overflow:hidden}.metric:before{content:"";position:absolute;inset:0 auto 0 0;width:5px;background:var(--metric-color,var(--accent))}.metric:nth-child(2){--metric-color:var(--terracotta)}.metric:nth-child(3){--metric-color:var(--sage)}.metric:nth-child(4){--metric-color:#c4936a}.metric span{display:block;color:var(--muted);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em}.metric b{display:block;margin-top:12px;color:var(--title);font-size:26px}
+.good{color:var(--good)!important}.bad{color:var(--bad)!important}.warn{color:var(--warn)!important}h2{color:var(--title);font-size:17px;margin:0 0 10px}pre{white-space:pre-wrap;word-break:break-word;direction:ltr;text-align:left;background:var(--code);color:#e5e7eb;padding:15px;border:1px solid var(--border);border-radius:12px;min-height:54px;overflow:auto}
+.question{font-size:16px;line-height:1.8;white-space:pre-wrap}.id-row{display:flex;align-items:center;justify-content:space-between;gap:12px}.question-id{direction:ltr;text-align:left;user-select:text;overflow-wrap:anywhere;color:var(--sand);font:600 14px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace}.copy-button{flex:0 0 auto}.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{background:var(--panel-2);border:1px solid var(--border);border-radius:999px;padding:6px 10px}.error{border-left:5px solid var(--bad)}.hidden{display:none}@media(max-width:650px){main{width:min(100% - 20px,1180px);padding:12px 0}.toolbar{padding:22px 18px}.hero-row,.controls{grid-template-columns:1fr}.theme-toggle{justify-self:start}.id-row{align-items:flex-start;flex-direction:column}}
+</style></head><body><main>
+<section class="toolbar"><div class="hero-row"><div><div class="eyebrow">Text-to-SQL diagnostics</div><h1>Evaluation Debugger</h1><div id="count" class="muted"></div></div><button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">Light mode</button></div>
+<div class="controls"><select id="questionSelect" aria-label="Choose a question"></select><button id="failedButton" type="button">Next failed</button></div></section>
+<section class="panel"><h2>Question ID</h2><div class="id-row"><div id="questionId" class="question-id"></div><button id="copyQuestionId" class="copy-button" type="button">Copy ID</button></div></section>
+<section class="panel"><h2>Question</h2><div id="question" class="question"></div></section>
+<section class="panel metrics" id="metrics"></section>
+<section class="panel error" id="errorPanel"><h2>Error</h2><div id="error"></div></section>
+<section class="panel"><h2>Reference SQL</h2><pre id="referenceSql"></pre></section>
+<section class="panel"><h2>Final generated SQL</h2><pre id="generatedSql"></pre></section>
+<section class="panel"><h2>Retrieved tables</h2><div class="chips" id="tables"></div></section>
+<section class="panel"><h2>Retrieved columns</h2><div class="chips" id="columns"></div></section>
+</main><script>
+const records=__DEBUG_DATA__;
+const select=document.getElementById('questionSelect');
+const root=document.documentElement;
+const themeToggle=document.getElementById('themeToggle');
+let savedTheme=null;try{savedTheme=localStorage.getItem('evaluation-debug-theme')}catch(error){}
+const initialTheme=savedTheme||(matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');
+function setTheme(theme){root.dataset.theme=theme;themeToggle.textContent=theme==='dark'?'Light mode':'Dark mode';try{localStorage.setItem('evaluation-debug-theme',theme)}catch(error){}}
+setTheme(initialTheme);themeToggle.addEventListener('click',()=>setTheme(root.dataset.theme==='dark'?'light':'dark'));
+const text=(value)=>value===null||value===undefined||value===''?'—':String(value);
+const percent=(value)=>value===null||value===undefined?'—':(Number(value)*100).toFixed(1)+'%';
+const setText=(id,value)=>document.getElementById(id).textContent=text(value);
+async function copyText(value){if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(value);return}const area=document.createElement('textarea');area.value=value;area.style.position='fixed';area.style.opacity='0';document.body.appendChild(area);area.select();document.execCommand('copy');area.remove()}
+const chips=(id,values)=>{const box=document.getElementById(id);box.replaceChildren();(values||[]).forEach(value=>{const item=document.createElement('span');item.className='chip';item.textContent=value;box.appendChild(item)});if(!box.children.length)box.textContent='—'};
+records.forEach((record,index)=>{const option=document.createElement('option');option.value=index;option.textContent=(record.ex===1?'PASS':'FAIL')+' · '+record.id;select.appendChild(option)});
+document.getElementById('count').textContent=records.length+' completed questions · '+records.filter(record=>record.ex!==1).length+' failed';
+function show(index){const r=records[index];if(!r)return;setText('questionId',r.id);setText('question',r.question);setText('referenceSql',r.reference_sql);setText('generatedSql',r.final_generated_sql);setText('error',r.error||'No runtime error; the generated result differed from the reference result.');document.getElementById('errorPanel').classList.toggle('hidden',r.ex===1&&!r.error);const values=[['EX',r.ex,r.ex===1?'good':'bad'],['Table recall',percent(r.table_recall),''],['Table precision',percent(r.table_precision),''],['Column recall',percent(r.column_recall),'']];const metrics=document.getElementById('metrics');metrics.replaceChildren();values.forEach(([label,value,cls])=>{const item=document.createElement('div');item.className='metric';const name=document.createElement('span');name.textContent=label;const val=document.createElement('b');val.className=cls;val.textContent=text(value);item.append(name,val);metrics.appendChild(item)});chips('tables',r.retrieved_tables);chips('columns',r.retrieved_columns);select.value=index}
+select.addEventListener('change',()=>show(Number(select.value)));
+document.getElementById('copyQuestionId').addEventListener('click',async(event)=>{const r=records[Number(select.value)];if(!r)return;const button=event.currentTarget;try{await copyText(String(r.id));button.textContent='Copied';setTimeout(()=>button.textContent='Copy ID',1200)}catch(error){button.textContent='Copy failed';setTimeout(()=>button.textContent='Copy ID',1600)}});
+document.getElementById('failedButton').addEventListener('click',()=>{if(!records.length)return;let index=Number(select.value);for(let step=1;step<=records.length;step++){const candidate=(index+step)%records.length;if(records[candidate].ex!==1){show(candidate);break}}});
+show(0);
+</script></body></html>""".replace("__DEBUG_DATA__", payload)
+    atomic_write_text(path, document)
 
 
 def format_percent(value: Any) -> str:
@@ -745,8 +860,13 @@ def write_reports(run_dir: Path, records: list[dict], manifest: dict) -> None:
         run_dir / "summary.json",
         json.dumps(summary, ensure_ascii=False, indent=2),
     )
+    atomic_write_text(
+        run_dir / "debug_eval.json",
+        json.dumps(make_debug_records(records), ensure_ascii=False, indent=2),
+    )
     write_csv(run_dir / "per_question.csv", records)
     write_html(run_dir / "report.html", summary, records)
+    write_debug_html(run_dir / "debug.html", records)
 
 
 def build_runtime(args: argparse.Namespace, run_dir: Path) -> tuple[Pipeline, DatabaseManager, Path]:
@@ -811,7 +931,11 @@ def evaluate_one(record: dict, pipeline: Pipeline, manager: DatabaseManager,
         execute_timed(manager, db_name, initial_sql) if initial_sql else
         {"valid": False, "rows": None, "duration_ms": None, "error": error}
     )
-    initial_ex = results_equal(reference["rows"], initial["rows"], record["reference_sql"])
+    order_sensitive = record_order_sensitive(record)
+    initial_ex = results_equal(
+        reference["rows"], initial["rows"], record["reference_sql"],
+        order_sensitive=order_sensitive,
+    )
 
     correction_eligible = bool(initial_sql) and (not initial["valid"] or not initial["rows"])
     if initial_sql:
@@ -839,7 +963,10 @@ def evaluate_one(record: dict, pipeline: Pipeline, manager: DatabaseManager,
     else:
         final = initial
 
-    final_ex = results_equal(reference["rows"], final["rows"], record["reference_sql"])
+    final_ex = results_equal(
+        reference["rows"], final["rows"], record["reference_sql"],
+        order_sensitive=order_sensitive,
+    )
 
     if final.get("valid") and final_sql:
         phase = time.perf_counter()
@@ -871,7 +998,9 @@ def evaluate_one(record: dict, pipeline: Pipeline, manager: DatabaseManager,
         "language": record.get("language"),
         "category": record.get("category"),
         "difficulty": record.get("difficulty"),
+        "order_sensitive": order_sensitive,
         "question": record["question"],
+        "reference_sql": record["reference_sql"],
         "status": "completed",
         "completed_at": utc_now(),
         "initial_sql": initial_sql,
@@ -925,13 +1054,18 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--timing-repeats", type=int, default=5)
     parser.add_argument("--max-token-budget", type=int)
     parser.add_argument("--retry-failed", action="store_true")
+    parser.add_argument(
+        "--reports-only", action="store_true",
+        help="Rebuild reports from checkpoint.jsonl without database/model setup.",
+    )
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
     dataset = args.dataset.resolve()
-    records = load_dataset(dataset)
+    all_records = load_dataset(dataset)
+    records = all_records
     if args.language:
         records = [r for r in records if r.get("language") == args.language]
     if args.category:
@@ -949,6 +1083,14 @@ def main() -> int:
     manifest_path = run_dir / "manifest.json"
     checkpoint_path = run_dir / "checkpoint.jsonl"
     completed = load_checkpoints(checkpoint_path)
+    dataset_by_id = {record["id"]: record for record in all_records}
+    # Checkpoints created before debug artifacts did not retain reference SQL.
+    # Hydrate diagnostic-only fields from the hash-verified source dataset so
+    # resumed historical runs get complete debug output too.
+    for record_id, completed_record in completed.items():
+        source_record = dataset_by_id.get(record_id, {})
+        completed_record.setdefault("question", source_record.get("question"))
+        completed_record.setdefault("reference_sql", source_record.get("reference_sql"))
     manifest = {
         "evaluator_version": EVALUATOR_VERSION,
         "dataset": str(dataset),
@@ -969,11 +1111,26 @@ def main() -> int:
                 ) from exc
             print("WARNING: incomplete manifest with no checkpoints; rebuilding it safely.")
         else:
-            for key in ("evaluator_version", "dataset_sha256", "db_name", "db_type"):
+            for key in ("evaluator_version", "db_name", "db_type"):
                 if existing.get(key) != manifest.get(key):
                     raise RuntimeError(f"Resume manifest mismatch for {key}.")
+            old_dataset_hash = existing.get("dataset_sha256")
+            if old_dataset_hash != manifest["dataset_sha256"]:
+                print(
+                    "Dataset changed since this run started; keeping all "
+                    "completed checkpoint IDs and using the new dataset for "
+                    "questions that have not run yet."
+                )
+                existing["dataset"] = str(dataset)
+                existing["dataset_sha256"] = manifest["dataset_sha256"]
+                existing["dataset_updated_at"] = utc_now()
             manifest = existing
     atomic_write_text(manifest_path, json.dumps(manifest, ensure_ascii=False, indent=2))
+    if args.reports_only:
+        write_reports(run_dir, list(completed.values()), manifest)
+        print(f"Rebuilt reports from {checkpoint_path}")
+        print(f"Report: {run_dir / 'report.html'}")
+        return 0
     pipeline, manager, model_log = build_runtime(args, run_dir)
     setup_log_offset = model_log.stat().st_size if model_log.exists() else 0
     setup_started = time.perf_counter()

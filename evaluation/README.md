@@ -58,9 +58,12 @@ evaluator مقدار connection string را داخل manifest، checkpoint یا 
   --resume evaluation\runs\smoke_test
 ```
 
-سؤال‌هایی که checkpoint کامل دارند دوباره اجرا نمی‌شوند و token جدید مصرف
-نمی‌کنند. evaluator پیش از resume، hash دیتاست، نسخه evaluator، نام و نوع
-دیتابیس را با manifest قبلی تطبیق می‌دهد.
+سؤال‌هایی که شناسه آن‌ها در checkpoint کامل شده است دوباره اجرا نمی‌شوند و
+token جدید مصرف نمی‌کنند، حتی اگر دیتاست بعداً ویرایش شود. evaluator هنگام
+resume، hash جدید دیتاست را در manifest ثبت می‌کند و سؤال‌های اجرا‌نشده را از
+نسخه جدید می‌خواند. برای اجرای دوباره یک سؤال باید رکورد آن عمداً از checkpoint
+حذف شود یا گزینه retry مناسب استفاده شود. نام و نوع دیتابیس و نسخه evaluator
+همچنان باید با manifest قبلی یکسان باشند.
 
 برای توقف امن می‌توان `Ctrl+C` زد. نتیجه سؤال‌های کامل‌شده باقی می‌ماند و گزارش
 تا همان نقطه دوباره ساخته می‌شود.
@@ -91,6 +94,24 @@ evaluator مقدار connection string را داخل manifest، checkpoint یا 
 
 برای چند category می‌توان گزینه `--category` را چند بار تکرار کرد.
 
+## بازسازی گزارش از checkpoint
+
+برای هماهنگ‌کردن تمام گزارش‌ها با وضعیت فعلی `checkpoint.jsonl` بدون اتصال به
+دیتابیس یا فراخوانی مدل:
+
+```powershell
+.\.venv\Scripts\python.exe evaluation\run_evaluation.py `
+  --dataset evaluation\datasets\questions_all.json `
+  --db-name test1 `
+  --db-type mssql `
+  --resume evaluation\runs\v1 `
+  --reports-only
+```
+
+این فرمان آخرین رکورد هر شناسه را از checkpoint انتخاب می‌کند و
+`report.html`، `debug.html`، `summary.json`، `debug_eval.json` و
+`per_question.csv` را دوباره می‌سازد.
+
 ## خروجی هر Run
 
 ```text
@@ -100,6 +121,8 @@ evaluation/runs/<run-name>/
 ├── model_calls.jsonl
 ├── summary.json
 ├── per_question.csv
+├── debug_eval.json
+├── debug.html
 └── report.html
 ```
 
@@ -107,6 +130,10 @@ evaluation/runs/<run-name>/
 - `model_calls.jsonl`: audit فراخوانی‌های مدل همان run
 - `summary.json`: معیارهای تجمیعی و breakdownها
 - `per_question.csv`: خروجی مناسب بررسی در Excel
+- `debug_eval.json`: داده‌های فشرده عیب‌یابی برای هر سؤال
+- `debug.html`: مرور تعاملی و مستقل SQL مرجع، SQL تولیدشده، خطا و retrieval هر
+  سؤال؛ evaluator آخرین رکوردهای checkpoint را هنگام ساخت گزارش داخل آن قرار
+  می‌دهد تا فایل مستقیماً در مرورگر باز شود.
 - `report.html`: گزارش فارسی مستقل با کارت‌ها، نمودارها و موارد ناموفق
 
 ## نکات اندازه‌گیری

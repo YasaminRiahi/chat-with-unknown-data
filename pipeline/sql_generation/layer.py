@@ -61,6 +61,26 @@ Generate a T-SQL query for Microsoft SQL Server.
   with an N prefix, for example: N'حسن انجام کار'.
 - Prefer the simplest table that directly contains the requested value. Do not
   add a join unless the requested result requires it and the schema supports it.
+- Use only relationships supplied in the schema context. Never invent a join
+  key merely because two columns have the same name or compatible data types.
+- Prefer a relationship marked declared_fk; it is authoritative database
+  metadata. If no declared_fk connects the required tables, a relationship
+  marked inferred_name_match may be used only when its Ref-to-Id direction and
+  entity meaning match the requested data.
+- Never replace a supplied Ref-to-Id relationship with a descriptive or
+  business-value match such as Code, Title, Name, Number, or PlaqueNumber just
+  because both tables contain that field. Use such fields as join keys only
+  when the schema explicitly identifies that relationship or the question
+  explicitly requests value matching.
+- Never use NATURAL JOIN; it is not supported by Microsoft SQL Server and can
+  silently join on unintended same-named columns in other SQL dialects.
+- When a join is needed, use INNER JOIN by default. Use LEFT JOIN (or another
+  outer join) only when the question explicitly requires retaining rows that
+  have no related match, such as "include accounts without an element" or
+  "include banks with zero branches". Do not infer an outer join merely from
+  words such as all, every, first, top, related, مرتبط, or مربوطه.
+- If the schema supplies no credible relationship between required tables, do
+  not guess one. Use a simpler supported query when possible.
 - Match date/time filtering to the precision stated by the user. A calendar
   date without a time means the entire day, not midnight. A date with only an
   hour means the entire hour; with an hour and minute, the entire minute; and

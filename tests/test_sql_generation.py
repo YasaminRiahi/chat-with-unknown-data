@@ -18,6 +18,24 @@ class SQLGenerationPromptTests(unittest.TestCase):
         self.assertIn(">= '20190331' AND < '20190401'", prompt)
         self.assertIn("with an hour and minute, the entire minute", prompt)
 
+    def test_prompt_requires_schema_grounded_join_keys(self):
+        llm = MagicMock()
+        llm.invoke.return_value.content = "SELECT 1"
+        layer = SQLGenerationLayer(llm, None, None)
+
+        layer.run("Show every asset and its costs", "Relationships: ...")
+
+        prompt = llm.invoke.call_args.args[0][0].content
+        self.assertIn("Never invent a join", prompt)
+        self.assertIn("declared_fk", prompt)
+        self.assertIn("inferred_name_match", prompt)
+        self.assertIn("Ref-to-Id", prompt)
+        self.assertIn("PlaqueNumber", prompt)
+        self.assertIn("Never use NATURAL JOIN", prompt)
+        self.assertIn("use INNER JOIN by default", prompt)
+        self.assertIn("only when the question explicitly requires", prompt)
+        self.assertIn("include banks with zero branches", prompt)
+
     def test_generated_mutation_after_select_is_rejected(self):
         llm = MagicMock()
         llm.invoke.return_value.content = (
