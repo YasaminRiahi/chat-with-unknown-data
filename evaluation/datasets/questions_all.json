@@ -814,7 +814,7 @@
                     {
                         "id":  "questions_bank_accounts_intent_004_en",
                         "language":  "en",
-                        "question":  "What is the total balance per fiscal year?",
+                        "question":  "What is the total bank account balance per fiscal year?",
                         "intent_id":  "questions_bank_accounts_intent_004",
                         "db_name":  "Sepidar02-back",
                         "schema":  "RPA",
@@ -835,7 +835,7 @@
                     {
                         "id":  "questions_bank_accounts_intent_005_fa",
                         "language":  "fa",
-                        "question":  "مجموع موجودی و تعداد حساب‌ها برای هر نوع حساب چیست؟",
+                        "question":  "مجموع موجودی و تعداد حساب ها را به تفکیک شناسهٔ نوع حساب نشان بده.",
                         "intent_id":  "questions_bank_accounts_intent_005",
                         "db_name":  "Sepidar02-back",
                         "schema":  "RPA",
@@ -925,12 +925,12 @@
                     {
                         "id":  "questions_cash_intent_002_fa",
                         "language":  "fa",
-                        "question":  "عنوان (به فارسی و انگلیسی) هر رکورد نقدی و مجموع مبلغ پرداختی دریافت شده برای آن چیست؟",
+                        "question":  "عنوان فارسی و انگلیسی هر صندوق و مجموع پرداخت های آن را نمایش بده؛ برای صندوق های بدون پرداخت، صفر نشان بده.",
                         "intent_id":  "questions_cash_intent_002",
                         "db_name":  "Sepidar02-back",
                         "schema":  "RPA",
                         "table":  "Cash",
-                        "reference_sql":  "SELECT TOP (20) c.[Title], c.[Title_En], SUM(ph.[Amount]) AS TotalPaymentAmount FROM [RPA].[Cash] AS c LEFT JOIN [RPA].[PaymentHeader] AS ph ON ph.[CashRef] = c.[CashId] GROUP BY c.[Title], c.[Title_En] ORDER BY TotalPaymentAmount DESC",
+                        "reference_sql":  "SELECT c.[Title], c.[Title_En], COALESCE(SUM(ph.[Amount]), 0) AS TotalPaymentAmount FROM [RPA].[Cash] AS c LEFT JOIN [RPA].[PaymentHeader] AS ph  ON ph.[CashRef] = c.[CashId] GROUP BY c.[CashId], c.[Title], c.[Title_En]",
                         "gold_tables":  [
                                             "RPA.Cash",
                                             "RPA.PaymentHeader"
@@ -1059,7 +1059,7 @@
                     {
                         "id":  "questions_cash_intent_005_fa",
                         "language":  "fa",
-                        "question":  "مجموع موجودی برای هر ارز چیست؟",
+                        "question":  "مجموع موجودی صندوق ها به تفکیک شناسهٔ ارز چقدر است؟",
                         "intent_id":  "questions_cash_intent_005",
                         "db_name":  "Sepidar02-back",
                         "schema":  "RPA",
@@ -1307,7 +1307,7 @@
                     {
                         "id":  "questions_fiscal_years_intent_001_fa",
                         "language":  "fa",
-                        "question":  "عنوان‌های سال‌های مالی و تعداد رسیدهای خرید ثبت‌شده در هر یک چه‌است، ۲۰ سال با بیشترین تعداد رسید را نشان دهید؟",
+                        "question":  "عنوان سال های مالی و تعداد رسیدهای تحصیل دارایی در 20 سال با بیشتزین تعداد رسید نمایش بده؛ سال های بدون رسید را هم با تعداد صفر در نظر بگیر",
                         "intent_id":  "questions_fiscal_years_intent_001",
                         "db_name":  "Sepidar02-back",
                         "schema":  "FMK",
@@ -1329,7 +1329,7 @@
                     {
                         "id":  "questions_fiscal_years_intent_001_en",
                         "language":  "en",
-                        "question":  "What are the titles of fiscal years and how many acquisition receipts were recorded in each, showing the top 20 years with the highest receipt counts?",
+                        "question":  "Show the titles of the top 20 fiscal years with the most asset acquisition receipts, along with the receipt count for each year. Include fiscal years with no receipts with a count of zero",
                         "intent_id":  "questions_fiscal_years_intent_001",
                         "db_name":  "Sepidar02-back",
                         "schema":  "FMK",
@@ -1351,7 +1351,7 @@
                     {
                         "id":  "questions_fiscal_years_intent_002_fa",
                         "language":  "fa",
-                        "question":  "آخرین ۲۰ تراکنش دارایی چیست که شناسه تراکنش، تاریخ فعالیت، نوع تراکنش و عنوان سال مالی مربوطه را نشان می‌دهد و بر اساس تاریخ فعالیت به ترتیب نزولی مرتب شده‌اند؟",
+                        "question":  "۲۰ تراکنش آخر دارایی را با شناسهٔ تراکنش، تاریخ فعالیت، نوع تراکنش و عنوان سال مالی نمایش بده؛ جدیدترین تاریخ فعالیت اول باشد.",
                         "intent_id":  "questions_fiscal_years_intent_002",
                         "db_name":  "Sepidar02-back",
                         "schema":  "AST",
@@ -1399,12 +1399,12 @@
                     {
                         "id":  "questions_fiscal_years_intent_003_fa",
                         "language":  "fa",
-                        "question":  "برای هر سال مالی، عنوان، تاریخ شروع و تاریخ پایان را به همراه تعداد عملیات بسته شدن مرتبط نمایش دهید.",
+                        "question":  "تعداد عملیات بسته شدن هر سال مالی را همراه عنوان آن نمایش بده؛ برای سال های بدون عملیات، صفر بیاور.",
                         "intent_id":  "questions_fiscal_years_intent_003",
                         "db_name":  "Sepidar02-back",
                         "schema":  "FMK",
                         "table":  "FiscalYear",
-                        "reference_sql":  "SELECT FY.Title, FY.StartDate, FY.EndDate, COUNT(CO.ClosingOperationId) AS ClosingCount FROM [FMK].[FiscalYear] AS FY LEFT JOIN [GNR].[ClosingOperation] AS CO ON CO.FiscalYearRef = FY.FiscalYearId GROUP BY FY.Title, FY.StartDate, FY.EndDate ORDER BY FY.StartDate DESC",
+                        "reference_sql":  "SELECT fy.Title, COUNT(co.ClosingOperationId) AS ClosingCount FROM FMK.FiscalYear AS fy LEFT JOIN GNR.ClosingOperation AS co ON co.FiscalYearRef = fy.FiscalYearId\nGROUP BY fy.FiscalYearId, fy.Title",
                         "gold_tables":  [
                                             "FMK.FiscalYear",
                                             "GNR.ClosingOperation"
@@ -1447,12 +1447,12 @@
                     {
                         "id":  "questions_fiscal_years_intent_004_fa",
                         "language":  "fa",
-                        "question":  "تعداد سال‌های مالی برای هر وضعیت چیست؟",
+                        "question":  "سال های مالی را بر اساس وضعیتشان گروه بندی کن و تعداد سال ها را در هر وضعیت نشان بده.",
                         "intent_id":  "questions_fiscal_years_intent_004",
                         "db_name":  "Sepidar02-back",
                         "schema":  "FMK",
                         "table":  "FiscalYear",
-                        "reference_sql":  "SELECT [Status], COUNT(*) AS [YearCount] FROM [FMK].[FiscalYear] GROUP BY [Status] ORDER BY [Status]",
+                        "reference_sql":  "SELECT [Status], COUNT(*) AS YearCount FROM [FMK].[FiscalYear] GROUP BY [Status]",
                         "gold_tables":  [
                                             "FMK.FiscalYear"
                                         ],
@@ -1467,52 +1467,12 @@
                     {
                         "id":  "questions_fiscal_years_intent_004_en",
                         "language":  "en",
-                        "question":  "What is the count of fiscal years for each status?",
+                        "question":  "Group fiscal years by their status and show the number of fiscal years in each group",
                         "intent_id":  "questions_fiscal_years_intent_004",
                         "db_name":  "Sepidar02-back",
                         "schema":  "FMK",
                         "table":  "FiscalYear",
-                        "reference_sql":  "SELECT [Status], COUNT(*) AS [YearCount] FROM [FMK].[FiscalYear] GROUP BY [Status] ORDER BY [Status]",
-                        "gold_tables":  [
-                                            "FMK.FiscalYear"
-                                        ],
-                        "gold_columns":  [
-                                             "FMK.FiscalYear.Status"
-                                         ],
-                        "category":  "aggregation",
-                        "difficulty":  "easy",
-                        "review_status":  "candidate",
-                        "review_notes":  ""
-                    },
-                    {
-                        "id":  "questions_fiscal_years_intent_005_fa",
-                        "language":  "fa",
-                        "question":  "برای هر وضعیت، چند سال مالی وجود دارد؟",
-                        "intent_id":  "questions_fiscal_years_intent_005",
-                        "db_name":  "Sepidar02-back",
-                        "schema":  "FMK",
-                        "table":  "FiscalYear",
-                        "reference_sql":  "SELECT [Status], COUNT(*) AS [YearCount] FROM [FMK].[FiscalYear] GROUP BY [Status] ORDER BY [YearCount] DESC",
-                        "gold_tables":  [
-                                            "FMK.FiscalYear"
-                                        ],
-                        "gold_columns":  [
-                                             "FMK.FiscalYear.Status"
-                                         ],
-                        "category":  "aggregation",
-                        "difficulty":  "easy",
-                        "review_status":  "candidate",
-                        "review_notes":  ""
-                    },
-                    {
-                        "id":  "questions_fiscal_years_intent_005_en",
-                        "language":  "en",
-                        "question":  "How many fiscal years exist for each status?",
-                        "intent_id":  "questions_fiscal_years_intent_005",
-                        "db_name":  "Sepidar02-back",
-                        "schema":  "FMK",
-                        "table":  "FiscalYear",
-                        "reference_sql":  "SELECT [Status], COUNT(*) AS [YearCount] FROM [FMK].[FiscalYear] GROUP BY [Status] ORDER BY [YearCount] DESC",
+                        "reference_sql":  "SELECT [Status], COUNT(*) AS YearCount FROM [FMK].[FiscalYear] GROUP BY [Status]",
                         "gold_tables":  [
                                             "FMK.FiscalYear"
                                         ],
@@ -1621,12 +1581,12 @@
                     {
                         "id":  "questions_general_intent_003_fa",
                         "language":  "fa",
-                        "question":  "پارتی‌های دارای شماره تلفن اصلی را به همراه شناسه، نام، نوع تلفن و وضعیت اصلی بودن تلفنشان لیست کنید.",
+                        "question":  "۲۰ شماره تلفن اصلی اشخاص را همراه شناسه و نام شخص، نوع تلفن و وضعیت اصلی بودن نمایش بده؛ به ترتیب شناسهٔ شخص و سپس شناسهٔ تلفن مرتب کن.",
                         "intent_id":  "questions_general_intent_003",
                         "db_name":  "Sepidar02-back",
                         "schema":  "GNR",
                         "table":  "Party",
-                        "reference_sql":  "SELECT TOP (20) p.[PartyId], p.[Name], pp.[Type] AS PhoneType, pp.[IsMain]  FROM [GNR].[Party] AS p  INNER JOIN [GNR].[PartyPhone] AS pp ON pp.[PartyRef] = p.[PartyId]  ORDER BY p.[PartyId]",
+                        "reference_sql":  "SELECT TOP (20) p.PartyId, p.Name, pp.[Type] AS PhoneType, pp.IsMain FROM GNR.Party AS p INNER JOIN GNR.PartyPhone AS pp ON pp.PartyRef = p.PartyId WHERE pp.IsMain = 1 ORDER BY p.PartyId, pp.PartyPhoneId",
                         "gold_tables":  [
                                             "GNR.Party",
                                             "GNR.PartyPhone"
@@ -1645,12 +1605,12 @@
                     {
                         "id":  "questions_general_intent_003_en",
                         "language":  "en",
-                        "question":  "List the first 20 parties that have a main phone entry, showing their PartyId, Name, phone Type and whether the phone is marked as main.",
+                        "question":  "List the first 20 main phone entries, ordered by PartyId and then PartyPhoneId, showing PartyId, Name, phone Type, and IsMain.",
                         "intent_id":  "questions_general_intent_003",
                         "db_name":  "Sepidar02-back",
                         "schema":  "GNR",
                         "table":  "Party",
-                        "reference_sql":  "SELECT TOP (20) p.[PartyId], p.[Name], pp.[Type] AS PhoneType, pp.[IsMain]  FROM [GNR].[Party] AS p  INNER JOIN [GNR].[PartyPhone] AS pp ON pp.[PartyRef] = p.[PartyId]  ORDER BY p.[PartyId]",
+                        "reference_sql":  "SELECT TOP (20) p.PartyId,p.Name,pp.[Type] AS PhoneType,pp.IsMain FROM GNR.Party AS p INNER JOIN GNR.PartyPhone AS pp  ON pp.PartyRef = p.PartyId WHERE pp.IsMain = 1 ORDER BY p.PartyId, pp.PartyPhoneId;",
                         "gold_tables":  [
                                             "GNR.Party",
                                             "GNR.PartyPhone"
@@ -1753,12 +1713,12 @@
                     {
                         "id":  "questions_invoice_intent_001_fa",
                         "language":  "fa",
-                        "question":  "مجموع قیمت خالص اقلام برای هر فاکتور را به همراه شماره فاکتور و نام مشتری نشان دهید.",
+                        "question":  "۲۰ فاکتور فروش در ماژول فروش (SLS) با بیشترین مجموع قیمت خالص اقلام را همراه شماره فاکتور و نام مشتری نمایش بده",
                         "intent_id":  "questions_invoice_intent_001",
                         "db_name":  "Sepidar02-back",
                         "schema":  "SLS",
                         "table":  "Invoice",
-                        "reference_sql":  "SELECT TOP (20)      i.[Number] AS InvoiceNumber,      i.[CustomerRealName] AS CustomerName,      SUM(ii.[NetPrice]) AS TotalItemNetPrice  FROM [SLS].[Invoice] AS i  INNER JOIN [SLS].[InvoiceItem] AS ii      ON ii.[InvoiceRef] = i.[InvoiceId]  GROUP BY i.[Number], i.[CustomerRealName]  ORDER BY TotalItemNetPrice DESC",
+                        "reference_sql":  "SELECT TOP (20) i.[Number] AS InvoiceNumber, i.[CustomerRealName] AS CustomerName, SUM(ii.[NetPrice]) AS TotalItemNetPrice FROM [SLS].[Invoice] AS i INNER JOIN [SLS].[InvoiceItem] AS ii ON ii.[InvoiceRef] = i.[InvoiceId] GROUP BY i.[InvoiceId], i.[Number], i.[CustomerRealName] ORDER BY TotalItemNetPrice DESC, i.[InvoiceId];",
                         "gold_tables":  [
                                             "SLS.Invoice",
                                             "SLS.InvoiceItem"
@@ -1776,12 +1736,12 @@
                     {
                         "id":  "questions_invoice_intent_001_en",
                         "language":  "en",
-                        "question":  "What is the total net price of items for each invoice, showing the invoice number and customer name?",
+                        "question":  "Show the top 20 sales invoices in the Sales (SLS) module with the highest total item net price, including the invoice number and customer name. Break ties by invoice ID ascending",
                         "intent_id":  "questions_invoice_intent_001",
                         "db_name":  "Sepidar02-back",
                         "schema":  "SLS",
                         "table":  "Invoice",
-                        "reference_sql":  "SELECT TOP (20)      i.[Number] AS InvoiceNumber,      i.[CustomerRealName] AS CustomerName,      SUM(ii.[NetPrice]) AS TotalItemNetPrice  FROM [SLS].[Invoice] AS i  INNER JOIN [SLS].[InvoiceItem] AS ii      ON ii.[InvoiceRef] = i.[InvoiceId]  GROUP BY i.[Number], i.[CustomerRealName]  ORDER BY TotalItemNetPrice DESC",
+                        "reference_sql":  "SELECT TOP (20) i.[Number] AS InvoiceNumber, i.[CustomerRealName] AS CustomerName, SUM(ii.[NetPrice]) AS TotalItemNetPrice FROM [SLS].[Invoice] AS i INNER JOIN [SLS].[InvoiceItem] AS ii ON ii.[InvoiceRef] = i.[InvoiceId] GROUP BY i.[InvoiceId], i.[Number], i.[CustomerRealName] ORDER BY TotalItemNetPrice DESC, i.[InvoiceId] ASC;",
                         "gold_tables":  [
                                             "SLS.Invoice",
                                             "SLS.InvoiceItem"
@@ -1841,52 +1801,6 @@
                         "review_notes":  ""
                     },
                     {
-                        "id":  "questions_invoice_intent_003_fa",
-                        "language":  "fa",
-                        "question":  "فهرست ۲۰ فاکتور برتر به همراه عنوان نوع فروش و قیمت خالص به ارز پایه، به ترتیب نزولی قیمت خالص.",
-                        "intent_id":  "questions_invoice_intent_003",
-                        "db_name":  "Sepidar02-back",
-                        "schema":  "SLS",
-                        "table":  "Invoice",
-                        "reference_sql":  "SELECT TOP (20) i.[Number] AS InvoiceNumber, st.[Title] AS SaleTypeTitle, i.[NetPriceInBaseCurrency] FROM [SLS].[Invoice] i JOIN [SLS].[SaleType] st ON i.[SaleTypeRef] = st.[SaleTypeId] ORDER BY i.[NetPriceInBaseCurrency] DESC",
-                        "gold_tables":  [
-                                            "SLS.Invoice",
-                                            "SLS.SaleType"
-                                        ],
-                        "gold_columns":  [
-                                             "SLS.Invoice.Number",
-                                             "SLS.Invoice.NetPriceInBaseCurrency",
-                                             "SLS.SaleType.Title"
-                                         ],
-                        "category":  "sales",
-                        "difficulty":  "medium",
-                        "review_status":  "candidate",
-                        "review_notes":  ""
-                    },
-                    {
-                        "id":  "questions_invoice_intent_003_en",
-                        "language":  "en",
-                        "question":  "List the top 20 invoices with their sale type titles and net price in base currency, ordered by net price descending.",
-                        "intent_id":  "questions_invoice_intent_003",
-                        "db_name":  "Sepidar02-back",
-                        "schema":  "SLS",
-                        "table":  "Invoice",
-                        "reference_sql":  "SELECT TOP (20) i.[Number] AS InvoiceNumber, st.[Title] AS SaleTypeTitle, i.[NetPriceInBaseCurrency] FROM [SLS].[Invoice] i JOIN [SLS].[SaleType] st ON i.[SaleTypeRef] = st.[SaleTypeId] ORDER BY i.[NetPriceInBaseCurrency] DESC",
-                        "gold_tables":  [
-                                            "SLS.Invoice",
-                                            "SLS.SaleType"
-                                        ],
-                        "gold_columns":  [
-                                             "SLS.Invoice.Number",
-                                             "SLS.Invoice.NetPriceInBaseCurrency",
-                                             "SLS.SaleType.Title"
-                                         ],
-                        "category":  "sales",
-                        "difficulty":  "medium",
-                        "review_status":  "candidate",
-                        "review_notes":  ""
-                    },
-                    {
                         "id":  "questions_msg_intent_001_fa",
                         "language":  "fa",
                         "question":  "عناوین قالب‌ها را به همراه تعداد مخاطبان مرتبط با هر قالب لیست کنید، به ترتیب تعداد نزولی و فقط 20 مورد برتر.",
@@ -1911,12 +1825,12 @@
                     {
                         "id":  "questions_msg_intent_001_en",
                         "language":  "en",
-                        "question":  "List the titles of templates along with the number of contacts associated with each template, ordered by the contact count descending, showing the top 20 templates.",
+                        "question":  "Show the top 20 templates with the most contacts, displaying each template’s title and contact count. Include templates with no contacts as zero, and break ties by template ID ascending.",
                         "intent_id":  "questions_msg_intent_001",
                         "db_name":  "Sepidar02-back",
                         "schema":  "MSG",
                         "table":  "Template",
-                        "reference_sql":  "SELECT TOP (20) t.[Title], COUNT(tc.[TemplateContactID]) AS [ContactCount] FROM [MSG].[Template] AS t LEFT JOIN [MSG].[TemplateContact] AS tc ON tc.[TemplateRef] = t.[TemplateID] GROUP BY t.[Title] ORDER BY [ContactCount] DESC",
+                        "reference_sql":  "SELECT TOP (20) t.[Title], COUNT(tc.[TemplateContactID]) AS ContactCount FROM [MSG].[Template] AS t LEFT JOIN [MSG].[TemplateContact] AS tc ON tc.[TemplateRef] = t.[TemplateID] GROUP BY t.[TemplateID], t.[Title] ORDER BY ContactCount DESC, t.[TemplateID] ASC",
                         "gold_tables":  [
                                             "MSG.Template",
                                             "MSG.TemplateContact"
@@ -1933,12 +1847,12 @@
                     {
                         "id":  "questions_msg_intent_002_fa",
                         "language":  "fa",
-                        "question":  "تعداد فیلترهای تعریف‌شده برای هر قالب را به‌صورت عنوان قالب و شمارش فیلتر نمایش دهید، به‌صورت نزولی بر اساس شمارش مرتب شود.",
+                        "question":  "عنوان هر قالب و تعداد فیلترهایش را نمایش بده؛ قالب های بدون فیلتر را صفر حساب کن و ۲۰ قالب با بیشترین تعداد فیلتر را بیاور. در تعداد برابر، شناسهٔ کمتر اول باشد.",
                         "intent_id":  "questions_msg_intent_002",
                         "db_name":  "Sepidar02-back",
                         "schema":  "MSG",
                         "table":  "Template",
-                        "reference_sql":  "SELECT TOP (20) t.[Title], COUNT(tf.[TemplateFilterID]) AS FilterCount FROM [MSG].[Template] AS t LEFT JOIN [MSG].[TemplateFilter] AS tf ON tf.[TemplateRef] = t.[TemplateID] GROUP BY t.[Title] ORDER BY FilterCount DESC",
+                        "reference_sql":  "SELECT TOP (20) t.[Title], COUNT(tf.[TemplateFilterID]) AS FilterCount FROM [MSG].[Template] AS t LEFT JOIN [MSG].[TemplateFilter] AS tf ON tf.[TemplateRef] = t.[TemplateID] GROUP BY t.[TemplateID], t.[Title] ORDER BY FilterCount DESC, t.[TemplateID] ASC",
                         "gold_tables":  [
                                             "MSG.Template",
                                             "MSG.TemplateFilter"
@@ -1955,12 +1869,12 @@
                     {
                         "id":  "questions_msg_intent_002_en",
                         "language":  "en",
-                        "question":  "What is the number of filters defined for each template, showing the template title and filter count, ordered by the count descending?",
+                        "question":  "Show the top 20 template titles with the highest filter counts, including titles with no filters with a count of zero, ordered by filter count descending.",
                         "intent_id":  "questions_msg_intent_002",
                         "db_name":  "Sepidar02-back",
                         "schema":  "MSG",
                         "table":  "Template",
-                        "reference_sql":  "SELECT TOP (20) t.[Title], COUNT(tf.[TemplateFilterID]) AS FilterCount FROM [MSG].[Template] AS t LEFT JOIN [MSG].[TemplateFilter] AS tf ON tf.[TemplateRef] = t.[TemplateID] GROUP BY t.[Title] ORDER BY FilterCount DESC",
+                        "reference_sql":  "SELECT TOP (20) t.[Title], COUNT(tf.[TemplateFilterID]) AS FilterCount FROM [MSG].[Template] AS t LEFT JOIN [MSG].[TemplateFilter] AS tf ON tf.[TemplateRef] = t.[TemplateID] GROUP BY t.[Title] ORDER BY FilterCount DESC;",
                         "gold_tables":  [
                                             "MSG.Template",
                                             "MSG.TemplateFilter"
@@ -1977,12 +1891,12 @@
                     {
                         "id":  "questions_msg_intent_003_fa",
                         "language":  "fa",
-                        "question":  "عنوان‌ها و تاریخ‌های ایجاد آخرین ۲۰ قالب چیست و برای هر قالب شناسهٔ برنامه‌ریزی مرتبط چیست؟",
+                        "question":  "عنوان، تاریخ ایجاد و شناسهٔ برنامه ریزی مرتبط با قالب ها را نمایش بده؛ قالب های بدون برنامه ریزی را هم بیاور و فقط ۲۰ ردیف اول را به ترتیب جدیدترین تاریخ ایجاد نشان بده.",
                         "intent_id":  "questions_msg_intent_003",
                         "db_name":  "Sepidar02-back",
                         "schema":  "MSG",
                         "table":  "Template",
-                        "reference_sql":  "SELECT TOP (20) t.[Title], t.[CreationDate], ts.[SchedulingRef]\nFROM [MSG].[Template] AS t\nLEFT JOIN [MSG].[TemplateScheduling] AS ts ON ts.[TemplateRef] = t.[TemplateID]\nORDER BY t.[CreationDate] DESC",
+                        "reference_sql":  "SELECT TOP (20) t.[Title], t.[CreationDate], ts.[SchedulingRef] FROM [MSG].[Template] AS t LEFT JOIN [MSG].[TemplateScheduling] AS ts ON ts.[TemplateRef] = t.[TemplateID] ORDER BY t.[CreationDate] DESC;",
                         "gold_tables":  [
                                             "MSG.Template",
                                             "MSG.TemplateScheduling"
@@ -2000,12 +1914,12 @@
                     {
                         "id":  "questions_msg_intent_003_en",
                         "language":  "en",
-                        "question":  "What are the titles and creation dates of the latest 20 templates, and what scheduling reference is associated with each template?",
+                        "question":  "List the top 20 templates by contact count, showing each template’s title and contact count. Include templates with no contacts with a count of zero. Break ties by template ID ascending.",
                         "intent_id":  "questions_msg_intent_003",
                         "db_name":  "Sepidar02-back",
                         "schema":  "MSG",
                         "table":  "Template",
-                        "reference_sql":  "SELECT TOP (20) t.[Title], t.[CreationDate], ts.[SchedulingRef]\nFROM [MSG].[Template] AS t\nLEFT JOIN [MSG].[TemplateScheduling] AS ts ON ts.[TemplateRef] = t.[TemplateID]\nORDER BY t.[CreationDate] DESC",
+                        "reference_sql":  "SELECT TOP (20) t.[Title], COUNT(tc.[TemplateContactID]) AS ContactCount FROM [MSG].[Template] AS t LEFT JOIN [MSG].[TemplateContact] AS tc ON tc.[TemplateRef] = t.[TemplateID] GROUP BY t.[TemplateID], t.[Title] ORDER BY ContactCount DESC, t.[TemplateID] ASC;",
                         "gold_tables":  [
                                             "MSG.Template",
                                             "MSG.TemplateScheduling"
@@ -2023,12 +1937,12 @@
                     {
                         "id":  "questions_msg_intent_004_fa",
                         "language":  "fa",
-                        "question":  "برای هر قالب، چند رکورد زمان‌بندی وجود دارد؟",
+                        "question":  "شناسهٔ قالب و تعداد رکوردهای زمان بندی آن را فقط برای قالب هایی که زمان بندی دارند نمایش بده.",
                         "intent_id":  "questions_msg_intent_004",
                         "db_name":  "Sepidar02-back",
                         "schema":  "MSG",
                         "table":  "TemplateScheduling",
-                        "reference_sql":  "SELECT [TemplateRef], COUNT(*) AS [ScheduleCount] FROM [MSG].[TemplateScheduling] GROUP BY [TemplateRef]",
+                        "reference_sql":  "SELECT [TemplateRef], COUNT(*) AS ScheduleCount FROM [MSG].[TemplateScheduling] GROUP BY [TemplateRef]",
                         "gold_tables":  [
                                             "MSG.TemplateScheduling"
                                         ],
@@ -2103,7 +2017,7 @@
                     {
                         "id":  "questions_payments_receipts_intent_001_fa",
                         "language":  "fa",
-                        "question":  "شماره پرداخت، تاریخ پرداخت، مبلغ پرداخت و شماره و تاریخ رسید مربوط به آخرین 20 پرداختی که رسید مرتبط دارند را نمایش دهید.",
+                        "question":  "شماره، تاریخ و مبلغ ثبت\u200Cشده در ستون Amount برای آخرین ۲۰ پرداخت دارای رسید مرتبط را همراه شماره و تاریخ رسید نمایش بده؛ جدیدترین تاریخ پرداخت اول باشد.",
                         "intent_id":  "questions_payments_receipts_intent_001",
                         "db_name":  "Sepidar02-back",
                         "schema":  "RPA",
