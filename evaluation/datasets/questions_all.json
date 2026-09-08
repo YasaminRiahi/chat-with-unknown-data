@@ -2039,6 +2039,1571 @@
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
+                                    
+                    {
+                        "id": "singleq_01_fa",
+                        "language": "fa",
+                        "question": "۲۰ حساب فعال اول را با کد، عنوان فارسی و عنوان انگلیسی نمایش دهید؛ نتایج را بر اساس کد حساب به‌صورت صعودی مرتب کنید.",
+                        "intent_id": "singleq_01",
+                        "db_name": "Sepidar02-back",
+                        "schema": "ACC",
+                        "table": "Account",
+                        "reference_sql": "SELECT TOP (20) [Code], [Title], [Title_En] FROM [ACC].[Account] WHERE [IsActive] = 1 ORDER BY [Code] ASC",
+                        "gold_tables": [
+                        "ACC.Account"
+                        ],
+                        "gold_columns": [
+                        "ACC.Account.Code",
+                        "ACC.Account.Title",
+                        "ACC.Account.Title_En"
+                        ],
+                        "category": "detail",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_01_en",
+                        "language": "en",
+                        "question": "List the first 20 active accounts with their code, Persian title, and English title. Sort the results by account code in ascending order.",
+                        "intent_id": "singleq_01",
+                        "db_name": "Sepidar02-back",
+                        "schema": "ACC",
+                        "table": "Account",
+                        "reference_sql": "SELECT TOP (20) [Code], [Title], [Title_En] FROM [ACC].[Account] WHERE [IsActive] = 1 ORDER BY [Code] ASC",
+                        "gold_tables": [
+                        "ACC.Account"
+                        ],
+                        "gold_columns": [
+                        "ACC.Account.Code",
+                        "ACC.Account.Title",
+                        "ACC.Account.Title_En"
+                        ],
+                        "category": "detail",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_03_fa",
+                        "language": "fa",
+                        "question": "تعداد حساب‌های غیرفعال را به تفکیک نوع مانده محاسبه کنید و نتایج را بر اساس نوع مانده به‌صورت صعودی مرتب کنید.",
+                        "intent_id": "singleq_03",
+                        "db_name": "Sepidar02-back",
+                        "schema": "ACC",
+                        "table": "Account",
+                        "reference_sql": "SELECT [BalanceType], COUNT(*) AS [InactiveAccountCount] FROM [ACC].[Account] WHERE [IsActive] = 0 GROUP BY [BalanceType] ORDER BY [BalanceType] ASC",
+                        "gold_tables": [
+                        "ACC.Account"
+                        ],
+                        "gold_columns": [
+                        "ACC.Account.BalanceType"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "medium",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_03_en",
+                        "language": "en",
+                        "question": "Count the inactive accounts in each balance type and sort the results by balance type in ascending order.",
+                        "intent_id": "singleq_03",
+                        "db_name": "Sepidar02-back",
+                        "schema": "ACC",
+                        "table": "Account",
+                        "reference_sql": "SELECT [BalanceType], COUNT(*) AS [InactiveAccountCount] FROM [ACC].[Account] WHERE [IsActive] = 0 GROUP BY [BalanceType] ORDER BY [BalanceType] ASC",
+                        "gold_tables": [
+                        "ACC.Account"
+                        ],
+                        "gold_columns": [
+                        "ACC.Account.BalanceType"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "medium",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_04_fa",
+                        "language": "fa",
+                        "question": "سال‌های مالی با وضعیت ۱ را همراه با عنوان، تاریخ شروع و تاریخ پایان نمایش دهید و آن‌ها را از قدیمی‌ترین تاریخ شروع به جدیدترین مرتب کنید.",
+                        "intent_id": "singleq_04",
+                        "db_name": "Sepidar02-back",
+                        "schema": "FMK",
+                        "table": "FiscalYear",
+                        "reference_sql": "SELECT [Title], [StartDate], [EndDate] FROM [FMK].[FiscalYear] WHERE [Status] = 1 ORDER BY [StartDate] ASC",
+                        "gold_tables": [
+                        "FMK.FiscalYear"
+                        ],
+                        "gold_columns": [
+                        "FMK.FiscalYear.Title",
+                        "FMK.FiscalYear.StartDate",
+                        "FMK.FiscalYear.EndDate"
+                        ],
+                        "category": "detail",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_04_en",
+                        "language": "en",
+                        "question": "List the fiscal years with status 1, showing their title, start date, and end date. Sort them from the earliest to the latest start date.",
+                        "intent_id": "singleq_04",
+                        "db_name": "Sepidar02-back",
+                        "schema": "FMK",
+                        "table": "FiscalYear",
+                        "reference_sql": "SELECT [Title], [StartDate], [EndDate] FROM [FMK].[FiscalYear] WHERE [Status] = 1 ORDER BY [StartDate] ASC",
+                        "gold_tables": [
+                        "FMK.FiscalYear"
+                        ],
+                        "gold_columns": [
+                        "FMK.FiscalYear.Title",
+                        "FMK.FiscalYear.StartDate",
+                        "FMK.FiscalYear.EndDate"
+                        ],
+                        "category": "detail",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_05_fa",
+                        "language": "fa",
+                        "question": "تعداد سال‌های مالی را به تفکیک وضعیت محاسبه کنید و نتایج را بر اساس وضعیت به‌صورت صعودی مرتب کنید.",
+                        "intent_id": "singleq_05",
+                        "db_name": "Sepidar02-back",
+                        "schema": "FMK",
+                        "table": "FiscalYear",
+                        "reference_sql": "SELECT [Status], COUNT(*) AS [FiscalYearCount] FROM [FMK].[FiscalYear] GROUP BY [Status] ORDER BY [Status] ASC",
+                        "gold_tables": [
+                        "FMK.FiscalYear"
+                        ],
+                        "gold_columns": [
+                        "FMK.FiscalYear.Status"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_05_en",
+                        "language": "en",
+                        "question": "Count the fiscal years and their status and sort the results by status in ascending order.",
+                        "intent_id": "singleq_05",
+                        "db_name": "Sepidar02-back",
+                        "schema": "FMK",
+                        "table": "FiscalYear",
+                        "reference_sql": "SELECT [Status], COUNT(*) AS [FiscalYearCount] FROM [FMK].[FiscalYear] GROUP BY [Status] ORDER BY [Status] ASC",
+                        "gold_tables": [
+                        "FMK.FiscalYear"
+                        ],
+                        "gold_columns": [
+                        "FMK.FiscalYear.Status"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_06_fa",
+                        "language": "fa",
+                        "question": "۲۰ کالای فعال و قابل‌فروش اول را با کد، عنوان و بارکد نمایش دهید؛ نتایج را بر اساس کد کالا به‌صورت صعودی مرتب کنید.",
+                        "intent_id": "singleq_06",
+                        "db_name": "Sepidar02-back",
+                        "schema": "INV",
+                        "table": "Item",
+                        "reference_sql": "SELECT TOP (20) [Code], [Title], [BarCode] FROM [INV].[Item] WHERE [IsActive] = 1 AND [Sellable] = 1 ORDER BY [Code] ASC",
+                        "gold_tables": [
+                        "INV.Item"
+                        ],
+                        "gold_columns": [
+                        "INV.Item.Code",
+                        "INV.Item.Title",
+                        "INV.Item.BarCode"
+                        ],
+                        "category": "detail",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_06_en",
+                        "language": "en",
+                        "question": "List the first 20 active, sellable items with their code, title, and barcode. Sort the results by item code in ascending order.",
+                        "intent_id": "singleq_06",
+                        "db_name": "Sepidar02-back",
+                        "schema": "INV",
+                        "table": "Item",
+                        "reference_sql": "SELECT TOP (20) [Code], [Title], [BarCode] FROM [INV].[Item] WHERE [IsActive] = 1 AND [Sellable] = 1 ORDER BY [Code] ASC",
+                        "gold_tables": [
+                        "INV.Item"
+                        ],
+                        "gold_columns": [
+                        "INV.Item.Code",
+                        "INV.Item.Title",
+                        "INV.Item.BarCode"
+                        ],
+                        "category": "detail",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_07_fa",
+                        "language": "fa",
+                        "question": "تعداد کالاها را به تفکیک نوع کالا محاسبه کنید و گروه‌ها را بر اساس نوع کالا به‌صورت صعودی مرتب کنید.",
+                        "intent_id": "singleq_07",
+                        "db_name": "Sepidar02-back",
+                        "schema": "INV",
+                        "table": "Item",
+                        "reference_sql": "SELECT [Type], COUNT(*) AS [ItemCount] FROM [INV].[Item] GROUP BY [Type] ORDER BY [Type] ASC",
+                        "gold_tables": [
+                        "INV.Item"
+                        ],
+                        "gold_columns": [
+                        "INV.Item.Type"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_07_en",
+                        "language": "en",
+                        "question": "Count the items in each item type and sort the groups by item type in ascending order.",
+                        "intent_id": "singleq_07",
+                        "db_name": "Sepidar02-back",
+                        "schema": "INV",
+                        "table": "Item",
+                        "reference_sql": "SELECT [Type], COUNT(*) AS [ItemCount] FROM [INV].[Item] GROUP BY [Type] ORDER BY [Type] ASC",
+                        "gold_tables": [
+                        "INV.Item"
+                        ],
+                        "gold_columns": [
+                        "INV.Item.Type"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_08_fa",
+                        "language": "fa",
+                        "question": "برای کالاهای نوع ۳، میانگین حداقل مقدار و میانگین حداکثر مقدار را محاسبه کنید.",
+                        "intent_id": "singleq_08",
+                        "db_name": "Sepidar02-back",
+                        "schema": "INV",
+                        "table": "Item",
+                        "reference_sql": "SELECT AVG([MinimumAmount]) AS [AverageMinimumAmount], AVG([MaximumAmount]) AS [AverageMaximumAmount] FROM [INV].[Item] WHERE [Type] = 3",
+                        "gold_tables": [
+                        "INV.Item"
+                        ],
+                        "gold_columns": [
+                        "INV.Item.MinimumAmount",
+                        "INV.Item.MaximumAmount"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "medium",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_08_en",
+                        "language": "en",
+                        "question": "For items of type 3, calculate the average minimum amount and average maximum amount.",
+                        "intent_id": "singleq_08",
+                        "db_name": "Sepidar02-back",
+                        "schema": "INV",
+                        "table": "Item",
+                        "reference_sql": "SELECT AVG([MinimumAmount]) AS [AverageMinimumAmount], AVG([MaximumAmount]) AS [AverageMaximumAmount] FROM [INV].[Item] WHERE [Type] = 3",
+                        "gold_tables": [
+                        "INV.Item"
+                        ],
+                        "gold_columns": [
+                        "INV.Item.MinimumAmount",
+                        "INV.Item.MaximumAmount"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "medium",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_09_fa",
+                        "language": "fa",
+                        "question": "برای کالاهای غیرمعاف از مالیات، تعداد کالاها را به تفکیک وضعیت قابل‌فروش بودن محاسبه کنید و نتایج را ابتدا برای مقدار ۰ و سپس ۱ نمایش دهید.",
+                        "intent_id": "singleq_09",
+                        "db_name": "Sepidar02-back",
+                        "schema": "INV",
+                        "table": "Item",
+                        "reference_sql": "SELECT [Sellable], COUNT(*) AS [ItemCount] FROM [INV].[Item] WHERE [TaxExempt] = 0 GROUP BY [Sellable] ORDER BY [Sellable] ASC",
+                        "gold_tables": [
+                        "INV.Item"
+                        ],
+                        "gold_columns": [
+                        "INV.Item.Sellable"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "medium",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_09_en",
+                        "language": "en",
+                        "question": "For items that are not tax-exempt, count the items by sellable status and show status 0 before status 1.",
+                        "intent_id": "singleq_09",
+                        "db_name": "Sepidar02-back",
+                        "schema": "INV",
+                        "table": "Item",
+                        "reference_sql": "SELECT [Sellable], COUNT(*) AS [ItemCount] FROM [INV].[Item] WHERE [TaxExempt] = 0 GROUP BY [Sellable] ORDER BY [Sellable] ASC",
+                        "gold_tables": [
+                        "INV.Item"
+                        ],
+                        "gold_columns": [
+                        "INV.Item.Sellable"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "medium",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_10_fa",
+                        "language": "fa",
+                        "question": "۲۰ انبار فعال اول را با کد، عنوان فارسی و عنوان انگلیسی نمایش دهید و نتایج را بر اساس کد انبار به‌صورت صعودی مرتب کنید.",
+                        "intent_id": "singleq_10",
+                        "db_name": "Sepidar02-back",
+                        "schema": "INV",
+                        "table": "Stock",
+                        "reference_sql": "SELECT TOP (20) [Code], [Title], [Title_En] FROM [INV].[Stock] WHERE [IsActive] = 1 ORDER BY [Code] ASC",
+                        "gold_tables": [
+                        "INV.Stock"
+                        ],
+                        "gold_columns": [
+                        "INV.Stock.Code",
+                        "INV.Stock.Title",
+                        "INV.Stock.Title_En"
+                        ],
+                        "category": "detail",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_10_en",
+                        "language": "en",
+                        "question": "List the first 20 active stocks with their code, Persian title, and English title. Sort the results by stock code in ascending order.",
+                        "intent_id": "singleq_10",
+                        "db_name": "Sepidar02-back",
+                        "schema": "INV",
+                        "table": "Stock",
+                        "reference_sql": "SELECT TOP (20) [Code], [Title], [Title_En] FROM [INV].[Stock] WHERE [IsActive] = 1 ORDER BY [Code] ASC",
+                        "gold_tables": [
+                        "INV.Stock"
+                        ],
+                        "gold_columns": [
+                        "INV.Stock.Code",
+                        "INV.Stock.Title",
+                        "INV.Stock.Title_En"
+                        ],
+                        "category": "detail",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_11_fa",
+                        "language": "fa",
+                        "question": "فهرست ارزها را با عنوان، واحد تبدیل و تعداد ارقام اعشار نمایش دهید؛ ابتدا بر اساس تعداد ارقام اعشار و سپس عنوان ارز، هر دو به‌صورت صعودی، مرتب کنید.",
+                        "intent_id": "singleq_11",
+                        "db_name": "Sepidar02-back",
+                        "schema": "GNR",
+                        "table": "Currency",
+                        "reference_sql": "SELECT [Title], [ExchangeUnit], [PrecisionCount] FROM [GNR].[Currency] ORDER BY [PrecisionCount] ASC, [Title] ASC",
+                        "gold_tables": [
+                        "GNR.Currency"
+                        ],
+                        "gold_columns": [
+                        "GNR.Currency.Title",
+                        "GNR.Currency.ExchangeUnit",
+                        "GNR.Currency.PrecisionCount"
+                        ],
+                        "category": "detail",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_11_en",
+                        "language": "en",
+                        "question": "List the currencies with their title, exchange unit, and decimal precision. Sort first by decimal precision and then by currency title, both in ascending order.",
+                        "intent_id": "singleq_11",
+                        "db_name": "Sepidar02-back",
+                        "schema": "GNR",
+                        "table": "Currency",
+                        "reference_sql": "SELECT [Title], [ExchangeUnit], [PrecisionCount] FROM [GNR].[Currency] ORDER BY [PrecisionCount] ASC, [Title] ASC",
+                        "gold_tables": [
+                        "GNR.Currency"
+                        ],
+                        "gold_columns": [
+                        "GNR.Currency.Title",
+                        "GNR.Currency.ExchangeUnit",
+                        "GNR.Currency.PrecisionCount"
+                        ],
+                        "category": "detail",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_12_fa",
+                        "language": "fa",
+                        "question": "ارزهایی را که تعداد ارقام اعشار آن‌ها دقیقاً ۲ است، با عنوان فارسی و انگلیسی نمایش دهید و بر اساس عنوان فارسی به‌صورت صعودی مرتب کنید.",
+                        "intent_id": "singleq_12",
+                        "db_name": "Sepidar02-back",
+                        "schema": "GNR",
+                        "table": "Currency",
+                        "reference_sql": "SELECT [Title], [Title_En] FROM [GNR].[Currency] WHERE [PrecisionCount] = 2 ORDER BY [Title] ASC",
+                        "gold_tables": [
+                        "GNR.Currency"
+                        ],
+                        "gold_columns": [
+                        "GNR.Currency.Title",
+                        "GNR.Currency.Title_En"
+                        ],
+                        "category": "detail",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_12_en",
+                        "language": "en",
+                        "question": "List currencies whose decimal precision is exactly 2, showing their Persian and English titles. Sort by Persian title in ascending order.",
+                        "intent_id": "singleq_12",
+                        "db_name": "Sepidar02-back",
+                        "schema": "GNR",
+                        "table": "Currency",
+                        "reference_sql": "SELECT [Title], [Title_En] FROM [GNR].[Currency] WHERE [PrecisionCount] = 2 ORDER BY [Title] ASC",
+                        "gold_tables": [
+                        "GNR.Currency"
+                        ],
+                        "gold_columns": [
+                        "GNR.Currency.Title",
+                        "GNR.Currency.Title_En"
+                        ],
+                        "category": "detail",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_13_fa",
+                        "language": "fa",
+                        "question": "۲۰ بانک اول را با عنوان فارسی، عنوان انگلیسی و کد پرونده مالیاتی نمایش دهید و بر اساس عنوان فارسی به‌صورت صعودی مرتب کنید.",
+                        "intent_id": "singleq_13",
+                        "db_name": "Sepidar02-back",
+                        "schema": "RPA",
+                        "table": "Bank",
+                        "reference_sql": "SELECT TOP (20) [Title], [Title_En], [TaxFileCode] FROM [RPA].[Bank] ORDER BY [Title] ASC",
+                        "gold_tables": [
+                        "RPA.Bank"
+                        ],
+                        "gold_columns": [
+                        "RPA.Bank.Title",
+                        "RPA.Bank.Title_En",
+                        "RPA.Bank.TaxFileCode"
+                        ],
+                        "category": "detail",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_13_en",
+                        "language": "en",
+                        "question": "List the first 20 banks with their Persian title, English title, and tax file code. Sort by Persian title in ascending order.",
+                        "intent_id": "singleq_13",
+                        "db_name": "Sepidar02-back",
+                        "schema": "RPA",
+                        "table": "Bank",
+                        "reference_sql": "SELECT TOP (20) [Title], [Title_En], [TaxFileCode] FROM [RPA].[Bank] ORDER BY [Title] ASC",
+                        "gold_tables": [
+                        "RPA.Bank"
+                        ],
+                        "gold_columns": [
+                        "RPA.Bank.Title",
+                        "RPA.Bank.Title_En",
+                        "RPA.Bank.TaxFileCode"
+                        ],
+                        "category": "detail",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_14_en",
+                        "language": "en",
+                        "question": "List cash accounts whose rate is exactly 1, showing their title, opening amount, and balance. Sort by title in ascending order.",
+                        "intent_id": "singleq_14",
+                        "db_name": "Sepidar02-back",
+                        "schema": "RPA",
+                        "table": "Cash",
+                        "reference_sql": "SELECT [Title], [FirstAmount], [Balance] FROM [RPA].[Cash] WHERE [Rate] = 1 ORDER BY [Title] ASC",
+                        "gold_tables": [
+                        "RPA.Cash"
+                        ],
+                        "gold_columns": [
+                        "RPA.Cash.Title",
+                        "RPA.Cash.FirstAmount",
+                        "RPA.Cash.Balance"
+                        ],
+                        "category": "financial",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_15_en",
+                        "language": "en",
+                        "question": "List the 20 sales invoices with status 2, showing their number, date, and net price. Sort first by date and then by invoice number, both in descending order.",
+                        "intent_id": "singleq_15",
+                        "db_name": "Sepidar02-back",
+                        "schema": "SLS",
+                        "table": "Invoice",
+                        "reference_sql": "SELECT TOP (20) [Number], [Date], [NetPrice] FROM [SLS].[Invoice] WHERE [State] = 2 ORDER BY [Date] DESC, [Number] DESC",
+                        "gold_tables": [
+                        "SLS.Invoice"
+                        ],
+                        "gold_columns": [
+                        "SLS.Invoice.Number",
+                        "SLS.Invoice.Date",
+                        "SLS.Invoice.NetPrice"
+                        ],
+                        "category": "financial",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_16_en",
+                        "language": "en",
+                        "question": "For each sales invoice status, calculate the invoice count and total net price. Sort the results by status in ascending order.",
+                        "intent_id": "singleq_16",
+                        "db_name": "Sepidar02-back",
+                        "schema": "SLS",
+                        "table": "Invoice",
+                        "reference_sql": "SELECT [State], COUNT(*) AS [InvoiceCount], SUM([NetPrice]) AS [TotalNetPrice] FROM [SLS].[Invoice] GROUP BY [State] ORDER BY [State] ASC",
+                        "gold_tables": [
+                        "SLS.Invoice"
+                        ],
+                        "gold_columns": [
+                        "SLS.Invoice.State",
+                        "SLS.Invoice.NetPrice"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "medium",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_17_en",
+                        "language": "en",
+                        "question": "For sales invoices with settlement type 1, calculate the invoice count and total net price by invoice year. Sort the years in ascending order.",
+                        "intent_id": "singleq_17",
+                        "db_name": "Sepidar02-back",
+                        "schema": "SLS",
+                        "table": "Invoice",
+                        "reference_sql": "SELECT YEAR([Date]) AS [InvoiceYear], COUNT(*) AS [InvoiceCount], SUM([NetPrice]) AS [TotalNetPrice] FROM [SLS].[Invoice] WHERE [SettlementType] = 1 GROUP BY YEAR([Date]) ORDER BY [InvoiceYear] ASC",
+                        "gold_tables": [
+                        "SLS.Invoice"
+                        ],
+                        "gold_columns": [
+                        "SLS.Invoice.Date",
+                        "SLS.Invoice.NetPrice"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "medium",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_18_en",
+                        "language": "en",
+                        "question": "For sales invoices that are not based on an inventory delivery, calculate the average discount and average tax amounts.",
+                        "intent_id": "singleq_18",
+                        "db_name": "Sepidar02-back",
+                        "schema": "SLS",
+                        "table": "Invoice",
+                        "reference_sql": "SELECT AVG([Discount]) AS [AverageDiscount], AVG([Tax]) AS [AverageTax] FROM [SLS].[Invoice] WHERE [BaseOnInventoryDelivery] = 0",
+                        "gold_tables": [
+                        "SLS.Invoice"
+                        ],
+                        "gold_columns": [
+                        "SLS.Invoice.Discount",
+                        "SLS.Invoice.Tax"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "medium",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_19_fa",
+                        "language": "fa",
+                        "question": "۲۰ دارایی اولیه با وضعیت ۳ را با شماره پلاک، عنوان و شماره سریال پلاک نمایش دهید و بر اساس شماره پلاک به‌صورت صعودی مرتب کنید.",
+                        "intent_id": "singleq_19",
+                        "db_name": "Sepidar02-back",
+                        "schema": "AST",
+                        "table": "Asset",
+                        "reference_sql": "SELECT TOP (20) [PlaqueNumber], [Title], [PlaqueSerial] FROM [AST].[Asset] WHERE [State] = 3 AND [IsInitial] = 1 ORDER BY [PlaqueNumber] ASC",
+                        "gold_tables": [
+                        "AST.Asset"
+                        ],
+                        "gold_columns": [
+                        "AST.Asset.PlaqueNumber",
+                        "AST.Asset.Title",
+                        "AST.Asset.PlaqueSerial"
+                        ],
+                        "category": "detail",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_19_en",
+                        "language": "en",
+                        "question": "List the first 20 initial assets with status 3, showing their plaque number, title, and plaque serial number. Sort by plaque number in ascending order.",
+                        "intent_id": "singleq_19",
+                        "db_name": "Sepidar02-back",
+                        "schema": "AST",
+                        "table": "Asset",
+                        "reference_sql": "SELECT TOP (20) [PlaqueNumber], [Title], [PlaqueSerial] FROM [AST].[Asset] WHERE [State] = 3 AND [IsInitial] = 1 ORDER BY [PlaqueNumber] ASC",
+                        "gold_tables": [
+                        "AST.Asset"
+                        ],
+                        "gold_columns": [
+                        "AST.Asset.PlaqueNumber",
+                        "AST.Asset.Title",
+                        "AST.Asset.PlaqueSerial"
+                        ],
+                        "category": "detail",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_20_fa",
+                        "language": "fa",
+                        "question": "تعداد دارایی‌ها را به تفکیک وضعیت دارایی و اولیه‌بودن محاسبه کنید؛ نتایج را ابتدا بر اساس وضعیت و سپس اولیه‌بودن، هر دو به‌صورت صعودی، مرتب کنید.",
+                        "intent_id": "singleq_20",
+                        "db_name": "Sepidar02-back",
+                        "schema": "AST",
+                        "table": "Asset",
+                        "reference_sql": "SELECT [State], [IsInitial], COUNT(*) AS [AssetCount] FROM [AST].[Asset] GROUP BY [State], [IsInitial] ORDER BY [State] ASC, [IsInitial] ASC",
+                        "gold_tables": [
+                        "AST.Asset"
+                        ],
+                        "gold_columns": [
+                        "AST.Asset.State",
+                        "AST.Asset.IsInitial"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_20_en",
+                        "language": "en",
+                        "question": "Count the assets by asset status and initial status. Sort first by asset status and then by initial status, both in ascending order.",
+                        "intent_id": "singleq_20",
+                        "db_name": "Sepidar02-back",
+                        "schema": "AST",
+                        "table": "Asset",
+                        "reference_sql": "SELECT [State], [IsInitial], COUNT(*) AS [AssetCount] FROM [AST].[Asset] GROUP BY [State], [IsInitial] ORDER BY [State] ASC, [IsInitial] ASC",
+                        "gold_tables": [
+                        "AST.Asset"
+                        ],
+                        "gold_columns": [
+                        "AST.Asset.State",
+                        "AST.Asset.IsInitial"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_21_fa",
+                        "language": "fa",
+                        "question": "۲۰ سند پرداخت با نوع ۲ و وضعیت ۲ را با شماره، تاریخ و مبلغ کل نمایش دهید؛ نتایج را ابتدا بر اساس تاریخ و سپس شماره سند، هر دو به‌صورت نزولی، مرتب کنید.",
+                        "intent_id": "singleq_21",
+                        "db_name": "Sepidar02-back",
+                        "schema": "RPA",
+                        "table": "PaymentHeader",
+                        "reference_sql": "SELECT TOP (20) [Number], [Date], [TotalAmount] FROM [RPA].[PaymentHeader] WHERE [Type] = 2 AND [State] = 2 ORDER BY [Date] DESC, [Number] DESC",
+                        "gold_tables": [
+                        "RPA.PaymentHeader"
+                        ],
+                        "gold_columns": [
+                        "RPA.PaymentHeader.Number",
+                        "RPA.PaymentHeader.Date",
+                        "RPA.PaymentHeader.TotalAmount"
+                        ],
+                        "category": "financial",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_21_en",
+                        "language": "en",
+                        "question": "List the 20 payment documents with type 2 and status 2, showing their number, date, and total amount. Sort first by date and then by document number, both in descending order.",
+                        "intent_id": "singleq_21",
+                        "db_name": "Sepidar02-back",
+                        "schema": "RPA",
+                        "table": "PaymentHeader",
+                        "reference_sql": "SELECT TOP (20) [Number], [Date], [TotalAmount] FROM [RPA].[PaymentHeader] WHERE [Type] = 2 AND [State] = 2 ORDER BY [Date] DESC, [Number] DESC",
+                        "gold_tables": [
+                        "RPA.PaymentHeader"
+                        ],
+                        "gold_columns": [
+                        "RPA.PaymentHeader.Number",
+                        "RPA.PaymentHeader.Date",
+                        "RPA.PaymentHeader.TotalAmount"
+                        ],
+                        "category": "financial",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_22_fa",
+                        "language": "fa",
+                        "question": "سرصفحه‌های اسناد پرداخت را بر اساس وضعیت ثبت‌شده روی خود سند گروه‌بندی کنید. برای هر وضعیت، تعداد سرصفحه‌های پرداخت و مجموع مبلغ کل ثبت‌شده در آن‌ها را محاسبه کنید. نتایج را بر اساس وضعیت به‌ترتیب صعودی مرتب کنید.",
+                        "intent_id": "singleq_22",
+                        "db_name": "Sepidar02-back",
+                        "schema": "RPA",
+                        "table": "PaymentHeader",
+                        "reference_sql": "SELECT [State], COUNT(*) AS [PaymentCount], SUM([TotalAmount]) AS [TotalPaymentAmount] FROM [RPA].[PaymentHeader] GROUP BY [State] ORDER BY [State] ASC",
+                        "gold_tables": [
+                        "RPA.PaymentHeader"
+                        ],
+                        "gold_columns": [
+                        "RPA.PaymentHeader.State",
+                        "RPA.PaymentHeader.TotalAmount"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "medium",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_22_en",
+                        "language": "en",
+                        "question": "For each payment document status, calculate the document count and total amount. Sort the results by status in ascending order.",
+                        "intent_id": "singleq_22",
+                        "db_name": "Sepidar02-back",
+                        "schema": "RPA",
+                        "table": "PaymentHeader",
+                        "reference_sql": "SELECT [State], COUNT(*) AS [PaymentCount], SUM([TotalAmount]) AS [TotalPaymentAmount] FROM [RPA].[PaymentHeader] GROUP BY [State] ORDER BY [State] ASC",
+                        "gold_tables": [
+                        "RPA.PaymentHeader"
+                        ],
+                        "gold_columns": [
+                        "RPA.PaymentHeader.State",
+                        "RPA.PaymentHeader.TotalAmount"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "medium",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_23_fa",
+                        "language": "fa",
+                        "question": "برای اسناد پرداخت با وضعیت ۴، تعداد اسناد را به تفکیک نوع سند محاسبه کنید و نوع‌ها را به‌صورت صعودی مرتب کنید.",
+                        "intent_id": "singleq_23",
+                        "db_name": "Sepidar02-back",
+                        "schema": "RPA",
+                        "table": "PaymentHeader",
+                        "reference_sql": "SELECT [Type], COUNT(*) AS [PaymentCount] FROM [RPA].[PaymentHeader] WHERE [State] = 4 GROUP BY [Type] ORDER BY [Type] ASC",
+                        "gold_tables": [
+                        "RPA.PaymentHeader"
+                        ],
+                        "gold_columns": [
+                        "RPA.PaymentHeader.Type"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "medium",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_23_en",
+                        "language": "en",
+                        "question": "For payment documents with status 4, count the documents by document type and sort the types in ascending order.",
+                        "intent_id": "singleq_23",
+                        "db_name": "Sepidar02-back",
+                        "schema": "RPA",
+                        "table": "PaymentHeader",
+                        "reference_sql": "SELECT [Type], COUNT(*) AS [PaymentCount] FROM [RPA].[PaymentHeader] WHERE [State] = 4 GROUP BY [Type] ORDER BY [Type] ASC",
+                        "gold_tables": [
+                        "RPA.PaymentHeader"
+                        ],
+                        "gold_columns": [
+                        "RPA.PaymentHeader.Type"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "medium",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_24_fa",
+                        "language": "fa",
+                        "question": "برای اسناد پرداخت نوع ۶۴، میانگین مبلغ و میانگین مبلغ به ارز پایه را محاسبه کنید.",
+                        "intent_id": "singleq_24",
+                        "db_name": "Sepidar02-back",
+                        "schema": "RPA",
+                        "table": "PaymentHeader",
+                        "reference_sql": "SELECT AVG([Amount]) AS [AverageAmount], AVG([AmountInBaseCurrency]) AS [AverageBaseAmount] FROM [RPA].[PaymentHeader] WHERE [Type] = 64",
+                        "gold_tables": [
+                        "RPA.PaymentHeader"
+                        ],
+                        "gold_columns": [
+                        "RPA.PaymentHeader.Amount",
+                        "RPA.PaymentHeader.AmountInBaseCurrency"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "medium",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_24_en",
+                        "language": "en",
+                        "question": "For payment documents of type 64, calculate the average amount and average amount in the base currency.",
+                        "intent_id": "singleq_24",
+                        "db_name": "Sepidar02-back",
+                        "schema": "RPA",
+                        "table": "PaymentHeader",
+                        "reference_sql": "SELECT AVG([Amount]) AS [AverageAmount], AVG([AmountInBaseCurrency]) AS [AverageBaseAmount] FROM [RPA].[PaymentHeader] WHERE [Type] = 64",
+                        "gold_tables": [
+                        "RPA.PaymentHeader"
+                        ],
+                        "gold_columns": [
+                        "RPA.PaymentHeader.Amount",
+                        "RPA.PaymentHeader.AmountInBaseCurrency"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "medium",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_25_fa",
+                        "language": "fa",
+                        "question": "سرصفحه‌های اسناد پرداخت را که نوع آیتم ثبت‌شده در آن‌ها دقیقاً برابر با ۴ است، بر اساس سالِ تاریخ سند گروه‌بندی کنید. برای هر سال، تعداد سرصفحه‌های پرداخت و مجموع مبلغ پرداخت ثبت‌شده در آن‌ها را محاسبه کنید. سال‌ها را به‌ترتیب صعودی مرتب کنید.",
+                        "intent_id": "singleq_25",
+                        "db_name": "Sepidar02-back",
+                        "schema": "RPA",
+                        "table": "PaymentHeader",
+                        "reference_sql": "SELECT YEAR([Date]) AS [PaymentYear], COUNT(*) AS [PaymentCount], SUM([PaymentAmount]) AS [TotalPaymentAmount] FROM [RPA].[PaymentHeader] WHERE [ItemType] = 4 GROUP BY YEAR([Date]) ORDER BY [PaymentYear] ASC",
+                        "gold_tables": [
+                        "RPA.PaymentHeader"
+                        ],
+                        "gold_columns": [
+                        "RPA.PaymentHeader.Date",
+                        "RPA.PaymentHeader.PaymentAmount"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "medium",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_25_en",
+                        "language": "en",
+                        "question": "For payment documents with item type 4, calculate the document count and total payment amount by document year. Sort the years in ascending order.",
+                        "intent_id": "singleq_25",
+                        "db_name": "Sepidar02-back",
+                        "schema": "RPA",
+                        "table": "PaymentHeader",
+                        "reference_sql": "SELECT YEAR([Date]) AS [PaymentYear], COUNT(*) AS [PaymentCount], SUM([PaymentAmount]) AS [TotalPaymentAmount] FROM [RPA].[PaymentHeader] WHERE [ItemType] = 4 GROUP BY YEAR([Date]) ORDER BY [PaymentYear] ASC",
+                        "gold_tables": [
+                        "RPA.PaymentHeader"
+                        ],
+                        "gold_columns": [
+                        "RPA.PaymentHeader.Date",
+                        "RPA.PaymentHeader.PaymentAmount"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "medium",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_26_fa",
+                        "language": "fa",
+                        "question": "۲۰ سند دریافت با نوع ۲ و وضعیت ۲ را با شماره، تاریخ و مبلغ کل نمایش دهید؛ نتایج را ابتدا بر اساس تاریخ و سپس شماره سند، هر دو به‌صورت نزولی، مرتب کنید.",
+                        "intent_id": "singleq_26",
+                        "db_name": "Sepidar02-back",
+                        "schema": "RPA",
+                        "table": "ReceiptHeader",
+                        "reference_sql": "SELECT TOP (20) [Number], [Date], [TotalAmount] FROM [RPA].[ReceiptHeader] WHERE [Type] = 2 AND [State] = 2 ORDER BY [Date] DESC, [Number] DESC",
+                        "gold_tables": [
+                        "RPA.ReceiptHeader"
+                        ],
+                        "gold_columns": [
+                        "RPA.ReceiptHeader.Number",
+                        "RPA.ReceiptHeader.Date",
+                        "RPA.ReceiptHeader.TotalAmount"
+                        ],
+                        "category": "financial",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_26_en",
+                        "language": "en",
+                        "question": "List the 20 receipt headers with type 2 and state 2, showing their number, date, and total amount. Apply both filters directly to the receipt header. Sort by date descending and then by receipt number descending.",
+                        "intent_id": "singleq_26",
+                        "db_name": "Sepidar02-back",
+                        "schema": "RPA",
+                        "table": "ReceiptHeader",
+                        "reference_sql": "SELECT TOP (20) [Number], [Date], [TotalAmount] FROM [RPA].[ReceiptHeader] WHERE [Type] = 2 AND [State] = 2 ORDER BY [Date] DESC, [Number] DESC",
+                        "gold_tables": [
+                        "RPA.ReceiptHeader"
+                        ],
+                        "gold_columns": [
+                        "RPA.ReceiptHeader.Number",
+                        "RPA.ReceiptHeader.Date",
+                        "RPA.ReceiptHeader.TotalAmount"
+                        ],
+                        "category": "financial",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_27_fa",
+                        "language": "fa",
+                        "question": "سرصفحه‌های اسناد دریافت را بر اساس وضعیت ثبت‌شده در خود سرصفحه گروه‌بندی کنید. برای هر وضعیت، تعداد سرصفحه‌های دریافت و مجموع مبلغ کل همان سرصفحه‌ها را محاسبه کنید. نتایج را بر اساس مقدار وضعیت به‌ترتیب صعودی مرتب کنید.",
+                        "intent_id": "singleq_27",
+                        "db_name": "Sepidar02-back",
+                        "schema": "RPA",
+                        "table": "ReceiptHeader",
+                        "reference_sql": "SELECT [State], COUNT(*) AS [ReceiptCount], SUM([TotalAmount]) AS [TotalReceiptAmount] FROM [RPA].[ReceiptHeader] GROUP BY [State] ORDER BY [State] ASC",
+                        "gold_tables": [
+                        "RPA.ReceiptHeader"
+                        ],
+                        "gold_columns": [
+                        "RPA.ReceiptHeader.State",
+                        "RPA.ReceiptHeader.TotalAmount"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "medium",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_27_en",
+                        "language": "en",
+                        "question": "Group the receipt document headers by the state recorded in each header. For each state, calculate the number of receipt headers and the sum of their total amounts. Sort the results by state in ascending order.",
+                        "intent_id": "singleq_27",
+                        "db_name": "Sepidar02-back",
+                        "schema": "RPA",
+                        "table": "ReceiptHeader",
+                        "reference_sql": "SELECT [State], COUNT(*) AS [ReceiptCount], SUM([TotalAmount]) AS [TotalReceiptAmount] FROM [RPA].[ReceiptHeader] GROUP BY [State] ORDER BY [State] ASC",
+                        "gold_tables": [
+                        "RPA.ReceiptHeader"
+                        ],
+                        "gold_columns": [
+                        "RPA.ReceiptHeader.State",
+                        "RPA.ReceiptHeader.TotalAmount"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "medium",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_28_fa",
+                        "language": "fa",
+                        "question": "برای اسناد دریافت با وضعیت ۴، میانگین مبلغ کل و میانگین تخفیف را محاسبه کنید.",
+                        "intent_id": "singleq_28",
+                        "db_name": "Sepidar02-back",
+                        "schema": "RPA",
+                        "table": "ReceiptHeader",
+                        "reference_sql": "SELECT AVG([TotalAmount]) AS [AverageTotalAmount], AVG([Discount]) AS [AverageDiscount] FROM [RPA].[ReceiptHeader] WHERE [State] = 4",
+                        "gold_tables": [
+                        "RPA.ReceiptHeader"
+                        ],
+                        "gold_columns": [
+                        "RPA.ReceiptHeader.TotalAmount",
+                        "RPA.ReceiptHeader.Discount"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "medium",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_28_en",
+                        "language": "en",
+                        "question": "For receipt documents with status 4, calculate the average total amount and average discount.",
+                        "intent_id": "singleq_28",
+                        "db_name": "Sepidar02-back",
+                        "schema": "RPA",
+                        "table": "ReceiptHeader",
+                        "reference_sql": "SELECT AVG([TotalAmount]) AS [AverageTotalAmount], AVG([Discount]) AS [AverageDiscount] FROM [RPA].[ReceiptHeader] WHERE [State] = 4",
+                        "gold_tables": [
+                        "RPA.ReceiptHeader"
+                        ],
+                        "gold_columns": [
+                        "RPA.ReceiptHeader.TotalAmount",
+                        "RPA.ReceiptHeader.Discount"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "medium",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_29_fa",
+                        "language": "fa",
+                        "question": "سرصفحه‌های اسناد دریافت را که نوع سند ثبت‌شده در آن‌ها دقیقاً برابر با ۳۲ است، بر اساس سالِ تاریخ سند گروه‌بندی کنید. برای هر سال، تعداد سرصفحه‌های دریافت و مجموع مبلغ دریافت ثبت‌شده در آن‌ها را محاسبه کنید. سال‌ها را به‌ترتیب صعودی مرتب کنید.",
+                        "intent_id": "singleq_29",
+                        "db_name": "Sepidar02-back",
+                        "schema": "RPA",
+                        "table": "ReceiptHeader",
+                        "reference_sql": "SELECT YEAR([Date]) AS [ReceiptYear], COUNT(*) AS [ReceiptCount], SUM([ReceiptAmount]) AS [TotalReceiptAmount] FROM [RPA].[ReceiptHeader] WHERE [Type] = 32 GROUP BY YEAR([Date]) ORDER BY [ReceiptYear] ASC",
+                        "gold_tables": [
+                        "RPA.ReceiptHeader"
+                        ],
+                        "gold_columns": [
+                        "RPA.ReceiptHeader.Date",
+                        "RPA.ReceiptHeader.ReceiptAmount"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "medium",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_29_en",
+                        "language": "en",
+                        "question": "For receipt documents of type 32, calculate the document count and total receipt amount by document year. Sort the years in ascending order.",
+                        "intent_id": "singleq_29",
+                        "db_name": "Sepidar02-back",
+                        "schema": "RPA",
+                        "table": "ReceiptHeader",
+                        "reference_sql": "SELECT YEAR([Date]) AS [ReceiptYear], COUNT(*) AS [ReceiptCount], SUM([ReceiptAmount]) AS [TotalReceiptAmount] FROM [RPA].[ReceiptHeader] WHERE [Type] = 32 GROUP BY YEAR([Date]) ORDER BY [ReceiptYear] ASC",
+                        "gold_tables": [
+                        "RPA.ReceiptHeader"
+                        ],
+                        "gold_columns": [
+                        "RPA.ReceiptHeader.Date",
+                        "RPA.ReceiptHeader.ReceiptAmount"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "medium",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_30_fa",
+                        "language": "fa",
+                        "question": "۲۰ سند دریافت با نوع آیتم ۸ را با شماره، تاریخ و مبلغ دریافت نمایش دهید؛ نتایج را بر اساس مبلغ دریافت به‌صورت نزولی و سپس شماره سند به‌صورت صعودی مرتب کنید.",
+                        "intent_id": "singleq_30",
+                        "db_name": "Sepidar02-back",
+                        "schema": "RPA",
+                        "table": "ReceiptHeader",
+                        "reference_sql": "SELECT TOP (20) [Number], [Date], [ReceiptAmount] FROM [RPA].[ReceiptHeader] WHERE [ItemType] = 8 ORDER BY [ReceiptAmount] DESC, [Number] ASC",
+                        "gold_tables": [
+                        "RPA.ReceiptHeader"
+                        ],
+                        "gold_columns": [
+                        "RPA.ReceiptHeader.Number",
+                        "RPA.ReceiptHeader.Date",
+                        "RPA.ReceiptHeader.ReceiptAmount"
+                        ],
+                        "category": "financial",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_30_en",
+                        "language": "en",
+                        "question": "List the 20 receipt documents with item type 8, showing their number, date, and receipt amount. Sort by receipt amount in descending order and then by document number in ascending order.",
+                        "intent_id": "singleq_30",
+                        "db_name": "Sepidar02-back",
+                        "schema": "RPA",
+                        "table": "ReceiptHeader",
+                        "reference_sql": "SELECT TOP (20) [Number], [Date], [ReceiptAmount] FROM [RPA].[ReceiptHeader] WHERE [ItemType] = 8 ORDER BY [ReceiptAmount] DESC, [Number] ASC",
+                        "gold_tables": [
+                        "RPA.ReceiptHeader"
+                        ],
+                        "gold_columns": [
+                        "RPA.ReceiptHeader.Number",
+                        "RPA.ReceiptHeader.Date",
+                        "RPA.ReceiptHeader.ReceiptAmount"
+                        ],
+                        "category": "financial",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_31_fa",
+                        "language": "fa",
+                        "question": "گروه‌های دارایی با روش استهلاک ۱ را با کد، عنوان، نرخ استهلاک و عمر مفید نمایش دهید و بر اساس کد به‌صورت صعودی مرتب کنید.",
+                        "intent_id": "singleq_31",
+                        "db_name": "Sepidar02-back",
+                        "schema": "AST",
+                        "table": "AssetGroup",
+                        "reference_sql": "SELECT [Code], [Title], [DepreciationRate], [UsefulLife] FROM [AST].[AssetGroup] WHERE [DepreciationMethod] = 1 ORDER BY [Code] ASC",
+                        "gold_tables": [
+                        "AST.AssetGroup"
+                        ],
+                        "gold_columns": [
+                        "AST.AssetGroup.Code",
+                        "AST.AssetGroup.Title",
+                        "AST.AssetGroup.DepreciationRate",
+                        "AST.AssetGroup.UsefulLife"
+                        ],
+                        "category": "detail",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_31_en",
+                        "language": "en",
+                        "question": "List asset groups with depreciation method 1, showing their code, title, depreciation rate, and useful life. Sort by code in ascending order.",
+                        "intent_id": "singleq_31",
+                        "db_name": "Sepidar02-back",
+                        "schema": "AST",
+                        "table": "AssetGroup",
+                        "reference_sql": "SELECT [Code], [Title], [DepreciationRate], [UsefulLife] FROM [AST].[AssetGroup] WHERE [DepreciationMethod] = 1 ORDER BY [Code] ASC",
+                        "gold_tables": [
+                        "AST.AssetGroup"
+                        ],
+                        "gold_columns": [
+                        "AST.AssetGroup.Code",
+                        "AST.AssetGroup.Title",
+                        "AST.AssetGroup.DepreciationRate",
+                        "AST.AssetGroup.UsefulLife"
+                        ],
+                        "category": "detail",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_32_fa",
+                        "language": "fa",
+                        "question": "برای هر روش استهلاک، تعداد گروه‌های دارایی و میانگین نرخ استهلاک را محاسبه کنید و نتایج را بر اساس روش استهلاک به‌صورت صعودی مرتب کنید.",
+                        "intent_id": "singleq_32",
+                        "db_name": "Sepidar02-back",
+                        "schema": "AST",
+                        "table": "AssetGroup",
+                        "reference_sql": "SELECT [DepreciationMethod], COUNT(*) AS [AssetGroupCount], AVG([DepreciationRate]) AS [AverageDepreciationRate] FROM [AST].[AssetGroup] GROUP BY [DepreciationMethod] ORDER BY [DepreciationMethod] ASC",
+                        "gold_tables": [
+                        "AST.AssetGroup"
+                        ],
+                        "gold_columns": [
+                        "AST.AssetGroup.DepreciationMethod",
+                        "AST.AssetGroup.DepreciationRate"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "medium",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_32_en",
+                        "language": "en",
+                        "question": "For each depreciation method, calculate the number of asset groups and the average depreciation rate. Sort the results by depreciation method in ascending order.",
+                        "intent_id": "singleq_32",
+                        "db_name": "Sepidar02-back",
+                        "schema": "AST",
+                        "table": "AssetGroup",
+                        "reference_sql": "SELECT [DepreciationMethod], COUNT(*) AS [AssetGroupCount], AVG([DepreciationRate]) AS [AverageDepreciationRate] FROM [AST].[AssetGroup] GROUP BY [DepreciationMethod] ORDER BY [DepreciationMethod] ASC",
+                        "gold_tables": [
+                        "AST.AssetGroup"
+                        ],
+                        "gold_columns": [
+                        "AST.AssetGroup.DepreciationMethod",
+                        "AST.AssetGroup.DepreciationRate"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "medium",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_33_fa",
+                        "language": "fa",
+                        "question": "۱۰ گروه دارایی دارای بیشترین عمر مفید را با کد، عنوان و عمر مفید نمایش دهید؛ نتایج را بر اساس عمر مفید به‌صورت نزولی و سپس کد به‌صورت صعودی مرتب کنید.",
+                        "intent_id": "singleq_33",
+                        "db_name": "Sepidar02-back",
+                        "schema": "AST",
+                        "table": "AssetGroup",
+                        "reference_sql": "SELECT TOP (10) [Code], [Title], [UsefulLife] FROM [AST].[AssetGroup] ORDER BY [UsefulLife] DESC, [Code] ASC",
+                        "gold_tables": [
+                        "AST.AssetGroup"
+                        ],
+                        "gold_columns": [
+                        "AST.AssetGroup.Code",
+                        "AST.AssetGroup.Title",
+                        "AST.AssetGroup.UsefulLife"
+                        ],
+                        "category": "ranking",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_33_en",
+                        "language": "en",
+                        "question": "List the 10 asset groups with the longest useful life, showing their code, title, and useful life. Sort by useful life in descending order and then by code in ascending order.",
+                        "intent_id": "singleq_33",
+                        "db_name": "Sepidar02-back",
+                        "schema": "AST",
+                        "table": "AssetGroup",
+                        "reference_sql": "SELECT TOP (10) [Code], [Title], [UsefulLife] FROM [AST].[AssetGroup] ORDER BY [UsefulLife] DESC, [Code] ASC",
+                        "gold_tables": [
+                        "AST.AssetGroup"
+                        ],
+                        "gold_columns": [
+                        "AST.AssetGroup.Code",
+                        "AST.AssetGroup.Title",
+                        "AST.AssetGroup.UsefulLife"
+                        ],
+                        "category": "ranking",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_34_fa",
+                        "language": "fa",
+                        "question": "۲۰ فاکتور برگشتی جدیدتر را با شماره، تاریخ، مبلغ، تخفیف و مبلغ خالص نمایش دهید؛ نتایج را ابتدا بر اساس تاریخ و سپس شماره، هر دو به‌صورت نزولی، مرتب کنید.",
+                        "intent_id": "singleq_34",
+                        "db_name": "Sepidar02-back",
+                        "schema": "SLS",
+                        "table": "ReturnedInvoice",
+                        "reference_sql": "SELECT TOP (20) [Number], [Date], [Price], [Discount], [NetPrice] FROM [SLS].[ReturnedInvoice] ORDER BY [Date] DESC, [Number] DESC",
+                        "gold_tables": [
+                        "SLS.ReturnedInvoice"
+                        ],
+                        "gold_columns": [
+                        "SLS.ReturnedInvoice.Number",
+                        "SLS.ReturnedInvoice.Date",
+                        "SLS.ReturnedInvoice.Price",
+                        "SLS.ReturnedInvoice.Discount",
+                        "SLS.ReturnedInvoice.NetPrice"
+                        ],
+                        "category": "financial",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_34_en",
+                        "language": "en",
+                        "question": "List the 20 most recent returned invoices with their number, date, price, discount, and net price. Sort first by date and then by number, both in descending order.",
+                        "intent_id": "singleq_34",
+                        "db_name": "Sepidar02-back",
+                        "schema": "SLS",
+                        "table": "ReturnedInvoice",
+                        "reference_sql": "SELECT TOP (20) [Number], [Date], [Price], [Discount], [NetPrice] FROM [SLS].[ReturnedInvoice] ORDER BY [Date] DESC, [Number] DESC",
+                        "gold_tables": [
+                        "SLS.ReturnedInvoice"
+                        ],
+                        "gold_columns": [
+                        "SLS.ReturnedInvoice.Number",
+                        "SLS.ReturnedInvoice.Date",
+                        "SLS.ReturnedInvoice.Price",
+                        "SLS.ReturnedInvoice.Discount",
+                        "SLS.ReturnedInvoice.NetPrice"
+                        ],
+                        "category": "financial",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_35_fa",
+                        "language": "fa",
+                        "question": "تعداد فاکتورهای برگشتی و مجموع مبلغ خالص آن‌ها را به تفکیک سال تاریخ فاکتور محاسبه کنید و سال‌ها را به‌صورت صعودی مرتب کنید.",
+                        "intent_id": "singleq_35",
+                        "db_name": "Sepidar02-back",
+                        "schema": "SLS",
+                        "table": "ReturnedInvoice",
+                        "reference_sql": "SELECT YEAR([Date]) AS [ReturnYear], COUNT(*) AS [ReturnedInvoiceCount], SUM([NetPrice]) AS [TotalNetPrice] FROM [SLS].[ReturnedInvoice] GROUP BY YEAR([Date]) ORDER BY [ReturnYear] ASC",
+                        "gold_tables": [
+                        "SLS.ReturnedInvoice"
+                        ],
+                        "gold_columns": [
+                        "SLS.ReturnedInvoice.Date",
+                        "SLS.ReturnedInvoice.NetPrice"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "medium",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_35_en",
+                        "language": "en",
+                        "question": "Calculate the returned invoice count and total net price by invoice year. Sort the years in ascending order.",
+                        "intent_id": "singleq_35",
+                        "db_name": "Sepidar02-back",
+                        "schema": "SLS",
+                        "table": "ReturnedInvoice",
+                        "reference_sql": "SELECT YEAR([Date]) AS [ReturnYear], COUNT(*) AS [ReturnedInvoiceCount], SUM([NetPrice]) AS [TotalNetPrice] FROM [SLS].[ReturnedInvoice] GROUP BY YEAR([Date]) ORDER BY [ReturnYear] ASC",
+                        "gold_tables": [
+                        "SLS.ReturnedInvoice"
+                        ],
+                        "gold_columns": [
+                        "SLS.ReturnedInvoice.Date",
+                        "SLS.ReturnedInvoice.NetPrice"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "medium",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_36_fa",
+                        "language": "fa",
+                        "question": "برای فاکتورهای برگشتی سال ۲۰۲۶، تعداد فاکتورها، مجموع مالیات و مجموع مبلغ خالص را محاسبه کنید.",
+                        "intent_id": "singleq_36",
+                        "db_name": "Sepidar02-back",
+                        "schema": "SLS",
+                        "table": "ReturnedInvoice",
+                        "reference_sql": "SELECT COUNT(*) AS [ReturnedInvoiceCount], SUM([Tax]) AS [TotalTax], SUM([NetPrice]) AS [TotalNetPrice] FROM [SLS].[ReturnedInvoice] WHERE [Date] >= '2026-01-01' AND [Date] < '2027-01-01'",
+                        "gold_tables": [
+                        "SLS.ReturnedInvoice"
+                        ],
+                        "gold_columns": [
+                        "SLS.ReturnedInvoice.Tax",
+                        "SLS.ReturnedInvoice.NetPrice"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "medium",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_36_en",
+                        "language": "en",
+                        "question": "For returned invoices from 2026, calculate the invoice count, total tax, and total net price.",
+                        "intent_id": "singleq_36",
+                        "db_name": "Sepidar02-back",
+                        "schema": "SLS",
+                        "table": "ReturnedInvoice",
+                        "reference_sql": "SELECT COUNT(*) AS [ReturnedInvoiceCount], SUM([Tax]) AS [TotalTax], SUM([NetPrice]) AS [TotalNetPrice] FROM [SLS].[ReturnedInvoice] WHERE [Date] >= '2026-01-01' AND [Date] < '2027-01-01'",
+                        "gold_tables": [
+                        "SLS.ReturnedInvoice"
+                        ],
+                        "gold_columns": [
+                        "SLS.ReturnedInvoice.Tax",
+                        "SLS.ReturnedInvoice.NetPrice"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "medium",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_37_fa",
+                        "language": "fa",
+                        "question": "مراکز هزینه با نوع ۱ را با شناسه مرکز هزینه و مرجع تفصیلی نمایش دهید و بر اساس شناسه مرکز هزینه به‌صورت صعودی مرتب کنید.",
+                        "intent_id": "singleq_37",
+                        "db_name": "Sepidar02-back",
+                        "schema": "GNR",
+                        "table": "CostCenter",
+                        "reference_sql": "SELECT [CostCenterId], [DLRef] FROM [GNR].[CostCenter] WHERE [Type] = 1 ORDER BY [CostCenterId] ASC",
+                        "gold_tables": [
+                        "GNR.CostCenter"
+                        ],
+                        "gold_columns": [
+                        "GNR.CostCenter.CostCenterId",
+                        "GNR.CostCenter.DLRef"
+                        ],
+                        "category": "detail",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_37_en",
+                        "language": "en",
+                        "question": "List cost centers of type 1 with their cost center ID and detail-ledger reference. Sort by cost center ID in ascending order.",
+                        "intent_id": "singleq_37",
+                        "db_name": "Sepidar02-back",
+                        "schema": "GNR",
+                        "table": "CostCenter",
+                        "reference_sql": "SELECT [CostCenterId], [DLRef] FROM [GNR].[CostCenter] WHERE [Type] = 1 ORDER BY [CostCenterId] ASC",
+                        "gold_tables": [
+                        "GNR.CostCenter"
+                        ],
+                        "gold_columns": [
+                        "GNR.CostCenter.CostCenterId",
+                        "GNR.CostCenter.DLRef"
+                        ],
+                        "category": "detail",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_38_fa",
+                        "language": "fa",
+                        "question": "تعداد مراکز هزینه را به تفکیک نوع محاسبه کنید و نتایج را بر اساس نوع به‌صورت صعودی مرتب کنید.",
+                        "intent_id": "singleq_38",
+                        "db_name": "Sepidar02-back",
+                        "schema": "GNR",
+                        "table": "CostCenter",
+                        "reference_sql": "SELECT [Type], COUNT(*) AS [CostCenterCount] FROM [GNR].[CostCenter] GROUP BY [Type] ORDER BY [Type] ASC",
+                        "gold_tables": [
+                        "GNR.CostCenter"
+                        ],
+                        "gold_columns": [
+                        "GNR.CostCenter.Type"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_38_en",
+                        "language": "en",
+                        "question": "Count the cost centers in each type and sort the results by type in ascending order.",
+                        "intent_id": "singleq_38",
+                        "db_name": "Sepidar02-back",
+                        "schema": "GNR",
+                        "table": "CostCenter",
+                        "reference_sql": "SELECT [Type], COUNT(*) AS [CostCenterCount] FROM [GNR].[CostCenter] GROUP BY [Type] ORDER BY [Type] ASC",
+                        "gold_tables": [
+                        "GNR.CostCenter"
+                        ],
+                        "gold_columns": [
+                        "GNR.CostCenter.Type"
+                        ],
+                        "category": "aggregation",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_39_fa",
+                        "language": "fa",
+                        "question": "کارگاه‌هایی را که کد آن‌ها بین ۱۰۰۱ و ۱۰۰۵ است، با کد، عنوان فارسی و عنوان انگلیسی نمایش دهید و بر اساس کد به‌صورت صعودی مرتب کنید.",
+                        "intent_id": "singleq_39",
+                        "db_name": "Sepidar02-back",
+                        "schema": "PAY",
+                        "table": "Worksite",
+                        "reference_sql": "SELECT [Code], [Title], [Title_En] FROM [PAY].[Worksite] WHERE [Code] BETWEEN 1001 AND 1005 ORDER BY [Code] ASC",
+                        "gold_tables": [
+                        "PAY.Worksite"
+                        ],
+                        "gold_columns": [
+                        "PAY.Worksite.Code",
+                        "PAY.Worksite.Title",
+                        "PAY.Worksite.Title_En"
+                        ],
+                        "category": "detail",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_39_en",
+                        "language": "en",
+                        "question": "List worksites with codes from 1001 through 1005, showing their code, Persian title, and English title. Sort by code in ascending order.",
+                        "intent_id": "singleq_39",
+                        "db_name": "Sepidar02-back",
+                        "schema": "PAY",
+                        "table": "Worksite",
+                        "reference_sql": "SELECT [Code], [Title], [Title_En] FROM [PAY].[Worksite] WHERE [Code] BETWEEN 1001 AND 1005 ORDER BY [Code] ASC",
+                        "gold_tables": [
+                        "PAY.Worksite"
+                        ],
+                        "gold_columns": [
+                        "PAY.Worksite.Code",
+                        "PAY.Worksite.Title",
+                        "PAY.Worksite.Title_En"
+                        ],
+                        "category": "detail",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_40_fa",
+                        "language": "fa",
+                        "question": "فهرست همه کارگاه‌ها را با شناسه، کد و عنوان نمایش دهید و بر اساس کد به‌صورت نزولی مرتب کنید.",
+                        "intent_id": "singleq_40",
+                        "db_name": "Sepidar02-back",
+                        "schema": "PAY",
+                        "table": "Worksite",
+                        "reference_sql": "SELECT [WorksiteId], [Code], [Title] FROM [PAY].[Worksite] ORDER BY [Code] DESC",
+                        "gold_tables": [
+                        "PAY.Worksite"
+                        ],
+                        "gold_columns": [
+                        "PAY.Worksite.WorksiteId",
+                        "PAY.Worksite.Code",
+                        "PAY.Worksite.Title"
+                        ],
+                        "category": "detail",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+                    {
+                        "id": "singleq_40_en",
+                        "language": "en",
+                        "question": "List all worksites with their ID, code, and title. Sort by code in descending order.",
+                        "intent_id": "singleq_40",
+                        "db_name": "Sepidar02-back",
+                        "schema": "PAY",
+                        "table": "Worksite",
+                        "reference_sql": "SELECT [WorksiteId], [Code], [Title] FROM [PAY].[Worksite] ORDER BY [Code] DESC",
+                        "gold_tables": [
+                        "PAY.Worksite"
+                        ],
+                        "gold_columns": [
+                        "PAY.Worksite.WorksiteId",
+                        "PAY.Worksite.Code",
+                        "PAY.Worksite.Title"
+                        ],
+                        "category": "detail",
+                        "difficulty": "easy",
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    },
+
+
+
+
+                    
                     {
                         "id":  "questions_payments_receipts_intent_001_en",
                         "language":  "en",

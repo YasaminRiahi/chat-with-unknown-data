@@ -1,68 +1,68 @@
 {
-  "generated_at": "2026-09-07T19:27:07.360367+00:00",
+  "generated_at": "2026-09-08T00:59:37.936981+00:00",
   "manifest": {
     "evaluator_version": 2,
-    "dataset": "D:\\lessons\\Project\\chat-with-unknown-data\\evaluation\\datasets\\questions_all.json",
-    "dataset_sha256": "239f6fe210847c0a7046fa9aa54f6fefce10e562610981558e98fe9d06236f04",
+    "dataset": "E:\\B Project\\chat-with-unknown-data\\evaluation\\datasets\\questions_all.json",
+    "dataset_sha256": "6447b99da927652c159d31a30e2fe7cf40dac02a7442e74537218a34976e6482",
     "db_name": "test1",
     "db_type": "mssql",
     "timing_repeats": 5,
     "created_at": "2026-09-06T19:07:48.017267+00:00",
-    "setup_latency_ms": 6149.784,
+    "setup_latency_ms": 8734.392,
     "setup_tokens": {
       "by_operation": {}
     },
-    "dataset_updated_at": "2026-09-07T19:26:00.848053+00:00"
+    "dataset_updated_at": "2026-09-08T00:54:57.166676+00:00"
   },
-  "completed_questions": 90,
+  "completed_questions": 150,
   "metrics": {
-    "initial_execution_accuracy": 0.888889,
-    "final_execution_accuracy": 0.888889,
+    "initial_execution_accuracy": 0.92,
+    "final_execution_accuracy": 0.92,
     "initial_valid_sql_rate": 1.0,
     "final_valid_sql_rate": 1.0,
-    "table_recall": 0.922222,
-    "table_precision": 0.85037,
-    "column_recall": 0.924815,
+    "table_recall": 0.946667,
+    "table_precision": 0.787841,
+    "column_recall": 0.948222,
     "self_correction_success_rate": 0.0,
     "correction_gain": 0.0,
-    "r_ves": 85.245386,
+    "r_ves": 87.223723,
     "end_to_end_latency_ms": {
-      "count": 90,
-      "mean": 38016.497,
-      "median": 39141.946,
-      "p90": 58655.598,
-      "p95": 61551.276,
+      "count": 150,
+      "mean": 39577.837,
+      "median": 42901.548,
+      "p90": 58368.29,
+      "p95": 61171.554,
       "min": 7788.511,
       "max": 70397.241
     },
     "final_sql_latency_ms": {
-      "count": 90,
-      "mean": 26.197,
-      "median": 16.339,
-      "p90": 53.079,
-      "p95": 73.718,
+      "count": 150,
+      "mean": 21.907,
+      "median": 14.092,
+      "p90": 39.217,
+      "p95": 56.992,
       "min": 2.1,
       "max": 338.951
     },
-    "total_llm_calls": 354,
-    "average_llm_calls": 3.933,
-    "total_tokens": 575619,
-    "average_tokens": 6395.767
+    "total_llm_calls": 593,
+    "average_llm_calls": 3.953,
+    "total_tokens": 975733,
+    "average_tokens": 6504.887
   },
   "by_language": {
     "en": {
-      "questions": 45,
-      "execution_accuracy": 0.933333,
+      "questions": 77,
+      "execution_accuracy": 0.961039,
       "valid_sql_rate": 1.0,
-      "table_recall": 0.966667,
-      "column_recall": 0.974074
+      "table_recall": 0.980519,
+      "column_recall": 0.984848
     },
     "fa": {
-      "questions": 45,
-      "execution_accuracy": 0.844444,
+      "questions": 73,
+      "execution_accuracy": 0.876712,
       "valid_sql_rate": 1.0,
-      "table_recall": 0.877778,
-      "column_recall": 0.875556
+      "table_recall": 0.910959,
+      "column_recall": 0.909589
     }
   },
   "by_category": {
@@ -88,11 +88,11 @@
       "column_recall": 1.0
     },
     "aggregation": {
-      "questions": 52,
-      "execution_accuracy": 0.923077,
+      "questions": 83,
+      "execution_accuracy": 0.939759,
       "valid_sql_rate": 1.0,
-      "table_recall": 0.932692,
-      "column_recall": 0.935897
+      "table_recall": 0.957831,
+      "column_recall": 0.959839
     },
     "analytics": {
       "questions": 4,
@@ -109,18 +109,18 @@
       "column_recall": 1.0
     },
     "detail": {
-      "questions": 5,
+      "questions": 23,
       "execution_accuracy": 1.0,
       "valid_sql_rate": 1.0,
       "table_recall": 1.0,
       "column_recall": 1.0
     },
     "financial": {
-      "questions": 8,
-      "execution_accuracy": 0.5,
+      "questions": 17,
+      "execution_accuracy": 0.705882,
       "valid_sql_rate": 1.0,
-      "table_recall": 0.75,
-      "column_recall": 0.716667
+      "table_recall": 0.823529,
+      "column_recall": 0.807843
     },
     "listing": {
       "questions": 4,
@@ -150,6 +150,13 @@
       "table_recall": 1.0,
       "column_recall": 1.0
     },
+    "ranking": {
+      "questions": 2,
+      "execution_accuracy": 1.0,
+      "valid_sql_rate": 1.0,
+      "table_recall": 1.0,
+      "column_recall": 1.0
+    },
     "template_management": {
       "questions": 2,
       "execution_accuracy": 1.0,
@@ -160,18 +167,18 @@
   },
   "by_difficulty": {
     "easy": {
-      "questions": 58,
-      "execution_accuracy": 0.931034,
+      "questions": 93,
+      "execution_accuracy": 0.946237,
       "valid_sql_rate": 1.0,
-      "table_recall": 0.948276,
-      "column_recall": 0.954023
+      "table_recall": 0.956989,
+      "column_recall": 0.960573
     },
     "medium": {
-      "questions": 32,
-      "execution_accuracy": 0.8125,
+      "questions": 57,
+      "execution_accuracy": 0.877193,
       "valid_sql_rate": 1.0,
-      "table_recall": 0.875,
-      "column_recall": 0.871875
+      "table_recall": 0.929825,
+      "column_recall": 0.92807
     }
   },
   "most_missed_tables": [
@@ -213,6 +220,10 @@
     ],
     [
       "msg.templatescheduling",
+      1
+    ],
+    [
+      "sls.returnedinvoice",
       1
     ]
   ],
