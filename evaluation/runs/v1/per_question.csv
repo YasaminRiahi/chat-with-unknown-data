@@ -1,43 +1,43 @@
-﻿id,language,category,difficulty,initial_sql,final_sql,initial_ex,final_ex,initial_valid_sql,final_valid_sql,table_recall,table_precision,column_recall,correction_attempted,correction_success,r_ves_score,end_to_end_ms,llm_calls,total_tokens,error
-questions_accounting_intent_002_fa,fa,account-element,easy,"SELECT TOP 20 a.AccountId, a.Title_En AS AccountTitleEn, e.Title_En AS ElementTitleEn
+﻿id,language,category,features,feature_count,initial_sql,final_sql,initial_ex,final_ex,initial_valid_sql,final_valid_sql,table_recall,table_precision,column_recall,correction_attempted,correction_success,r_ves_score,end_to_end_ms,llm_calls,total_tokens,error
+questions_accounting_intent_002_fa,fa,account-element,join|order_by|top_limit,3,"SELECT TOP 20 a.AccountId, a.Title_En AS AccountTitleEn, e.Title_En AS ElementTitleEn
 FROM [ACC].[Account] AS a
 INNER JOIN [PAY].[Element] AS e ON e.AccountRef = a.AccountId
 ORDER BY a.AccountId ASC","SELECT TOP 20 a.AccountId, a.Title_En AS AccountTitleEn, e.Title_En AS ElementTitleEn
 FROM [ACC].[Account] AS a
 INNER JOIN [PAY].[Element] AS e ON e.AccountRef = a.AccountId
 ORDER BY a.AccountId ASC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,10614.029,4,7275,
-questions_accounting_intent_002_en,en,account-element,easy,"SELECT TOP 20 a.[AccountId], a.[Title_En] AS AccountTitleEn, e.[Title_En] AS ElementTitleEn
+questions_accounting_intent_002_en,en,account-element,join|order_by|top_limit,3,"SELECT TOP 20 a.[AccountId], a.[Title_En] AS AccountTitleEn, e.[Title_En] AS ElementTitleEn
 FROM [ACC].[Account] AS a
 INNER JOIN [PAY].[Element] AS e ON e.[AccountRef] = a.[AccountId]
 ORDER BY a.[AccountId] ASC","SELECT TOP 20 a.[AccountId], a.[Title_En] AS AccountTitleEn, e.[Title_En] AS ElementTitleEn
 FROM [ACC].[Account] AS a
 INNER JOIN [PAY].[Element] AS e ON e.[AccountRef] = a.[AccountId]
 ORDER BY a.[AccountId] ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,36702.371,4,7286,
-questions_accounting_intent_003_en,en,account,medium,"SELECT TOP 20 a.[Code] AS AccountCode, a.[Title_En] AS AccountTitleEn, e.[Title_En] AS ElementTitleEn
+questions_accounting_intent_003_en,en,account,join|order_by|outer_join|top_limit,4,"SELECT TOP 20 a.[Code] AS AccountCode, a.[Title_En] AS AccountTitleEn, e.[Title_En] AS ElementTitleEn
 FROM [ACC].[Account] AS a
 LEFT JOIN [PAY].[Element] AS e ON e.[AccountRef] = a.[AccountId]
 ORDER BY a.[Code] ASC","SELECT TOP 20 a.[Code] AS AccountCode, a.[Title_En] AS AccountTitleEn, e.[Title_En] AS ElementTitleEn
 FROM [ACC].[Account] AS a
 LEFT JOIN [PAY].[Element] AS e ON e.[AccountRef] = a.[AccountId]
 ORDER BY a.[Code] ASC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,14451.611,4,6812,
-questions_accounting_intent_003_fa,fa,account,medium,"SELECT TOP 20 a.[Code], a.[Title_En] AS AccountTitleEn, e.[Title_En] AS ElementTitleEn
+questions_accounting_intent_003_fa,fa,account,join|order_by|top_limit,3,"SELECT TOP 20 a.[Code], a.[Title_En] AS AccountTitleEn, e.[Title_En] AS ElementTitleEn
 FROM [ACC].[Account] AS a
 JOIN [PAY].[Element] AS e ON e.[AccountRef] = a.[AccountId]
 ORDER BY a.[Code]","SELECT TOP 20 a.[Code], a.[Title_En] AS AccountTitleEn, e.[Title_En] AS ElementTitleEn
 FROM [ACC].[Account] AS a
 JOIN [PAY].[Element] AS e ON e.[AccountRef] = a.[AccountId]
 ORDER BY a.[Code]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,15187.551,4,7215,
-questions_accounting_intent_004_fa,fa,aggregation,easy,"SELECT a.[BalanceType], a.[IsActive], COUNT(*) AS AccountCount FROM [ACC].[Account] AS a GROUP BY a.[BalanceType], a.[IsActive]","SELECT a.[BalanceType], a.[IsActive], COUNT(*) AS AccountCount FROM [ACC].[Account] AS a GROUP BY a.[BalanceType], a.[IsActive]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,32374.661,4,5397,
-questions_accounting_intent_004_en,en,aggregation,easy,"SELECT a.[BalanceType], a.[IsActive], COUNT(*) AS AccountCount
+questions_accounting_intent_004_fa,fa,aggregation,aggregation|group_by|order_by,3,"SELECT a.[BalanceType], a.[IsActive], COUNT(*) AS AccountCount FROM [ACC].[Account] AS a GROUP BY a.[BalanceType], a.[IsActive]","SELECT a.[BalanceType], a.[IsActive], COUNT(*) AS AccountCount FROM [ACC].[Account] AS a GROUP BY a.[BalanceType], a.[IsActive]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,32374.661,4,5397,
+questions_accounting_intent_004_en,en,aggregation,aggregation|group_by|order_by,3,"SELECT a.[BalanceType], a.[IsActive], COUNT(*) AS AccountCount
 FROM [ACC].[Account] AS a
 GROUP BY a.[BalanceType], a.[IsActive]
 ORDER BY a.[BalanceType], a.[IsActive]","SELECT a.[BalanceType], a.[IsActive], COUNT(*) AS AccountCount
 FROM [ACC].[Account] AS a
 GROUP BY a.[BalanceType], a.[IsActive]
 ORDER BY a.[BalanceType], a.[IsActive]",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,35703.399,4,4826,
-questions_accounting_intent_005_fa,fa,aggregation,easy,"SELECT h.[Year], h.[Month], SUM(h.[Amount]) AS TotalAmount FROM [ACC].[AccVchHdr] AS h GROUP BY h.[Year], h.[Month] ORDER BY h.[Year], h.[Month]","SELECT h.[Year], h.[Month], SUM(h.[Amount]) AS TotalAmount FROM [ACC].[AccVchHdr] AS h GROUP BY h.[Year], h.[Month] ORDER BY h.[Year], h.[Month]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,66282.599,4,10654,
-questions_accounting_intent_005_en,en,aggregation,easy,"SELECT [Year], [Month], SUM([Amount]) AS TotalAmount FROM [ACC].[AccVchHdr] AS h GROUP BY [Year], [Month] ORDER BY [Year], [Month];","SELECT [Year], [Month], SUM([Amount]) AS TotalAmount FROM [ACC].[AccVchHdr] AS h GROUP BY [Year], [Month] ORDER BY [Year], [Month];",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,70397.241,4,9684,
-questions_assets_intent_002_en,en,aggregation,medium,"SELECT ac.[Code], ac.[Title_En], COUNT(ag.[AssetGroupID]) AS GroupCount
+questions_accounting_intent_005_fa,fa,aggregation,aggregation|group_by,2,"SELECT h.[Year], h.[Month], SUM(h.[Amount]) AS TotalAmount FROM [ACC].[AccVchHdr] AS h GROUP BY h.[Year], h.[Month] ORDER BY h.[Year], h.[Month]","SELECT h.[Year], h.[Month], SUM(h.[Amount]) AS TotalAmount FROM [ACC].[AccVchHdr] AS h GROUP BY h.[Year], h.[Month] ORDER BY h.[Year], h.[Month]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,66282.599,4,10654,
+questions_accounting_intent_005_en,en,aggregation,aggregation|group_by,2,"SELECT [Year], [Month], SUM([Amount]) AS TotalAmount FROM [ACC].[AccVchHdr] AS h GROUP BY [Year], [Month] ORDER BY [Year], [Month];","SELECT [Year], [Month], SUM([Amount]) AS TotalAmount FROM [ACC].[AccVchHdr] AS h GROUP BY [Year], [Month] ORDER BY [Year], [Month];",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,70397.241,4,9684,
+questions_assets_intent_002_en,en,aggregation,aggregation|group_by|join|order_by|outer_join,5,"SELECT ac.[Code], ac.[Title_En], COUNT(ag.[AssetGroupID]) AS GroupCount
 FROM [AST].[AssetClass] AS ac
 LEFT JOIN [AST].[AssetGroup] AS ag ON ag.[AssetClassRef] = ac.[AssetClassID]
 GROUP BY ac.[Code], ac.[Title_En]
@@ -46,7 +46,7 @@ FROM [AST].[AssetClass] AS ac
 LEFT JOIN [AST].[AssetGroup] AS ag ON ag.[AssetClassRef] = ac.[AssetClassID]
 GROUP BY ac.[Code], ac.[Title_En]
 ORDER BY GroupCount DESC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,56809.445,4,7218,
-questions_assets_intent_001_fa,fa,financial,medium,"SELECT TOP 20 ari.[PlaqueNumber], ari.[Title], SUM(arp.[Price]) AS TotalPurchaseCost
+questions_assets_intent_001_fa,fa,financial,aggregation|group_by|join|order_by|outer_join|top_limit,6,"SELECT TOP 20 ari.[PlaqueNumber], ari.[Title], SUM(arp.[Price]) AS TotalPurchaseCost
 FROM [AST].[AcquisitionReceiptItem] AS ari
 LEFT JOIN [AST].[AssetRelatedPurchaseInvoice] AS arp
     ON arp.[AcquisitionReceiptItemRef] = ari.[AcquisitionReceiptItemID]
@@ -57,7 +57,7 @@ LEFT JOIN [AST].[AssetRelatedPurchaseInvoice] AS arp
     ON arp.[AcquisitionReceiptItemRef] = ari.[AcquisitionReceiptItemID]
 GROUP BY ari.[PlaqueNumber], ari.[Title]
 ORDER BY TotalPurchaseCost DESC",0,0,1,1,0.5,0.25,0.4,False,False,0.0,62414.687,4,10305,
-questions_assets_intent_002_fa,fa,aggregation,medium,"SELECT ac.[Code], ac.[Title_En], COUNT(ag.[AssetGroupID]) AS GroupCount
+questions_assets_intent_002_fa,fa,aggregation,aggregation|group_by|join|order_by|outer_join,5,"SELECT ac.[Code], ac.[Title_En], COUNT(ag.[AssetGroupID]) AS GroupCount
 FROM [AST].[AssetClass] AS ac
 LEFT JOIN [AST].[AssetGroup] AS ag ON ag.[AssetClassRef] = ac.[AssetClassID]
 GROUP BY ac.[Code], ac.[Title_En]
@@ -66,7 +66,7 @@ FROM [AST].[AssetClass] AS ac
 LEFT JOIN [AST].[AssetGroup] AS ag ON ag.[AssetClassRef] = ac.[AssetClassID]
 GROUP BY ac.[Code], ac.[Title_En]
 ORDER BY GroupCount DESC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,49437.831,4,6534,
-questions_assets_intent_003_en,en,detail,medium,"SELECT TOP 20 a.[PlaqueNumber], a.[Title], MAX(at.[ActivityDate]) AS LatestTransactionDate
+questions_assets_intent_003_en,en,detail,aggregation|group_by|join|order_by|top_limit,5,"SELECT TOP 20 a.[PlaqueNumber], a.[Title], MAX(at.[ActivityDate]) AS LatestTransactionDate
 FROM [AST].[Asset] AS a
 INNER JOIN [AST].[AssetTransaction] AS at ON at.[AssetRef] = a.[AssetId]
 GROUP BY a.[PlaqueNumber], a.[Title]
@@ -75,11 +75,11 @@ FROM [AST].[Asset] AS a
 INNER JOIN [AST].[AssetTransaction] AS at ON at.[AssetRef] = a.[AssetId]
 GROUP BY a.[PlaqueNumber], a.[Title]
 ORDER BY LatestTransactionDate DESC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,58620.068,4,7893,
-questions_assets_intent_005_fa,fa,aggregation,easy,"SELECT a.[State], COUNT(*) AS AssetCount FROM [AST].[Asset] AS a GROUP BY a.[State]","SELECT a.[State], COUNT(*) AS AssetCount FROM [AST].[Asset] AS a GROUP BY a.[State]",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,43519.124,4,5498,
-questions_assets_intent_005_en,en,aggregation,easy,"SELECT a.[State], COUNT(*) AS AssetCount FROM [AST].[Asset] AS a GROUP BY a.[State]","SELECT a.[State], COUNT(*) AS AssetCount FROM [AST].[Asset] AS a GROUP BY a.[State]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,37012.532,4,5215,
-questions_assets_intent_004_fa,fa,aggregation,medium,"SELECT DATEPART(year, ac.[CreationDate]) AS [Year], COUNT(*) AS [AssetClassCount] FROM [AST].[AssetClass] AS ac GROUP BY DATEPART(year, ac.[CreationDate]) ORDER BY [Year]","SELECT DATEPART(year, ac.[CreationDate]) AS [Year], COUNT(*) AS [AssetClassCount] FROM [AST].[AssetClass] AS ac GROUP BY DATEPART(year, ac.[CreationDate]) ORDER BY [Year]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,48767.796,4,5618,
-questions_assets_intent_004_en,en,aggregation,medium,"SELECT YEAR(ac.[CreationDate]) AS [Year], COUNT(*) AS [AssetClassCount] FROM [AST].[AssetClass] AS ac GROUP BY YEAR(ac.[CreationDate]) ORDER BY YEAR(ac.[CreationDate])","SELECT YEAR(ac.[CreationDate]) AS [Year], COUNT(*) AS [AssetClassCount] FROM [AST].[AssetClass] AS ac GROUP BY YEAR(ac.[CreationDate]) ORDER BY YEAR(ac.[CreationDate])",1,1,1,1,1.0,1.0,1.0,False,False,100.0,41201.612,4,5847,
-questions_assets_intent_001_en,en,financial,medium,"SELECT TOP 20 a.PlaqueNumber, a.Title, SUM(ari.TotalCost) AS TotalAcquisitionCost
+questions_assets_intent_005_fa,fa,aggregation,aggregation|group_by,2,"SELECT a.[State], COUNT(*) AS AssetCount FROM [AST].[Asset] AS a GROUP BY a.[State]","SELECT a.[State], COUNT(*) AS AssetCount FROM [AST].[Asset] AS a GROUP BY a.[State]",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,43519.124,4,5498,
+questions_assets_intent_005_en,en,aggregation,aggregation|group_by,2,"SELECT a.[State], COUNT(*) AS AssetCount FROM [AST].[Asset] AS a GROUP BY a.[State]","SELECT a.[State], COUNT(*) AS AssetCount FROM [AST].[Asset] AS a GROUP BY a.[State]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,37012.532,4,5215,
+questions_assets_intent_004_fa,fa,aggregation,aggregation|date_operation|group_by,3,"SELECT DATEPART(year, ac.[CreationDate]) AS [Year], COUNT(*) AS [AssetClassCount] FROM [AST].[AssetClass] AS ac GROUP BY DATEPART(year, ac.[CreationDate]) ORDER BY [Year]","SELECT DATEPART(year, ac.[CreationDate]) AS [Year], COUNT(*) AS [AssetClassCount] FROM [AST].[AssetClass] AS ac GROUP BY DATEPART(year, ac.[CreationDate]) ORDER BY [Year]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,48767.796,4,5618,
+questions_assets_intent_004_en,en,aggregation,aggregation|date_operation|group_by,3,"SELECT YEAR(ac.[CreationDate]) AS [Year], COUNT(*) AS [AssetClassCount] FROM [AST].[AssetClass] AS ac GROUP BY YEAR(ac.[CreationDate]) ORDER BY YEAR(ac.[CreationDate])","SELECT YEAR(ac.[CreationDate]) AS [Year], COUNT(*) AS [AssetClassCount] FROM [AST].[AssetClass] AS ac GROUP BY YEAR(ac.[CreationDate]) ORDER BY YEAR(ac.[CreationDate])",1,1,1,1,1.0,1.0,1.0,False,False,100.0,41201.612,4,5847,
+questions_assets_intent_001_en,en,financial,aggregation|group_by|join|order_by|outer_join|top_limit,6,"SELECT TOP 20 a.PlaqueNumber, a.Title, SUM(ari.TotalCost) AS TotalAcquisitionCost
 FROM [AST].[Asset] AS a
 INNER JOIN [AST].[AcquisitionReceiptItem] AS ari ON ari.AssetRef = a.AssetId
 GROUP BY a.PlaqueNumber, a.Title
@@ -88,14 +88,14 @@ FROM [AST].[Asset] AS a
 INNER JOIN [AST].[AcquisitionReceiptItem] AS ari ON ari.AssetRef = a.AssetId
 GROUP BY a.PlaqueNumber, a.Title
 ORDER BY TotalAcquisitionCost DESC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,68360.678,4,9146,
-questions_bank_intent_001_fa,fa,listing,easy,"SELECT TOP 20 bb.[BankBranchId], bb.[Code], bb.[Title], b.[Title] AS BankTitle
+questions_bank_intent_001_fa,fa,listing,join|order_by|top_limit,3,"SELECT TOP 20 bb.[BankBranchId], bb.[Code], bb.[Title], b.[Title] AS BankTitle
 FROM [RPA].[BankBranch] AS bb
 INNER JOIN [RPA].[Bank] AS b ON bb.[BankRef] = b.[BankId]
 ORDER BY bb.[BankBranchId] ASC","SELECT TOP 20 bb.[BankBranchId], bb.[Code], bb.[Title], b.[Title] AS BankTitle
 FROM [RPA].[BankBranch] AS bb
 INNER JOIN [RPA].[Bank] AS b ON bb.[BankRef] = b.[BankId]
 ORDER BY bb.[BankBranchId] ASC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,59492.356,4,7526,
-questions_bank_intent_002_fa,fa,analytics,easy,"SELECT TOP 20 b.Title, COUNT(a.BankAccountId) AS AccountCount
+questions_bank_intent_002_fa,fa,analytics,aggregation|group_by|join|order_by|outer_join|top_limit,6,"SELECT TOP 20 b.Title, COUNT(a.BankAccountId) AS AccountCount
 FROM [RPA].[BankBranch] AS b
 LEFT JOIN [RPA].[BankAccount] AS a ON a.BankBranchRef = b.BankBranchId
 GROUP BY b.Title
@@ -104,7 +104,7 @@ FROM [RPA].[BankBranch] AS b
 LEFT JOIN [RPA].[BankAccount] AS a ON a.BankBranchRef = b.BankBranchId
 GROUP BY b.Title
 ORDER BY AccountCount DESC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,58341.822,4,7315,
-questions_bank_intent_002_en,en,analytics,easy,"SELECT TOP 20 b.Title, COUNT(a.BankAccountId) AS AccountCount
+questions_bank_intent_002_en,en,analytics,aggregation|group_by|join|order_by|outer_join|top_limit,6,"SELECT TOP 20 b.Title, COUNT(a.BankAccountId) AS AccountCount
 FROM [RPA].[BankBranch] AS b
 LEFT JOIN [RPA].[BankAccount] AS a ON a.BankBranchRef = b.BankBranchId
 GROUP BY b.Title
@@ -113,17 +113,16 @@ FROM [RPA].[BankBranch] AS b
 LEFT JOIN [RPA].[BankAccount] AS a ON a.BankBranchRef = b.BankBranchId
 GROUP BY b.Title
 ORDER BY AccountCount DESC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,53908.824,4,7189,
-questions_bank_intent_003_fa,fa,aggregation,easy,"SELECT c.[BankRef], SUM(c.[Amount]) AS TotalAmount FROM [DST].[CustomerReceiptInfoCheque] AS c GROUP BY c.[BankRef]","SELECT c.[BankRef], SUM(c.[Amount]) AS TotalAmount FROM [DST].[CustomerReceiptInfoCheque] AS c GROUP BY c.[BankRef]",0,0,1,1,0.0,0.0,0.0,True,False,0.0,43166.096,3,5643,
-questions_bank_intent_003_en,en,aggregation,easy,"SELECT b.[Title] AS BankTitle, SUM(rc.[Amount]) AS TotalAmount
+questions_bank_intent_003_en,en,aggregation,aggregation|group_by|join,3,"SELECT b.[Title] AS BankTitle, SUM(rc.[Amount]) AS TotalAmount
 FROM [RPA].[ReceiptCheque] rc
 INNER JOIN [RPA].[Bank] b ON rc.[BankRef] = b.[BankId]
 GROUP BY b.[Title]","SELECT b.[Title] AS BankTitle, SUM(rc.[Amount]) AS TotalAmount
 FROM [RPA].[ReceiptCheque] rc
 INNER JOIN [RPA].[Bank] b ON rc.[BankRef] = b.[BankId]
 GROUP BY b.[Title]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,52576.723,4,8193,
-questions_bank_intent_005_fa,fa,aggregation,easy,"SELECT b.[Creator], COUNT(*) AS BankCount FROM [RPA].[Bank] AS b GROUP BY b.[Creator]","SELECT b.[Creator], COUNT(*) AS BankCount FROM [RPA].[Bank] AS b GROUP BY b.[Creator]",1,1,1,1,1.0,0.5,1.0,False,False,100.0,26427.938,4,1789,
-questions_bank_intent_005_en,en,aggregation,easy,"SELECT b.[Creator], COUNT(*) AS BankCount FROM [RPA].[Bank] AS b GROUP BY b.[Creator]","SELECT b.[Creator], COUNT(*) AS BankCount FROM [RPA].[Bank] AS b GROUP BY b.[Creator]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,13376.294,4,4683,
-questions_bank_intent_004_fa,fa,aggregation,easy,"SELECT b.Title AS BankName, COUNT(bb.BankBranchId) AS BranchCount
+questions_bank_intent_005_fa,fa,aggregation,aggregation|group_by,2,"SELECT b.[Creator], COUNT(*) AS BankCount FROM [RPA].[Bank] AS b GROUP BY b.[Creator]","SELECT b.[Creator], COUNT(*) AS BankCount FROM [RPA].[Bank] AS b GROUP BY b.[Creator]",1,1,1,1,1.0,0.5,1.0,False,False,100.0,26427.938,4,1789,
+questions_bank_intent_005_en,en,aggregation,aggregation|group_by,2,"SELECT b.[Creator], COUNT(*) AS BankCount FROM [RPA].[Bank] AS b GROUP BY b.[Creator]","SELECT b.[Creator], COUNT(*) AS BankCount FROM [RPA].[Bank] AS b GROUP BY b.[Creator]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,13376.294,4,4683,
+questions_bank_intent_004_fa,fa,aggregation,aggregation|group_by|join|outer_join,4,"SELECT b.Title AS BankName, COUNT(bb.BankBranchId) AS BranchCount
 FROM [RPA].[Bank] AS b
 LEFT JOIN [RPA].[BankBranch] AS bb ON bb.BankRef = b.BankId
 GROUP BY b.Title
@@ -132,23 +131,23 @@ FROM [RPA].[Bank] AS b
 LEFT JOIN [RPA].[BankBranch] AS bb ON bb.BankRef = b.BankId
 GROUP BY b.Title
 ORDER BY b.Title",1,1,1,1,1.0,1.0,1.0,False,False,100.0,51103.262,4,6999,
-questions_bank_intent_004_en,en,aggregation,easy,"SELECT b.[Title] AS BankName, COUNT(bb.[BankBranchId]) AS BranchCount
+questions_bank_intent_004_en,en,aggregation,aggregation|group_by|join|outer_join,4,"SELECT b.[Title] AS BankName, COUNT(bb.[BankBranchId]) AS BranchCount
 FROM [RPA].[Bank] AS b
 LEFT JOIN [RPA].[BankBranch] AS bb ON bb.[BankRef] = b.[BankId]
 GROUP BY b.[Title]","SELECT b.[Title] AS BankName, COUNT(bb.[BankBranchId]) AS BranchCount
 FROM [RPA].[Bank] AS b
 LEFT JOIN [RPA].[BankBranch] AS bb ON bb.[BankRef] = b.[BankId]
 GROUP BY b.[Title]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,52260.969,4,7431,
-questions_bank_intent_001_en,en,listing,easy,"SELECT TOP 20 bb.[BankBranchId], bb.[Code], bb.[Title], b.[Title] AS BankName FROM [RPA].[BankBranch] AS bb INNER JOIN [RPA].[Bank] AS b ON bb.[BankRef] = b.[BankId] ORDER BY bb.[BankBranchId] ASC","SELECT TOP 20 bb.[BankBranchId], bb.[Code], bb.[Title], b.[Title] AS BankName FROM [RPA].[BankBranch] AS bb INNER JOIN [RPA].[Bank] AS b ON bb.[BankRef] = b.[BankId] ORDER BY bb.[BankBranchId] ASC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,52351.459,4,7468,
-questions_bank_accounts_intent_002_fa,fa,account_overview,easy,"SELECT TOP 20 ba.[AccountNo], ba.[Owner], ba.[Balance], at.[Title_En] FROM [RPA].[BankAccount] AS ba INNER JOIN [RPA].[AccountType] AS at ON ba.[AccountTypeRef] = at.[AccountTypeId] ORDER BY ba.[Balance] DESC","SELECT TOP 20 ba.[AccountNo], ba.[Owner], ba.[Balance], at.[Title_En] FROM [RPA].[BankAccount] AS ba INNER JOIN [RPA].[AccountType] AS at ON ba.[AccountTypeRef] = at.[AccountTypeId] ORDER BY ba.[Balance] DESC",1,1,1,1,1.0,0.5,1.0,False,False,86.60254,60495.996,4,8823,
-questions_bank_accounts_intent_001_fa,fa,financial,easy,"SELECT TOP 20 ba.[AccountNo], ba.[Balance] AS CurrentBalance, bab.[Balance] AS HistoricalBalance
+questions_bank_intent_001_en,en,listing,join|order_by|top_limit,3,"SELECT TOP 20 bb.[BankBranchId], bb.[Code], bb.[Title], b.[Title] AS BankName FROM [RPA].[BankBranch] AS bb INNER JOIN [RPA].[Bank] AS b ON bb.[BankRef] = b.[BankId] ORDER BY bb.[BankBranchId] ASC","SELECT TOP 20 bb.[BankBranchId], bb.[Code], bb.[Title], b.[Title] AS BankName FROM [RPA].[BankBranch] AS bb INNER JOIN [RPA].[Bank] AS b ON bb.[BankRef] = b.[BankId] ORDER BY bb.[BankBranchId] ASC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,52351.459,4,7468,
+questions_bank_accounts_intent_002_fa,fa,account_overview,join|order_by|top_limit,3,"SELECT TOP 20 ba.[AccountNo], ba.[Owner], ba.[Balance], at.[Title_En] FROM [RPA].[BankAccount] AS ba INNER JOIN [RPA].[AccountType] AS at ON ba.[AccountTypeRef] = at.[AccountTypeId] ORDER BY ba.[Balance] DESC","SELECT TOP 20 ba.[AccountNo], ba.[Owner], ba.[Balance], at.[Title_En] FROM [RPA].[BankAccount] AS ba INNER JOIN [RPA].[AccountType] AS at ON ba.[AccountTypeRef] = at.[AccountTypeId] ORDER BY ba.[Balance] DESC",1,1,1,1,1.0,0.5,1.0,False,False,86.60254,60495.996,4,8823,
+questions_bank_accounts_intent_001_fa,fa,financial,join|order_by|top_limit,3,"SELECT TOP 20 ba.[AccountNo], ba.[Balance] AS CurrentBalance, bab.[Balance] AS HistoricalBalance
 FROM [RPA].[BankAccount] AS ba
 LEFT JOIN [RPA].[BankAccountBalance] AS bab ON bab.[BankAccountRef] = ba.[BankAccountId]
 ORDER BY ba.[AccountNo] ASC","SELECT TOP 20 ba.[AccountNo], ba.[Balance] AS CurrentBalance, bab.[Balance] AS HistoricalBalance
 FROM [RPA].[BankAccount] AS ba
 LEFT JOIN [RPA].[BankAccountBalance] AS bab ON bab.[BankAccountRef] = ba.[BankAccountId]
 ORDER BY ba.[AccountNo] ASC",1,1,1,1,1.0,1.0,1.0,False,False,111.803399,58606.499,4,8046,
-questions_bank_accounts_intent_001_en,en,financial,easy,"SELECT TOP 20 ba.AccountNo, ba.Balance AS CurrentBalance, bab.Balance AS HistoricalBalance
+questions_bank_accounts_intent_001_en,en,financial,join|order_by|top_limit,3,"SELECT TOP 20 ba.AccountNo, ba.Balance AS CurrentBalance, bab.Balance AS HistoricalBalance
 FROM [RPA].[BankAccount] ba
 INNER JOIN (
     SELECT b1.BankAccountRef, b1.Balance
@@ -171,28 +170,28 @@ INNER JOIN (
     ) b2 ON b1.BankAccountRef = b2.BankAccountRef AND b1.FiscalYearRef = b2.MaxFiscalYear
 ) bab ON ba.BankAccountId = bab.BankAccountRef
 ORDER BY ba.AccountNo ASC",0,0,1,1,1.0,1.0,1.0,False,False,0.0,58975.363,4,8164,
-questions_bank_accounts_intent_002_en,en,account_overview,easy,"SELECT TOP 20 ba.[AccountNo], ba.[Owner], ba.[Balance], at.[Title_En]
+questions_bank_accounts_intent_002_en,en,account_overview,join|order_by|top_limit,3,"SELECT TOP 20 ba.[AccountNo], ba.[Owner], ba.[Balance], at.[Title_En]
 FROM [RPA].[BankAccount] AS ba
 INNER JOIN [RPA].[AccountType] AS at ON ba.[AccountTypeRef] = at.[AccountTypeId]
 ORDER BY ba.[Balance] DESC","SELECT TOP 20 ba.[AccountNo], ba.[Owner], ba.[Balance], at.[Title_En]
 FROM [RPA].[BankAccount] AS ba
 INNER JOIN [RPA].[AccountType] AS at ON ba.[AccountTypeRef] = at.[AccountTypeId]
 ORDER BY ba.[Balance] DESC",1,1,1,1,1.0,0.5,1.0,False,False,100.0,35835.414,4,9295,
-questions_bank_accounts_intent_003_fa,fa,account,easy,"SELECT TOP 20 ba.[AccountNo], ba.[Balance], br.[WorkshopName] AS [BranchName] FROM [RPA].[BankAccount] AS ba INNER JOIN [PAY].[Branch] AS br ON ba.[BankBranchRef] = br.[BranchId] ORDER BY ba.[Balance] DESC","SELECT TOP 20 ba.[AccountNo], ba.[Balance], br.[WorkshopName] AS [BranchName] FROM [RPA].[BankAccount] AS ba INNER JOIN [PAY].[Branch] AS br ON ba.[BankBranchRef] = br.[BranchId] ORDER BY ba.[Balance] DESC",0,0,1,1,0.5,0.333333,0.666667,True,False,0.0,58089.081,3,6514,
-questions_bank_accounts_intent_003_en,en,account,easy,"SELECT TOP 20 ba.AccountNo, ba.Balance, bb.Title
+questions_bank_accounts_intent_003_fa,fa,account,join|order_by|top_limit,3,"SELECT TOP 20 ba.[AccountNo], ba.[Balance], br.[WorkshopName] AS [BranchName] FROM [RPA].[BankAccount] AS ba INNER JOIN [PAY].[Branch] AS br ON ba.[BankBranchRef] = br.[BranchId] ORDER BY ba.[Balance] DESC","SELECT TOP 20 ba.[AccountNo], ba.[Balance], br.[WorkshopName] AS [BranchName] FROM [RPA].[BankAccount] AS ba INNER JOIN [PAY].[Branch] AS br ON ba.[BankBranchRef] = br.[BranchId] ORDER BY ba.[Balance] DESC",0,0,1,1,0.5,0.333333,0.666667,True,False,0.0,58089.081,3,6514,
+questions_bank_accounts_intent_003_en,en,account,join|order_by|top_limit,3,"SELECT TOP 20 ba.AccountNo, ba.Balance, bb.Title
 FROM [RPA].[BankAccount] AS ba
 INNER JOIN [RPA].[BankBranch] AS bb ON ba.BankBranchRef = bb.BankBranchId
 ORDER BY ba.Balance DESC","SELECT TOP 20 ba.AccountNo, ba.Balance, bb.Title
 FROM [RPA].[BankAccount] AS ba
 INNER JOIN [RPA].[BankBranch] AS bb ON ba.BankBranchRef = bb.BankBranchId
 ORDER BY ba.Balance DESC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,50568.871,4,7348,
-questions_bank_accounts_intent_004_fa,fa,aggregation,easy,"SELECT bab.[FiscalYearRef], SUM(bab.[Balance]) AS TotalBalance
+questions_bank_accounts_intent_004_fa,fa,aggregation,aggregation|group_by|order_by,3,"SELECT bab.[FiscalYearRef], SUM(bab.[Balance]) AS TotalBalance
 FROM [RPA].[BankAccountBalance] AS bab
 GROUP BY bab.[FiscalYearRef]","SELECT bab.[FiscalYearRef], SUM(bab.[Balance]) AS TotalBalance
 FROM [RPA].[BankAccountBalance] AS bab
 GROUP BY bab.[FiscalYearRef]",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,46985.166,4,5927,
-questions_bank_accounts_intent_005_en,en,aggregation,easy,"SELECT ba.[AccountTypeRef] AS AccountType, SUM(ba.[Balance]) AS TotalBalance, COUNT(*) AS AccountCount FROM [RPA].[BankAccount] AS ba GROUP BY ba.[AccountTypeRef]","SELECT ba.[AccountTypeRef] AS AccountType, SUM(ba.[Balance]) AS TotalBalance, COUNT(*) AS AccountCount FROM [RPA].[BankAccount] AS ba GROUP BY ba.[AccountTypeRef]",1,1,1,1,1.0,0.2,1.0,False,False,100.0,17336.876,4,3468,
-questions_cash_intent_001_en,en,financial,medium,"SELECT TOP 20 c.Title, c.Title_En, c.Balance, SUM(cb.Balance) AS TotalBalance
+questions_bank_accounts_intent_005_en,en,aggregation,aggregation|group_by,2,"SELECT ba.[AccountTypeRef] AS AccountType, SUM(ba.[Balance]) AS TotalBalance, COUNT(*) AS AccountCount FROM [RPA].[BankAccount] AS ba GROUP BY ba.[AccountTypeRef]","SELECT ba.[AccountTypeRef] AS AccountType, SUM(ba.[Balance]) AS TotalBalance, COUNT(*) AS AccountCount FROM [RPA].[BankAccount] AS ba GROUP BY ba.[AccountTypeRef]",1,1,1,1,1.0,0.2,1.0,False,False,100.0,17336.876,4,3468,
+questions_cash_intent_001_en,en,financial,aggregation|group_by|join|order_by|top_limit,5,"SELECT TOP 20 c.Title, c.Title_En, c.Balance, SUM(cb.Balance) AS TotalBalance
 FROM [RPA].[Cash] AS c
 INNER JOIN [RPA].[CashBalance] AS cb ON c.CashId = cb.CashRef
 GROUP BY c.CashId, c.Title, c.Title_En, c.Balance
@@ -201,24 +200,24 @@ FROM [RPA].[Cash] AS c
 INNER JOIN [RPA].[CashBalance] AS cb ON c.CashId = cb.CashRef
 GROUP BY c.CashId, c.Title, c.Title_En, c.Balance
 ORDER BY TotalBalance DESC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,41428.568,4,5897,
-questions_bank_accounts_intent_004_en,en,aggregation,easy,"SELECT b.FiscalYearRef, SUM(b.Balance) AS TotalBalance FROM [RPA].[BankAccountBalance] AS b GROUP BY b.FiscalYearRef","SELECT b.FiscalYearRef, SUM(b.Balance) AS TotalBalance FROM [RPA].[BankAccountBalance] AS b GROUP BY b.FiscalYearRef",1,1,1,1,1.0,1.0,1.0,False,False,100.0,18207.067,4,5506,
-questions_cash_intent_001_fa,fa,financial,medium,"SELECT TOP 20 a.Title, a.Title_En, a.OpeningBalance FROM [ACC].[Account] AS a ORDER BY a.OpeningBalance DESC","SELECT TOP 20 a.Title, a.Title_En, a.OpeningBalance FROM [ACC].[Account] AS a ORDER BY a.OpeningBalance DESC",0,0,1,1,0.0,0.0,0.0,False,False,0.0,17233.825,4,8774,
-questions_cash_intent_002_fa,fa,financial,medium,"SELECT pc.Title, pc.Title_En, COALESCE(SUM(ph.Amount), 0) AS TotalPayments
+questions_bank_accounts_intent_004_en,en,aggregation,aggregation|group_by|order_by,3,"SELECT b.FiscalYearRef, SUM(b.Balance) AS TotalBalance FROM [RPA].[BankAccountBalance] AS b GROUP BY b.FiscalYearRef","SELECT b.FiscalYearRef, SUM(b.Balance) AS TotalBalance FROM [RPA].[BankAccountBalance] AS b GROUP BY b.FiscalYearRef",1,1,1,1,1.0,1.0,1.0,False,False,100.0,18207.067,4,5506,
+questions_cash_intent_001_fa,fa,financial,aggregation|group_by|join|order_by|top_limit,5,"SELECT TOP 20 a.Title, a.Title_En, a.OpeningBalance FROM [ACC].[Account] AS a ORDER BY a.OpeningBalance DESC","SELECT TOP 20 a.Title, a.Title_En, a.OpeningBalance FROM [ACC].[Account] AS a ORDER BY a.OpeningBalance DESC",0,0,1,1,0.0,0.0,0.0,False,False,0.0,17233.825,4,8774,
+questions_cash_intent_002_fa,fa,financial,aggregation|group_by|join|null_handling|outer_join,5,"SELECT pc.Title, pc.Title_En, COALESCE(SUM(ph.Amount), 0) AS TotalPayments
 FROM [RPA].[PettyCash] AS pc
 LEFT JOIN [RPA].[PaymentHeader] AS ph ON ph.CashRef = pc.PettyCashId
 GROUP BY pc.Title, pc.Title_En","SELECT pc.Title, pc.Title_En, COALESCE(SUM(ph.Amount), 0) AS TotalPayments
 FROM [RPA].[PettyCash] AS pc
 LEFT JOIN [RPA].[PaymentHeader] AS ph ON ph.CashRef = pc.PettyCashId
 GROUP BY pc.Title, pc.Title_En",0,0,1,1,0.5,0.25,0.333333,True,False,0.0,51656.248,3,6617,
-questions_bank_accounts_intent_005_fa,fa,aggregation,easy,"SELECT ba.AccountTypeRef AS AccountTypeId, SUM(ba.Balance) AS TotalBalance, COUNT(*) AS AccountCount FROM [RPA].[BankAccount] ba GROUP BY ba.AccountTypeRef","SELECT ba.AccountTypeRef AS AccountTypeId, SUM(ba.Balance) AS TotalBalance, COUNT(*) AS AccountCount FROM [RPA].[BankAccount] ba GROUP BY ba.AccountTypeRef",1,1,1,1,1.0,0.333333,1.0,False,False,111.803399,8401.605,4,6579,
-questions_cash_intent_002_en,en,financial,medium,"SELECT c.[Title], c.[Title_En], SUM(COALESCE(ph.[Amount], 0)) AS TotalPaymentAmount
+questions_bank_accounts_intent_005_fa,fa,aggregation,aggregation|group_by,2,"SELECT ba.AccountTypeRef AS AccountTypeId, SUM(ba.Balance) AS TotalBalance, COUNT(*) AS AccountCount FROM [RPA].[BankAccount] ba GROUP BY ba.AccountTypeRef","SELECT ba.AccountTypeRef AS AccountTypeId, SUM(ba.Balance) AS TotalBalance, COUNT(*) AS AccountCount FROM [RPA].[BankAccount] ba GROUP BY ba.AccountTypeRef",1,1,1,1,1.0,0.333333,1.0,False,False,111.803399,8401.605,4,6579,
+questions_cash_intent_002_en,en,financial,aggregation|group_by|join|order_by|outer_join|top_limit,6,"SELECT c.[Title], c.[Title_En], SUM(COALESCE(ph.[Amount], 0)) AS TotalPaymentAmount
 FROM [RPA].[Cash] AS c
 LEFT JOIN [RPA].[PaymentHeader] AS ph ON ph.[CashRef] = c.[CashId]
 GROUP BY c.[Title], c.[Title_En]","SELECT c.[Title], c.[Title_En], SUM(COALESCE(ph.[Amount], 0)) AS TotalPaymentAmount
 FROM [RPA].[Cash] AS c
 LEFT JOIN [RPA].[PaymentHeader] AS ph ON ph.[CashRef] = c.[CashId]
 GROUP BY c.[Title], c.[Title_En]",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,33050.108,4,6649,
-questions_cash_intent_003_fa,fa,aggregation,medium,"SELECT TOP 20 c.Title_En, c.Balance, COALESCE(SUM(rc.Amount), 0) AS TotalChequeAmount
+questions_cash_intent_003_fa,fa,aggregation,aggregation|group_by|join|null_handling|order_by|outer_join|top_limit,7,"SELECT TOP 20 c.Title_En, c.Balance, COALESCE(SUM(rc.Amount), 0) AS TotalChequeAmount
 FROM [RPA].[Cash] AS c
 LEFT JOIN [RPA].[ReceiptCheque] AS rc ON rc.CashRef = c.CashId
 GROUP BY c.CashId, c.Title_En, c.Balance
@@ -227,7 +226,7 @@ FROM [RPA].[Cash] AS c
 LEFT JOIN [RPA].[ReceiptCheque] AS rc ON rc.CashRef = c.CashId
 GROUP BY c.CashId, c.Title_En, c.Balance
 ORDER BY TotalChequeAmount DESC",1,1,1,1,1.0,0.666667,1.0,False,False,100.0,59733.219,4,8047,
-questions_cash_intent_003_en,en,aggregation,medium,"SELECT TOP 20 c.[Title_En], c.[Balance], ISNULL(SUM(rc.[Amount]), 0) AS TotalChequeAmount
+questions_cash_intent_003_en,en,aggregation,aggregation|group_by|join|null_handling|order_by|outer_join|top_limit,7,"SELECT TOP 20 c.[Title_En], c.[Balance], ISNULL(SUM(rc.[Amount]), 0) AS TotalChequeAmount
 FROM [RPA].[Cash] AS c
 LEFT JOIN [RPA].[ReceiptCheque] AS rc ON rc.[CashRef] = c.[CashId]
 GROUP BY c.[CashId], c.[Title_En], c.[Balance]
@@ -236,33 +235,33 @@ FROM [RPA].[Cash] AS c
 LEFT JOIN [RPA].[ReceiptCheque] AS rc ON rc.[CashRef] = c.[CashId]
 GROUP BY c.[CashId], c.[Title_En], c.[Balance]
 ORDER BY TotalChequeAmount DESC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,54970.16,4,6969,
-questions_cash_intent_004_fa,fa,aggregation,easy,"SELECT cb.[FiscalYearRef], SUM(cb.[Balance]) AS TotalBalance FROM [RPA].[CashBalance] AS cb GROUP BY cb.[FiscalYearRef]","SELECT cb.[FiscalYearRef], SUM(cb.[Balance]) AS TotalBalance FROM [RPA].[CashBalance] AS cb GROUP BY cb.[FiscalYearRef]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,39104.297,4,5643,
-questions_cash_intent_004_en,en,aggregation,easy,"SELECT cb.[FiscalYearRef], SUM(cb.[Balance]) AS TotalBalance
+questions_cash_intent_004_fa,fa,aggregation,aggregation|group_by|order_by,3,"SELECT cb.[FiscalYearRef], SUM(cb.[Balance]) AS TotalBalance FROM [RPA].[CashBalance] AS cb GROUP BY cb.[FiscalYearRef]","SELECT cb.[FiscalYearRef], SUM(cb.[Balance]) AS TotalBalance FROM [RPA].[CashBalance] AS cb GROUP BY cb.[FiscalYearRef]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,39104.297,4,5643,
+questions_cash_intent_004_en,en,aggregation,aggregation|group_by|order_by,3,"SELECT cb.[FiscalYearRef], SUM(cb.[Balance]) AS TotalBalance
 FROM [RPA].[CashBalance] AS cb
 GROUP BY cb.[FiscalYearRef]","SELECT cb.[FiscalYearRef], SUM(cb.[Balance]) AS TotalBalance
 FROM [RPA].[CashBalance] AS cb
 GROUP BY cb.[FiscalYearRef]",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,39961.187,4,5369,
-questions_cash_intent_005_en,en,aggregation,easy,"SELECT c.[CurrencyRef], SUM(c.[Balance]) AS TotalBalance FROM [RPA].[Cash] AS c GROUP BY c.[CurrencyRef]","SELECT c.[CurrencyRef], SUM(c.[Balance]) AS TotalBalance FROM [RPA].[Cash] AS c GROUP BY c.[CurrencyRef]",1,1,1,1,1.0,0.5,1.0,False,False,100.0,34922.756,4,5514,
-questions_cnt_intent_001_en,en,aggregation,easy,"SELECT c.[Type], AVG(c.[Percent]) AS AvgPercent
+questions_cash_intent_005_en,en,aggregation,aggregation|group_by,2,"SELECT c.[CurrencyRef], SUM(c.[Balance]) AS TotalBalance FROM [RPA].[Cash] AS c GROUP BY c.[CurrencyRef]","SELECT c.[CurrencyRef], SUM(c.[Balance]) AS TotalBalance FROM [RPA].[Cash] AS c GROUP BY c.[CurrencyRef]",1,1,1,1,1.0,0.5,1.0,False,False,100.0,34922.756,4,5514,
+questions_cnt_intent_001_en,en,aggregation,aggregation|group_by,2,"SELECT c.[Type], AVG(c.[Percent]) AS AvgPercent
 FROM [CNT].[Coefficient] AS c
 GROUP BY c.[Type]","SELECT c.[Type], AVG(c.[Percent]) AS AvgPercent
 FROM [CNT].[Coefficient] AS c
 GROUP BY c.[Type]",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,31661.409,4,5165,
-questions_cnt_intent_002_fa,fa,aggregation,easy,"SELECT c.[Creator], COUNT(*) AS RecordCount
+questions_cnt_intent_002_fa,fa,aggregation,aggregation|group_by|order_by,3,"SELECT c.[Creator], COUNT(*) AS RecordCount
 FROM [CNT].[Cost] AS c
 GROUP BY c.[Creator]","SELECT c.[Creator], COUNT(*) AS RecordCount
 FROM [CNT].[Cost] AS c
 GROUP BY c.[Creator]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,34919.478,4,5195,
-questions_cash_intent_005_fa,fa,aggregation,easy,"SELECT pc.CurrencyRef, SUM(pc.FirstAmount) AS TotalBalance FROM [RPA].[PettyCash] AS pc GROUP BY pc.CurrencyRef","SELECT pc.CurrencyRef, SUM(pc.FirstAmount) AS TotalBalance FROM [RPA].[PettyCash] AS pc GROUP BY pc.CurrencyRef",0,0,1,1,0.0,0.0,0.0,True,False,0.0,13639.378,3,5599,
-questions_cnt_intent_001_fa,fa,aggregation,easy,"SELECT c.[Type], AVG(c.[Percent]) AS AvgPercent FROM [CNT].[Coefficient] AS c GROUP BY c.[Type]","SELECT c.[Type], AVG(c.[Percent]) AS AvgPercent FROM [CNT].[Coefficient] AS c GROUP BY c.[Type]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,17714.963,4,4732,
-questions_cnt_intent_002_en,en,aggregation,easy,"SELECT c.[Creator], COUNT(*) AS CostCount FROM [CNT].[Cost] AS c GROUP BY c.[Creator]","SELECT c.[Creator], COUNT(*) AS CostCount FROM [CNT].[Cost] AS c GROUP BY c.[Creator]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,39179.595,4,5323,
-questions_cnt_intent_003_fa,fa,detail,easy,"SELECT TOP 20 w.Title, w.CreationDate FROM [CNT].[Warranty] AS w ORDER BY w.CreationDate DESC","SELECT TOP 20 w.Title, w.CreationDate FROM [CNT].[Warranty] AS w ORDER BY w.CreationDate DESC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,32393.442,4,5274,
-questions_cnt_intent_003_en,en,detail,easy,"SELECT TOP 20 w.[Title], w.[CreationDate] FROM [CNT].[Warranty] AS w ORDER BY w.[CreationDate] DESC","SELECT TOP 20 w.[Title], w.[CreationDate] FROM [CNT].[Warranty] AS w ORDER BY w.[CreationDate] DESC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,36146.995,4,5330,
-questions_cnt_intent_004_fa,fa,aggregation,easy,"SELECT c.[Type], AVG(c.[Percent]) AS AvgPercent, COUNT(*) AS CoefficientCount FROM [CNT].[Coefficient] AS c GROUP BY c.[Type]","SELECT c.[Type], AVG(c.[Percent]) AS AvgPercent, COUNT(*) AS CoefficientCount FROM [CNT].[Coefficient] AS c GROUP BY c.[Type]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,35654.51,4,5310,
-questions_cnt_intent_004_en,en,aggregation,easy,"SELECT c.[Type], AVG(c.[Percent]) AS AvgPercent, COUNT(*) AS CoefficientCount FROM [CNT].[Coefficient] AS c GROUP BY c.[Type]","SELECT c.[Type], AVG(c.[Percent]) AS AvgPercent, COUNT(*) AS CoefficientCount FROM [CNT].[Coefficient] AS c GROUP BY c.[Type]",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,39374.333,4,5322,
-questions_cnt_intent_005_fa,fa,aggregation,easy,"SELECT c.[Creator], COUNT(*) AS RecordCount FROM [CNT].[Cost] AS c GROUP BY c.[Creator]","SELECT c.[Creator], COUNT(*) AS RecordCount FROM [CNT].[Cost] AS c GROUP BY c.[Creator]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,14281.554,4,5316,
-questions_cnt_intent_005_en,en,aggregation,easy,"SELECT c.[Creator], COUNT(*) AS CostCount FROM [CNT].[Cost] AS c GROUP BY c.[Creator]","SELECT c.[Creator], COUNT(*) AS CostCount FROM [CNT].[Cost] AS c GROUP BY c.[Creator]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,18683.286,4,5233,
-questions_fiscal_years_intent_001_fa,fa,aggregation,medium,"SELECT TOP 20 fy.Title, COUNT(ar.AcquisitionReceiptID) AS ReceiptCount
+questions_cash_intent_005_fa,fa,aggregation,aggregation|group_by,2,"SELECT pc.CurrencyRef, SUM(pc.FirstAmount) AS TotalBalance FROM [RPA].[PettyCash] AS pc GROUP BY pc.CurrencyRef","SELECT pc.CurrencyRef, SUM(pc.FirstAmount) AS TotalBalance FROM [RPA].[PettyCash] AS pc GROUP BY pc.CurrencyRef",0,0,1,1,0.0,0.0,0.0,True,False,0.0,13639.378,3,5599,
+questions_cnt_intent_001_fa,fa,aggregation,aggregation|group_by,2,"SELECT c.[Type], AVG(c.[Percent]) AS AvgPercent FROM [CNT].[Coefficient] AS c GROUP BY c.[Type]","SELECT c.[Type], AVG(c.[Percent]) AS AvgPercent FROM [CNT].[Coefficient] AS c GROUP BY c.[Type]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,17714.963,4,4732,
+questions_cnt_intent_002_en,en,aggregation,aggregation|group_by|order_by,3,"SELECT c.[Creator], COUNT(*) AS CostCount FROM [CNT].[Cost] AS c GROUP BY c.[Creator]","SELECT c.[Creator], COUNT(*) AS CostCount FROM [CNT].[Cost] AS c GROUP BY c.[Creator]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,39179.595,4,5323,
+questions_cnt_intent_003_fa,fa,detail,order_by|top_limit,2,"SELECT TOP 20 w.Title, w.CreationDate FROM [CNT].[Warranty] AS w ORDER BY w.CreationDate DESC","SELECT TOP 20 w.Title, w.CreationDate FROM [CNT].[Warranty] AS w ORDER BY w.CreationDate DESC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,32393.442,4,5274,
+questions_cnt_intent_003_en,en,detail,order_by|top_limit,2,"SELECT TOP 20 w.[Title], w.[CreationDate] FROM [CNT].[Warranty] AS w ORDER BY w.[CreationDate] DESC","SELECT TOP 20 w.[Title], w.[CreationDate] FROM [CNT].[Warranty] AS w ORDER BY w.[CreationDate] DESC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,36146.995,4,5330,
+questions_cnt_intent_004_fa,fa,aggregation,aggregation|group_by|order_by,3,"SELECT c.[Type], AVG(c.[Percent]) AS AvgPercent, COUNT(*) AS CoefficientCount FROM [CNT].[Coefficient] AS c GROUP BY c.[Type]","SELECT c.[Type], AVG(c.[Percent]) AS AvgPercent, COUNT(*) AS CoefficientCount FROM [CNT].[Coefficient] AS c GROUP BY c.[Type]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,35654.51,4,5310,
+questions_cnt_intent_004_en,en,aggregation,aggregation|group_by|order_by,3,"SELECT c.[Type], AVG(c.[Percent]) AS AvgPercent, COUNT(*) AS CoefficientCount FROM [CNT].[Coefficient] AS c GROUP BY c.[Type]","SELECT c.[Type], AVG(c.[Percent]) AS AvgPercent, COUNT(*) AS CoefficientCount FROM [CNT].[Coefficient] AS c GROUP BY c.[Type]",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,39374.333,4,5322,
+questions_cnt_intent_005_fa,fa,aggregation,aggregation|group_by|order_by,3,"SELECT c.[Creator], COUNT(*) AS RecordCount FROM [CNT].[Cost] AS c GROUP BY c.[Creator]","SELECT c.[Creator], COUNT(*) AS RecordCount FROM [CNT].[Cost] AS c GROUP BY c.[Creator]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,14281.554,4,5316,
+questions_cnt_intent_005_en,en,aggregation,aggregation|group_by|order_by,3,"SELECT c.[Creator], COUNT(*) AS CostCount FROM [CNT].[Cost] AS c GROUP BY c.[Creator]","SELECT c.[Creator], COUNT(*) AS CostCount FROM [CNT].[Cost] AS c GROUP BY c.[Creator]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,18683.286,4,5233,
+questions_fiscal_years_intent_001_fa,fa,aggregation,aggregation|group_by|join|order_by|outer_join|top_limit,6,"SELECT TOP 20 fy.Title, COUNT(ar.AcquisitionReceiptID) AS ReceiptCount
 FROM [FMK].[FiscalYear] AS fy
 LEFT JOIN [AST].[AcquisitionReceipt] AS ar
   ON ar.FiscalYearRef = fy.FiscalYearId
@@ -273,22 +272,22 @@ LEFT JOIN [AST].[AcquisitionReceipt] AS ar
   ON ar.FiscalYearRef = fy.FiscalYearId
 GROUP BY fy.Title
 ORDER BY ReceiptCount DESC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,20440.901,4,6498,
-questions_fiscal_years_intent_002_fa,fa,detail,medium,"SELECT TOP 20 at.[AssetTransactionID], at.[ActivityDate], at.[TransactionType], fy.[Title] FROM [AST].[AssetTransaction] AS at INNER JOIN [FMK].[FiscalYear] AS fy ON at.[FiscalYearRef] = fy.[FiscalYearId] ORDER BY at.[ActivityDate] DESC","SELECT TOP 20 at.[AssetTransactionID], at.[ActivityDate], at.[TransactionType], fy.[Title] FROM [AST].[AssetTransaction] AS at INNER JOIN [FMK].[FiscalYear] AS fy ON at.[FiscalYearRef] = fy.[FiscalYearId] ORDER BY at.[ActivityDate] DESC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,23087.699,4,7682,
-questions_fiscal_years_intent_001_en,en,aggregation,medium,"SELECT TOP 20 ar.FiscalYearRef AS FiscalYear, COUNT(*) AS ReceiptCount
+questions_fiscal_years_intent_002_fa,fa,detail,join|order_by|top_limit,3,"SELECT TOP 20 at.[AssetTransactionID], at.[ActivityDate], at.[TransactionType], fy.[Title] FROM [AST].[AssetTransaction] AS at INNER JOIN [FMK].[FiscalYear] AS fy ON at.[FiscalYearRef] = fy.[FiscalYearId] ORDER BY at.[ActivityDate] DESC","SELECT TOP 20 at.[AssetTransactionID], at.[ActivityDate], at.[TransactionType], fy.[Title] FROM [AST].[AssetTransaction] AS at INNER JOIN [FMK].[FiscalYear] AS fy ON at.[FiscalYearRef] = fy.[FiscalYearId] ORDER BY at.[ActivityDate] DESC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,23087.699,4,7682,
+questions_fiscal_years_intent_001_en,en,aggregation,aggregation|group_by|join|order_by|outer_join|top_limit,6,"SELECT TOP 20 ar.FiscalYearRef AS FiscalYear, COUNT(*) AS ReceiptCount
 FROM [AST].[AcquisitionReceipt] AS ar
 GROUP BY ar.FiscalYearRef
 ORDER BY COUNT(*) DESC, ar.FiscalYearRef;","SELECT TOP 20 ar.FiscalYearRef AS FiscalYear, COUNT(*) AS ReceiptCount
 FROM [AST].[AcquisitionReceipt] AS ar
 GROUP BY ar.FiscalYearRef
 ORDER BY COUNT(*) DESC, ar.FiscalYearRef;",0,0,1,1,0.5,1.0,0.5,False,False,0.0,14951.978,4,7078,
-questions_fiscal_years_intent_002_en,en,detail,medium,"SELECT TOP 20 at.AssetTransactionID, at.ActivityDate, at.TransactionType, fy.Title
+questions_fiscal_years_intent_002_en,en,detail,join|order_by|top_limit,3,"SELECT TOP 20 at.AssetTransactionID, at.ActivityDate, at.TransactionType, fy.Title
 FROM [AST].[AssetTransaction] AS at
 INNER JOIN [FMK].[FiscalYear] AS fy ON at.FiscalYearRef = fy.FiscalYearId
 ORDER BY at.ActivityDate DESC","SELECT TOP 20 at.AssetTransactionID, at.ActivityDate, at.TransactionType, fy.Title
 FROM [AST].[AssetTransaction] AS at
 INNER JOIN [FMK].[FiscalYear] AS fy ON at.FiscalYearRef = fy.FiscalYearId
 ORDER BY at.ActivityDate DESC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,21078.568,4,8132,
-questions_fiscal_years_intent_003_en,en,aggregation,medium,"SELECT fy.Title, fy.StartDate, fy.EndDate, COUNT(co.ClosingOperationId) AS ClosingOperationCount
+questions_fiscal_years_intent_003_en,en,aggregation,aggregation|group_by|join|order_by|outer_join,5,"SELECT fy.Title, fy.StartDate, fy.EndDate, COUNT(co.ClosingOperationId) AS ClosingOperationCount
 FROM [FMK].[FiscalYear] AS fy
 LEFT JOIN [GNR].[ClosingOperation] AS co ON co.FiscalYearRef = fy.FiscalYearId
 GROUP BY fy.Title, fy.StartDate, fy.EndDate
@@ -297,7 +296,7 @@ FROM [FMK].[FiscalYear] AS fy
 LEFT JOIN [GNR].[ClosingOperation] AS co ON co.FiscalYearRef = fy.FiscalYearId
 GROUP BY fy.Title, fy.StartDate, fy.EndDate
 ORDER BY fy.Title",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,46440.48,4,7089,
-questions_fiscal_years_intent_003_fa,fa,aggregation,medium,"SELECT fy.[Title] AS Title, COUNT(co.[ClosingOperationId]) AS OperationCount
+questions_fiscal_years_intent_003_fa,fa,aggregation,aggregation|group_by|join|outer_join,4,"SELECT fy.[Title] AS Title, COUNT(co.[ClosingOperationId]) AS OperationCount
 FROM [FMK].[FiscalYear] AS fy
 LEFT JOIN [GNR].[ClosingOperation] AS co ON co.[FiscalYearRef] = fy.[FiscalYearId]
 GROUP BY fy.[Title], fy.[FiscalYearId]
@@ -306,9 +305,9 @@ FROM [FMK].[FiscalYear] AS fy
 LEFT JOIN [GNR].[ClosingOperation] AS co ON co.[FiscalYearRef] = fy.[FiscalYearId]
 GROUP BY fy.[Title], fy.[FiscalYearId]
 ORDER BY fy.[FiscalYearId]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,21217.321,4,5609,
-questions_fiscal_years_intent_004_fa,fa,aggregation,easy,"SELECT fy.[Status], COUNT(*) AS YearCount FROM [FMK].[FiscalYear] AS fy GROUP BY fy.[Status]","SELECT fy.[Status], COUNT(*) AS YearCount FROM [FMK].[FiscalYear] AS fy GROUP BY fy.[Status]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,16718.369,4,4808,
-questions_fiscal_years_intent_004_en,en,aggregation,easy,"SELECT fy.[Status], COUNT(*) AS YearCount FROM [FMK].[FiscalYear] AS fy GROUP BY fy.[Status]","SELECT fy.[Status], COUNT(*) AS YearCount FROM [FMK].[FiscalYear] AS fy GROUP BY fy.[Status]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,38100.863,4,5113,
-questions_general_intent_001_fa,fa,party_address,medium,"SELECT TOP 20 p.Name_En, pa.Title
+questions_fiscal_years_intent_004_fa,fa,aggregation,aggregation|group_by,2,"SELECT fy.[Status], COUNT(*) AS YearCount FROM [FMK].[FiscalYear] AS fy GROUP BY fy.[Status]","SELECT fy.[Status], COUNT(*) AS YearCount FROM [FMK].[FiscalYear] AS fy GROUP BY fy.[Status]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,16718.369,4,4808,
+questions_fiscal_years_intent_004_en,en,aggregation,aggregation|group_by,2,"SELECT fy.[Status], COUNT(*) AS YearCount FROM [FMK].[FiscalYear] AS fy GROUP BY fy.[Status]","SELECT fy.[Status], COUNT(*) AS YearCount FROM [FMK].[FiscalYear] AS fy GROUP BY fy.[Status]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,38100.863,4,5113,
+questions_general_intent_001_fa,fa,party_address,filter|join|order_by|top_limit,4,"SELECT TOP 20 p.Name_En, pa.Title
 FROM [GNR].[Party] AS p
 INNER JOIN [GNR].[PartyAddress] AS pa ON pa.PartyRef = p.PartyId
 WHERE pa.IsMain = 1
@@ -317,7 +316,7 @@ FROM [GNR].[Party] AS p
 INNER JOIN [GNR].[PartyAddress] AS pa ON pa.PartyRef = p.PartyId
 WHERE pa.IsMain = 1
 ORDER BY p.Name_En",1,1,1,1,1.0,1.0,1.0,False,False,100.0,44276.703,4,5916,
-questions_general_intent_001_en,en,party_address,medium,"SELECT TOP 20 p.[Name_En] AS PartyName, a.[Title] AS AddressTitle
+questions_general_intent_001_en,en,party_address,filter|join|order_by|top_limit,4,"SELECT TOP 20 p.[Name_En] AS PartyName, a.[Title] AS AddressTitle
 FROM [GNR].[Party] AS p
 INNER JOIN [GNR].[PartyAddress] AS a ON a.[PartyRef] = p.[Version]
 WHERE a.[IsMain] = 1
@@ -326,22 +325,22 @@ FROM [GNR].[Party] AS p
 INNER JOIN [GNR].[PartyAddress] AS a ON a.[PartyRef] = p.[Version]
 WHERE a.[IsMain] = 1
 ORDER BY p.[Name_En]",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,52272.234,4,6853,
-questions_general_intent_002_fa,fa,balance,medium,"SELECT TOP 20 pob.PartyRef AS PartyId, p.Name AS Name_Farsi, p.Name_En AS Name_English, pob.OpeningBalance, pob.FiscalYearRef FROM [GNR].[PartyOpeningBalance] AS pob INNER JOIN [GNR].[Party] AS p ON pob.PartyRef = p.PartyId ORDER BY pob.OpeningBalance DESC","SELECT TOP 20 pob.PartyRef AS PartyId, p.Name AS Name_Farsi, p.Name_En AS Name_English, pob.OpeningBalance, pob.FiscalYearRef FROM [GNR].[PartyOpeningBalance] AS pob INNER JOIN [GNR].[Party] AS p ON pob.PartyRef = p.PartyId ORDER BY pob.OpeningBalance DESC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,54225.794,4,7530,
-questions_general_intent_002_en,en,balance,medium,"SELECT TOP 20 p.[PartyId], p.[Name], p.[Name_En], pob.[OpeningBalance], pob.[FiscalYearRef] FROM [GNR].[PartyOpeningBalance] pob INNER JOIN [GNR].[Party] p ON pob.[PartyRef] = p.[PartyId] ORDER BY pob.[OpeningBalance] DESC","SELECT TOP 20 p.[PartyId], p.[Name], p.[Name_En], pob.[OpeningBalance], pob.[FiscalYearRef] FROM [GNR].[PartyOpeningBalance] pob INNER JOIN [GNR].[Party] p ON pob.[PartyRef] = p.[PartyId] ORDER BY pob.[OpeningBalance] DESC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,28777.784,4,7584,
-questions_general_intent_004_fa,fa,aggregation,easy,"SELECT p.[Type], COUNT(*) AS PartyCount FROM [GNR].[Party] AS p GROUP BY p.[Type]","SELECT p.[Type], COUNT(*) AS PartyCount FROM [GNR].[Party] AS p GROUP BY p.[Type]",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,28077.582,4,4973,
-questions_general_intent_004_en,en,aggregation,easy,"SELECT p.[Type], COUNT(*) AS PartyCount FROM [GNR].[Party] AS p GROUP BY p.[Type]","SELECT p.[Type], COUNT(*) AS PartyCount FROM [GNR].[Party] AS p GROUP BY p.[Type]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,37585.196,4,4801,
-questions_general_intent_005_fa,fa,listing,easy,"SELECT TOP 20 c.Title_En, c.ExchangeUnit, c.PrecisionCount FROM [GNR].[Currency] AS c ORDER BY c.ExchangeUnit DESC","SELECT TOP 20 c.Title_En, c.ExchangeUnit, c.PrecisionCount FROM [GNR].[Currency] AS c ORDER BY c.ExchangeUnit DESC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,39901.57,4,5683,
-questions_invoice_intent_002_fa,fa,aggregation,medium,"SELECT TOP 20 iia.[InvoiceItemRef] AS InvoiceItemID, SUM(iia.[Value]) AS TotalAdditionFactorValue FROM [SLS].[InvoiceItemAdditionFactor] iia GROUP BY iia.[InvoiceItemRef] ORDER BY TotalAdditionFactorValue DESC","SELECT TOP 20 iia.[InvoiceItemRef] AS InvoiceItemID, SUM(iia.[Value]) AS TotalAdditionFactorValue FROM [SLS].[InvoiceItemAdditionFactor] iia GROUP BY iia.[InvoiceItemRef] ORDER BY TotalAdditionFactorValue DESC",1,1,1,1,0.5,0.5,0.5,False,False,111.803399,47945.436,4,7290,
-questions_invoice_intent_002_en,en,aggregation,medium,"SELECT TOP 20 iaf.[InvoiceItemRef] AS InvoiceItemID, SUM(iaf.[Value]) AS TotalAdditionFactor
+questions_general_intent_002_fa,fa,balance,join|order_by|top_limit,3,"SELECT TOP 20 pob.PartyRef AS PartyId, p.Name AS Name_Farsi, p.Name_En AS Name_English, pob.OpeningBalance, pob.FiscalYearRef FROM [GNR].[PartyOpeningBalance] AS pob INNER JOIN [GNR].[Party] AS p ON pob.PartyRef = p.PartyId ORDER BY pob.OpeningBalance DESC","SELECT TOP 20 pob.PartyRef AS PartyId, p.Name AS Name_Farsi, p.Name_En AS Name_English, pob.OpeningBalance, pob.FiscalYearRef FROM [GNR].[PartyOpeningBalance] AS pob INNER JOIN [GNR].[Party] AS p ON pob.PartyRef = p.PartyId ORDER BY pob.OpeningBalance DESC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,54225.794,4,7530,
+questions_general_intent_002_en,en,balance,join|order_by|top_limit,3,"SELECT TOP 20 p.[PartyId], p.[Name], p.[Name_En], pob.[OpeningBalance], pob.[FiscalYearRef] FROM [GNR].[PartyOpeningBalance] pob INNER JOIN [GNR].[Party] p ON pob.[PartyRef] = p.[PartyId] ORDER BY pob.[OpeningBalance] DESC","SELECT TOP 20 p.[PartyId], p.[Name], p.[Name_En], pob.[OpeningBalance], pob.[FiscalYearRef] FROM [GNR].[PartyOpeningBalance] pob INNER JOIN [GNR].[Party] p ON pob.[PartyRef] = p.[PartyId] ORDER BY pob.[OpeningBalance] DESC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,28777.784,4,7584,
+questions_general_intent_004_fa,fa,aggregation,aggregation|group_by|order_by,3,"SELECT p.[Type], COUNT(*) AS PartyCount FROM [GNR].[Party] AS p GROUP BY p.[Type]","SELECT p.[Type], COUNT(*) AS PartyCount FROM [GNR].[Party] AS p GROUP BY p.[Type]",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,28077.582,4,4973,
+questions_general_intent_004_en,en,aggregation,aggregation|group_by|order_by,3,"SELECT p.[Type], COUNT(*) AS PartyCount FROM [GNR].[Party] AS p GROUP BY p.[Type]","SELECT p.[Type], COUNT(*) AS PartyCount FROM [GNR].[Party] AS p GROUP BY p.[Type]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,37585.196,4,4801,
+questions_general_intent_005_fa,fa,listing,order_by|top_limit,2,"SELECT TOP 20 c.Title_En, c.ExchangeUnit, c.PrecisionCount FROM [GNR].[Currency] AS c ORDER BY c.ExchangeUnit DESC","SELECT TOP 20 c.Title_En, c.ExchangeUnit, c.PrecisionCount FROM [GNR].[Currency] AS c ORDER BY c.ExchangeUnit DESC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,39901.57,4,5683,
+questions_invoice_intent_002_fa,fa,aggregation,aggregation|group_by|join|order_by|top_limit,5,"SELECT TOP 20 iia.[InvoiceItemRef] AS InvoiceItemID, SUM(iia.[Value]) AS TotalAdditionFactorValue FROM [SLS].[InvoiceItemAdditionFactor] iia GROUP BY iia.[InvoiceItemRef] ORDER BY TotalAdditionFactorValue DESC","SELECT TOP 20 iia.[InvoiceItemRef] AS InvoiceItemID, SUM(iia.[Value]) AS TotalAdditionFactorValue FROM [SLS].[InvoiceItemAdditionFactor] iia GROUP BY iia.[InvoiceItemRef] ORDER BY TotalAdditionFactorValue DESC",1,1,1,1,0.5,0.5,0.5,False,False,111.803399,47945.436,4,7290,
+questions_invoice_intent_002_en,en,aggregation,aggregation|group_by|join|order_by|top_limit,5,"SELECT TOP 20 iaf.[InvoiceItemRef] AS InvoiceItemID, SUM(iaf.[Value]) AS TotalAdditionFactor
 FROM [SLS].[InvoiceItemAdditionFactor] AS iaf
 GROUP BY iaf.[InvoiceItemRef]
 ORDER BY SUM(iaf.[Value]) DESC","SELECT TOP 20 iaf.[InvoiceItemRef] AS InvoiceItemID, SUM(iaf.[Value]) AS TotalAdditionFactor
 FROM [SLS].[InvoiceItemAdditionFactor] AS iaf
 GROUP BY iaf.[InvoiceItemRef]
 ORDER BY SUM(iaf.[Value]) DESC",1,1,1,1,1.0,1.0,1.0,False,False,111.803399,55746.675,4,6757,
-questions_general_intent_003_en,en,party_phone,medium,"SELECT TOP 20 pp.PartyRef AS PartyId, p.Name, pp.[Type], pp.IsMain FROM [GNR].[PartyPhone] pp INNER JOIN [GNR].[Party] p ON pp.PartyRef = p.PartyId WHERE pp.IsMain = 1 ORDER BY pp.PartyRef, pp.PartyPhoneId","SELECT TOP 20 pp.PartyRef AS PartyId, p.Name, pp.[Type], pp.IsMain FROM [GNR].[PartyPhone] pp INNER JOIN [GNR].[Party] p ON pp.PartyRef = p.PartyId WHERE pp.IsMain = 1 ORDER BY pp.PartyRef, pp.PartyPhoneId",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,25164.851,4,6547,
-questions_general_intent_005_en,en,listing,easy,"SELECT TOP 20 c.Title_En, c.ExchangeUnit, c.PrecisionCount FROM [GNR].[Currency] AS c ORDER BY c.ExchangeUnit DESC","SELECT TOP 20 c.Title_En, c.ExchangeUnit, c.PrecisionCount FROM [GNR].[Currency] AS c ORDER BY c.ExchangeUnit DESC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,47844.799,4,5602,
-questions_invoice_intent_001_en,en,aggregation,medium,"SELECT TOP 20 i.[Number] AS InvoiceNumber, i.[CustomerRealName] AS CustomerName, SUM(ii.[NetPrice]) AS TotalItemNetPrice
+questions_general_intent_003_en,en,party_phone,filter|join|order_by|top_limit,4,"SELECT TOP 20 pp.PartyRef AS PartyId, p.Name, pp.[Type], pp.IsMain FROM [GNR].[PartyPhone] pp INNER JOIN [GNR].[Party] p ON pp.PartyRef = p.PartyId WHERE pp.IsMain = 1 ORDER BY pp.PartyRef, pp.PartyPhoneId","SELECT TOP 20 pp.PartyRef AS PartyId, p.Name, pp.[Type], pp.IsMain FROM [GNR].[PartyPhone] pp INNER JOIN [GNR].[Party] p ON pp.PartyRef = p.PartyId WHERE pp.IsMain = 1 ORDER BY pp.PartyRef, pp.PartyPhoneId",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,25164.851,4,6547,
+questions_general_intent_005_en,en,listing,order_by|top_limit,2,"SELECT TOP 20 c.Title_En, c.ExchangeUnit, c.PrecisionCount FROM [GNR].[Currency] AS c ORDER BY c.ExchangeUnit DESC","SELECT TOP 20 c.Title_En, c.ExchangeUnit, c.PrecisionCount FROM [GNR].[Currency] AS c ORDER BY c.ExchangeUnit DESC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,47844.799,4,5602,
+questions_invoice_intent_001_en,en,aggregation,aggregation|group_by|join|order_by|top_limit,5,"SELECT TOP 20 i.[Number] AS InvoiceNumber, i.[CustomerRealName] AS CustomerName, SUM(ii.[NetPrice]) AS TotalItemNetPrice
 FROM [SLS].[Invoice] AS i
 INNER JOIN [POS].[InvoiceItem] AS ii ON i.[InvoiceId] = ii.[InvoiceRef]
 GROUP BY i.[InvoiceId], i.[Number], i.[CustomerRealName]
@@ -350,8 +349,8 @@ FROM [SLS].[Invoice] AS i
 INNER JOIN [POS].[InvoiceItem] AS ii ON i.[InvoiceId] = ii.[InvoiceRef]
 GROUP BY i.[InvoiceId], i.[Number], i.[CustomerRealName]
 ORDER BY TotalItemNetPrice DESC, i.[InvoiceId] ASC",0,0,1,1,0.5,0.333333,0.666667,True,False,0.0,39745.297,3,7306,
-questions_general_intent_003_fa,fa,party_phone,medium,"SELECT TOP 20 pp.PartyPhoneId, pp.PartyRef, pr.Name, pp.Type, pp.IsMain FROM [GNR].[PartyPhone] pp INNER JOIN [GNR].[PartyRelated] pr ON pp.PartyRef = pr.PartyRef WHERE pp.IsMain = 1 ORDER BY pp.PartyRef, pp.PartyPhoneId","SELECT TOP 20 pp.PartyPhoneId, pp.PartyRef, pr.Name, pp.Type, pp.IsMain FROM [GNR].[PartyPhone] pp INNER JOIN [GNR].[PartyRelated] pr ON pp.PartyRef = pr.PartyRef WHERE pp.IsMain = 1 ORDER BY pp.PartyRef, pp.PartyPhoneId",0,0,1,1,0.5,0.5,0.5,True,False,0.0,29490.738,3,4743,
-questions_msg_intent_001_fa,fa,analytics,easy,"SELECT TOP 20 t.Title, COUNT(tc.TemplateContactID) AS ContactCount
+questions_general_intent_003_fa,fa,party_phone,filter|join|order_by|top_limit,4,"SELECT TOP 20 pp.PartyPhoneId, pp.PartyRef, pr.Name, pp.Type, pp.IsMain FROM [GNR].[PartyPhone] pp INNER JOIN [GNR].[PartyRelated] pr ON pp.PartyRef = pr.PartyRef WHERE pp.IsMain = 1 ORDER BY pp.PartyRef, pp.PartyPhoneId","SELECT TOP 20 pp.PartyPhoneId, pp.PartyRef, pr.Name, pp.Type, pp.IsMain FROM [GNR].[PartyPhone] pp INNER JOIN [GNR].[PartyRelated] pr ON pp.PartyRef = pr.PartyRef WHERE pp.IsMain = 1 ORDER BY pp.PartyRef, pp.PartyPhoneId",0,0,1,1,0.5,0.5,0.5,True,False,0.0,29490.738,3,4743,
+questions_msg_intent_001_fa,fa,analytics,aggregation|group_by|join|order_by|outer_join|top_limit,6,"SELECT TOP 20 t.Title, COUNT(tc.TemplateContactID) AS ContactCount
 FROM [MSG].[Template] AS t
 INNER JOIN [MSG].[TemplateContact] AS tc ON tc.TemplateRef = t.TemplateID
 GROUP BY t.Title
@@ -360,7 +359,7 @@ FROM [MSG].[Template] AS t
 INNER JOIN [MSG].[TemplateContact] AS tc ON tc.TemplateRef = t.TemplateID
 GROUP BY t.Title
 ORDER BY ContactCount DESC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,29674.604,4,5112,
-questions_msg_intent_001_en,en,analytics,easy,"SELECT TOP 20 t.Title, COUNT(tc.TemplateContactID) AS ContactCount
+questions_msg_intent_001_en,en,analytics,aggregation|group_by|join|order_by|outer_join|top_limit,6,"SELECT TOP 20 t.Title, COUNT(tc.TemplateContactID) AS ContactCount
 FROM [MSG].[Template] t
 LEFT JOIN [MSG].[TemplateContact] tc ON tc.TemplateRef = t.TemplateID
 GROUP BY t.TemplateID, t.Title
@@ -369,8 +368,8 @@ FROM [MSG].[Template] t
 LEFT JOIN [MSG].[TemplateContact] tc ON tc.TemplateRef = t.TemplateID
 GROUP BY t.TemplateID, t.Title
 ORDER BY ContactCount DESC, t.TemplateID ASC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,19969.718,4,5195,
-questions_msg_intent_002_en,en,aggregation,easy,"SELECT TOP 20 t.Title, COUNT(tf.TemplateFilterID) AS FilterCount FROM [MSG].[Template] t LEFT JOIN [MSG].[TemplateFilter] tf ON tf.TemplateRef = t.TemplateID GROUP BY t.Title ORDER BY FilterCount DESC","SELECT TOP 20 t.Title, COUNT(tf.TemplateFilterID) AS FilterCount FROM [MSG].[Template] t LEFT JOIN [MSG].[TemplateFilter] tf ON tf.TemplateRef = t.TemplateID GROUP BY t.Title ORDER BY FilterCount DESC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,39665.284,4,5334,
-questions_msg_intent_003_fa,fa,template_management,easy,"SELECT TOP 20 t.Title, t.CreationDate, s.SchedulingId
+questions_msg_intent_002_en,en,aggregation,aggregation|group_by|join|order_by|outer_join|top_limit,6,"SELECT TOP 20 t.Title, COUNT(tf.TemplateFilterID) AS FilterCount FROM [MSG].[Template] t LEFT JOIN [MSG].[TemplateFilter] tf ON tf.TemplateRef = t.TemplateID GROUP BY t.Title ORDER BY FilterCount DESC","SELECT TOP 20 t.Title, COUNT(tf.TemplateFilterID) AS FilterCount FROM [MSG].[Template] t LEFT JOIN [MSG].[TemplateFilter] tf ON tf.TemplateRef = t.TemplateID GROUP BY t.Title ORDER BY FilterCount DESC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,39665.284,4,5334,
+questions_msg_intent_003_fa,fa,template_management,join|order_by|outer_join|top_limit,4,"SELECT TOP 20 t.Title, t.CreationDate, s.SchedulingId
 FROM [MSG].[Template] AS t
 LEFT JOIN [MSG].[TemplateScheduling] AS ts ON ts.TemplateRef = t.TemplateID
 LEFT JOIN [SCD].[Scheduling] AS s ON s.SchedulingId = ts.SchedulingRef
@@ -379,7 +378,7 @@ FROM [MSG].[Template] AS t
 LEFT JOIN [MSG].[TemplateScheduling] AS ts ON ts.TemplateRef = t.TemplateID
 LEFT JOIN [SCD].[Scheduling] AS s ON s.SchedulingId = ts.SchedulingRef
 ORDER BY t.CreationDate DESC",1,1,1,1,1.0,0.666667,1.0,False,False,100.0,53675.825,4,6287,
-questions_msg_intent_003_en,en,template_management,easy,"SELECT TOP 20 t.Title, COUNT(tc.TemplateContactID) AS ContactCount
+questions_msg_intent_003_en,en,template_management,aggregation|group_by|join|order_by|outer_join|top_limit,6,"SELECT TOP 20 t.Title, COUNT(tc.TemplateContactID) AS ContactCount
 FROM [MSG].[Template] AS t
 LEFT JOIN [MSG].[TemplateContact] AS tc ON tc.TemplateRef = t.TemplateID
 GROUP BY t.TemplateID, t.Title
@@ -388,7 +387,7 @@ FROM [MSG].[Template] AS t
 LEFT JOIN [MSG].[TemplateContact] AS tc ON tc.TemplateRef = t.TemplateID
 GROUP BY t.TemplateID, t.Title
 ORDER BY ContactCount DESC, t.TemplateID ASC",1,1,1,1,0.5,0.5,0.666667,False,False,100.0,35110.697,4,5174,
-questions_msg_intent_002_fa,fa,aggregation,easy,"SELECT TOP 20 t.Title, COUNT(tf.TemplateFilterID) AS FilterCount
+questions_msg_intent_002_fa,fa,aggregation,aggregation|group_by|join|order_by|outer_join|top_limit,6,"SELECT TOP 20 t.Title, COUNT(tf.TemplateFilterID) AS FilterCount
 FROM [MSG].[Template] AS t
 LEFT JOIN [MSG].[TemplateFilter] AS tf ON tf.TemplateRef = t.TemplateID
 GROUP BY t.TemplateID, t.Title
@@ -397,30 +396,30 @@ FROM [MSG].[Template] AS t
 LEFT JOIN [MSG].[TemplateFilter] AS tf ON tf.TemplateRef = t.TemplateID
 GROUP BY t.TemplateID, t.Title
 ORDER BY FilterCount DESC, t.TemplateID ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,8773.119,4,5714,
-questions_msg_intent_004_en,en,aggregation,easy,"SELECT ts.TemplateRef, COUNT(*) AS SchedulingCount FROM [MSG].[TemplateScheduling] AS ts GROUP BY ts.TemplateRef","SELECT ts.TemplateRef, COUNT(*) AS SchedulingCount FROM [MSG].[TemplateScheduling] AS ts GROUP BY ts.TemplateRef",1,1,1,1,1.0,0.5,1.0,False,False,100.0,7788.511,4,4691,
-questions_msg_intent_005_en,en,aggregation,easy,"SELECT t.[Creator], COUNT(*) AS TemplateCount FROM [MSG].[Template] AS t GROUP BY t.[Creator]","SELECT t.[Creator], COUNT(*) AS TemplateCount FROM [MSG].[Template] AS t GROUP BY t.[Creator]",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,16359.743,4,4686,
-questions_msg_intent_005_fa,fa,aggregation,easy,"SELECT t.[Creator], COUNT(*) AS TemplateCount FROM [MSG].[Template] AS t GROUP BY t.[Creator]","SELECT t.[Creator], COUNT(*) AS TemplateCount FROM [MSG].[Template] AS t GROUP BY t.[Creator]",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,17558.778,4,4640,
-questions_msg_intent_004_fa,fa,aggregation,easy,"SELECT t.[TemplateID], COUNT(*) AS SchedulingCount
+questions_msg_intent_004_en,en,aggregation,aggregation|group_by,2,"SELECT ts.TemplateRef, COUNT(*) AS SchedulingCount FROM [MSG].[TemplateScheduling] AS ts GROUP BY ts.TemplateRef","SELECT ts.TemplateRef, COUNT(*) AS SchedulingCount FROM [MSG].[TemplateScheduling] AS ts GROUP BY ts.TemplateRef",1,1,1,1,1.0,0.5,1.0,False,False,100.0,7788.511,4,4691,
+questions_msg_intent_005_en,en,aggregation,aggregation|group_by|order_by,3,"SELECT t.[Creator], COUNT(*) AS TemplateCount FROM [MSG].[Template] AS t GROUP BY t.[Creator]","SELECT t.[Creator], COUNT(*) AS TemplateCount FROM [MSG].[Template] AS t GROUP BY t.[Creator]",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,16359.743,4,4686,
+questions_msg_intent_005_fa,fa,aggregation,aggregation|group_by|order_by,3,"SELECT t.[Creator], COUNT(*) AS TemplateCount FROM [MSG].[Template] AS t GROUP BY t.[Creator]","SELECT t.[Creator], COUNT(*) AS TemplateCount FROM [MSG].[Template] AS t GROUP BY t.[Creator]",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,17558.778,4,4640,
+questions_msg_intent_004_fa,fa,aggregation,aggregation|group_by,2,"SELECT t.[TemplateID], COUNT(*) AS SchedulingCount
 FROM [MSG].[Template] AS t
 INNER JOIN [MSG].[TemplateScheduling] AS ts ON ts.[TemplateRef] = t.[TemplateID]
 GROUP BY t.[TemplateID]","SELECT t.[TemplateID], COUNT(*) AS SchedulingCount
 FROM [MSG].[Template] AS t
 INNER JOIN [MSG].[TemplateScheduling] AS ts ON ts.[TemplateRef] = t.[TemplateID]
 GROUP BY t.[TemplateID]",1,1,1,1,1.0,0.5,1.0,False,False,86.60254,12244.264,4,4623,
-questions_payments_receipts_intent_001_fa,fa,payment_receipt,medium,"SELECT TOP 20 ph.[Number] AS PaymentNumber, ph.[Date] AS PaymentDate, ph.[Amount] AS PaymentAmount, rh.[Number] AS ReceiptNumber, rh.[Date] AS ReceiptDate FROM [RPA].[PaymentHeader] ph INNER JOIN [RPA].[ReceiptHeader] rh ON ph.[ReceiptHeaderRef] = rh.[ReceiptHeaderId] WHERE ph.[ReceiptHeaderRef] IS NOT NULL ORDER BY ph.[Date] DESC","SELECT TOP 20 ph.[Number] AS PaymentNumber, ph.[Date] AS PaymentDate, ph.[Amount] AS PaymentAmount, rh.[Number] AS ReceiptNumber, rh.[Date] AS ReceiptDate FROM [RPA].[PaymentHeader] ph INNER JOIN [RPA].[ReceiptHeader] rh ON ph.[ReceiptHeaderRef] = rh.[ReceiptHeaderId] WHERE ph.[ReceiptHeaderRef] IS NOT NULL ORDER BY ph.[Date] DESC",1,1,1,1,1.0,0.5,1.0,False,False,86.60254,45636.817,4,10074,
-singleq_01_fa,fa,detail,easy,"SELECT TOP 20 a.[Code], a.[Title], a.[Title_En] FROM [ACC].[Account] AS a WHERE a.[IsActive] = 1 ORDER BY a.[Code] ASC","SELECT TOP 20 a.[Code], a.[Title], a.[Title_En] FROM [ACC].[Account] AS a WHERE a.[IsActive] = 1 ORDER BY a.[Code] ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,17613.295,4,6162,
-singleq_01_en,en,detail,easy,"SELECT TOP 20 a.[Code], a.[Title], a.[Title_En] FROM [ACC].[Account] AS a WHERE a.[IsActive] = 1 ORDER BY a.[Code] ASC","SELECT TOP 20 a.[Code], a.[Title], a.[Title_En] FROM [ACC].[Account] AS a WHERE a.[IsActive] = 1 ORDER BY a.[Code] ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,30486.927,4,6205,
-singleq_03_fa,fa,aggregation,medium,"SELECT a.[BalanceType], COUNT(*) AS InactiveCount FROM [ACC].[Account] AS a WHERE a.[IsActive] = 0 GROUP BY a.[BalanceType] ORDER BY a.[BalanceType] ASC","SELECT a.[BalanceType], COUNT(*) AS InactiveCount FROM [ACC].[Account] AS a WHERE a.[IsActive] = 0 GROUP BY a.[BalanceType] ORDER BY a.[BalanceType] ASC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,47263.546,4,5070,
-singleq_03_en,en,aggregation,medium,"SELECT a.[BalanceType], COUNT(*) AS InactiveCount FROM [ACC].[Account] AS a WHERE a.[IsActive] = 0 GROUP BY a.[BalanceType] ORDER BY a.[BalanceType] ASC","SELECT a.[BalanceType], COUNT(*) AS InactiveCount FROM [ACC].[Account] AS a WHERE a.[IsActive] = 0 GROUP BY a.[BalanceType] ORDER BY a.[BalanceType] ASC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,29523.351,4,5045,
-singleq_04_fa,fa,detail,easy,"SELECT Title, StartDate, EndDate FROM [FMK].[FiscalYear] WHERE [Status] = 1 ORDER BY StartDate ASC","SELECT Title, StartDate, EndDate FROM [FMK].[FiscalYear] WHERE [Status] = 1 ORDER BY StartDate ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,42466.661,4,6123,
-singleq_04_en,en,detail,easy,"SELECT fy.[Title], fy.[StartDate], fy.[EndDate] FROM [FMK].[FiscalYear] AS fy WHERE fy.[Status] = 1 ORDER BY fy.[StartDate] ASC","SELECT fy.[Title], fy.[StartDate], fy.[EndDate] FROM [FMK].[FiscalYear] AS fy WHERE fy.[Status] = 1 ORDER BY fy.[StartDate] ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,50007.023,4,6470,
-singleq_05_fa,fa,aggregation,easy,"SELECT fy.Status, COUNT(*) AS FiscalYearCount FROM [FMK].[FiscalYear] AS fy GROUP BY fy.Status ORDER BY fy.Status ASC","SELECT fy.Status, COUNT(*) AS FiscalYearCount FROM [FMK].[FiscalYear] AS fy GROUP BY fy.Status ORDER BY fy.Status ASC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,41442.693,4,5189,
-singleq_06_fa,fa,detail,easy,"SELECT TOP 20 i.[Code], i.[Title], i.[BarCode] FROM [INV].[Item] AS i WHERE i.[IsActive] = 1 AND i.[Sellable] = 1 ORDER BY i.[Code] ASC","SELECT TOP 20 i.[Code], i.[Title], i.[BarCode] FROM [INV].[Item] AS i WHERE i.[IsActive] = 1 AND i.[Sellable] = 1 ORDER BY i.[Code] ASC",1,1,1,1,1.0,0.333333,1.0,False,False,100.0,50522.429,4,6891,
-singleq_06_en,en,detail,easy,"SELECT TOP 20 i.[Code], i.[Title], i.[BarCode] FROM [INV].[Item] AS i WHERE i.[IsActive] = 1 AND i.[Sellable] = 1 ORDER BY i.[Code] ASC","SELECT TOP 20 i.[Code], i.[Title], i.[BarCode] FROM [INV].[Item] AS i WHERE i.[IsActive] = 1 AND i.[Sellable] = 1 ORDER BY i.[Code] ASC",1,1,1,1,1.0,0.5,1.0,False,False,86.60254,49196.751,4,6994,
-singleq_07_en,en,aggregation,easy,"SELECT i.[Type], COUNT(*) AS ItemCount FROM [INV].[Item] AS i GROUP BY i.[Type] ORDER BY i.[Type] ASC","SELECT i.[Type], COUNT(*) AS ItemCount FROM [INV].[Item] AS i GROUP BY i.[Type] ORDER BY i.[Type] ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,42636.999,4,5806,
-singleq_08_fa,fa,aggregation,medium,"SELECT AVG(i.[MinimumAmount]) AS AvgMinimumAmount, AVG(i.[MaximumAmount]) AS AvgMaximumAmount FROM [INV].[Item] AS i WHERE i.[Type] = 3","SELECT AVG(i.[MinimumAmount]) AS AvgMinimumAmount, AVG(i.[MaximumAmount]) AS AvgMaximumAmount FROM [INV].[Item] AS i WHERE i.[Type] = 3",1,1,1,1,1.0,0.5,1.0,False,False,86.60254,44763.672,4,6312,
-singleq_08_en,en,aggregation,medium,"SELECT AVG(i.MinimumAmount) AS AvgMinimumAmount, AVG(i.MaximumAmount) AS AvgMaximumAmount FROM [INV].[Item] AS i WHERE i.Type = 3","SELECT AVG(i.MinimumAmount) AS AvgMinimumAmount, AVG(i.MaximumAmount) AS AvgMaximumAmount FROM [INV].[Item] AS i WHERE i.Type = 3",1,1,1,1,1.0,0.5,1.0,False,False,100.0,49069.081,4,6949,
-singleq_09_fa,fa,aggregation,medium,"SELECT i.Sellable, COUNT(*) AS ItemCount
+questions_payments_receipts_intent_001_fa,fa,payment_receipt,join|order_by|top_limit,3,"SELECT TOP 20 ph.[Number] AS PaymentNumber, ph.[Date] AS PaymentDate, ph.[Amount] AS PaymentAmount, rh.[Number] AS ReceiptNumber, rh.[Date] AS ReceiptDate FROM [RPA].[PaymentHeader] ph INNER JOIN [RPA].[ReceiptHeader] rh ON ph.[ReceiptHeaderRef] = rh.[ReceiptHeaderId] WHERE ph.[ReceiptHeaderRef] IS NOT NULL ORDER BY ph.[Date] DESC","SELECT TOP 20 ph.[Number] AS PaymentNumber, ph.[Date] AS PaymentDate, ph.[Amount] AS PaymentAmount, rh.[Number] AS ReceiptNumber, rh.[Date] AS ReceiptDate FROM [RPA].[PaymentHeader] ph INNER JOIN [RPA].[ReceiptHeader] rh ON ph.[ReceiptHeaderRef] = rh.[ReceiptHeaderId] WHERE ph.[ReceiptHeaderRef] IS NOT NULL ORDER BY ph.[Date] DESC",1,1,1,1,1.0,0.5,1.0,False,False,86.60254,45636.817,4,10074,
+singleq_01_fa,fa,detail,filter|order_by|top_limit,3,"SELECT TOP 20 a.[Code], a.[Title], a.[Title_En] FROM [ACC].[Account] AS a WHERE a.[IsActive] = 1 ORDER BY a.[Code] ASC","SELECT TOP 20 a.[Code], a.[Title], a.[Title_En] FROM [ACC].[Account] AS a WHERE a.[IsActive] = 1 ORDER BY a.[Code] ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,17613.295,4,6162,
+singleq_01_en,en,detail,filter|order_by|top_limit,3,"SELECT TOP 20 a.[Code], a.[Title], a.[Title_En] FROM [ACC].[Account] AS a WHERE a.[IsActive] = 1 ORDER BY a.[Code] ASC","SELECT TOP 20 a.[Code], a.[Title], a.[Title_En] FROM [ACC].[Account] AS a WHERE a.[IsActive] = 1 ORDER BY a.[Code] ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,30486.927,4,6205,
+singleq_03_fa,fa,aggregation,aggregation|filter|group_by|order_by,4,"SELECT a.[BalanceType], COUNT(*) AS InactiveCount FROM [ACC].[Account] AS a WHERE a.[IsActive] = 0 GROUP BY a.[BalanceType] ORDER BY a.[BalanceType] ASC","SELECT a.[BalanceType], COUNT(*) AS InactiveCount FROM [ACC].[Account] AS a WHERE a.[IsActive] = 0 GROUP BY a.[BalanceType] ORDER BY a.[BalanceType] ASC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,47263.546,4,5070,
+singleq_03_en,en,aggregation,aggregation|filter|group_by|order_by,4,"SELECT a.[BalanceType], COUNT(*) AS InactiveCount FROM [ACC].[Account] AS a WHERE a.[IsActive] = 0 GROUP BY a.[BalanceType] ORDER BY a.[BalanceType] ASC","SELECT a.[BalanceType], COUNT(*) AS InactiveCount FROM [ACC].[Account] AS a WHERE a.[IsActive] = 0 GROUP BY a.[BalanceType] ORDER BY a.[BalanceType] ASC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,29523.351,4,5045,
+singleq_04_fa,fa,detail,filter|order_by,2,"SELECT Title, StartDate, EndDate FROM [FMK].[FiscalYear] WHERE [Status] = 1 ORDER BY StartDate ASC","SELECT Title, StartDate, EndDate FROM [FMK].[FiscalYear] WHERE [Status] = 1 ORDER BY StartDate ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,42466.661,4,6123,
+singleq_04_en,en,detail,filter|order_by,2,"SELECT fy.[Title], fy.[StartDate], fy.[EndDate] FROM [FMK].[FiscalYear] AS fy WHERE fy.[Status] = 1 ORDER BY fy.[StartDate] ASC","SELECT fy.[Title], fy.[StartDate], fy.[EndDate] FROM [FMK].[FiscalYear] AS fy WHERE fy.[Status] = 1 ORDER BY fy.[StartDate] ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,50007.023,4,6470,
+singleq_05_fa,fa,aggregation,aggregation|group_by|order_by,3,"SELECT fy.Status, COUNT(*) AS FiscalYearCount FROM [FMK].[FiscalYear] AS fy GROUP BY fy.Status ORDER BY fy.Status ASC","SELECT fy.Status, COUNT(*) AS FiscalYearCount FROM [FMK].[FiscalYear] AS fy GROUP BY fy.Status ORDER BY fy.Status ASC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,41442.693,4,5189,
+singleq_06_fa,fa,detail,filter|order_by|top_limit,3,"SELECT TOP 20 i.[Code], i.[Title], i.[BarCode] FROM [INV].[Item] AS i WHERE i.[IsActive] = 1 AND i.[Sellable] = 1 ORDER BY i.[Code] ASC","SELECT TOP 20 i.[Code], i.[Title], i.[BarCode] FROM [INV].[Item] AS i WHERE i.[IsActive] = 1 AND i.[Sellable] = 1 ORDER BY i.[Code] ASC",1,1,1,1,1.0,0.333333,1.0,False,False,100.0,50522.429,4,6891,
+singleq_06_en,en,detail,filter|order_by|top_limit,3,"SELECT TOP 20 i.[Code], i.[Title], i.[BarCode] FROM [INV].[Item] AS i WHERE i.[IsActive] = 1 AND i.[Sellable] = 1 ORDER BY i.[Code] ASC","SELECT TOP 20 i.[Code], i.[Title], i.[BarCode] FROM [INV].[Item] AS i WHERE i.[IsActive] = 1 AND i.[Sellable] = 1 ORDER BY i.[Code] ASC",1,1,1,1,1.0,0.5,1.0,False,False,86.60254,49196.751,4,6994,
+singleq_07_en,en,aggregation,aggregation|group_by|order_by,3,"SELECT i.[Type], COUNT(*) AS ItemCount FROM [INV].[Item] AS i GROUP BY i.[Type] ORDER BY i.[Type] ASC","SELECT i.[Type], COUNT(*) AS ItemCount FROM [INV].[Item] AS i GROUP BY i.[Type] ORDER BY i.[Type] ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,42636.999,4,5806,
+singleq_08_fa,fa,aggregation,aggregation|filter,2,"SELECT AVG(i.[MinimumAmount]) AS AvgMinimumAmount, AVG(i.[MaximumAmount]) AS AvgMaximumAmount FROM [INV].[Item] AS i WHERE i.[Type] = 3","SELECT AVG(i.[MinimumAmount]) AS AvgMinimumAmount, AVG(i.[MaximumAmount]) AS AvgMaximumAmount FROM [INV].[Item] AS i WHERE i.[Type] = 3",1,1,1,1,1.0,0.5,1.0,False,False,86.60254,44763.672,4,6312,
+singleq_08_en,en,aggregation,aggregation|filter,2,"SELECT AVG(i.MinimumAmount) AS AvgMinimumAmount, AVG(i.MaximumAmount) AS AvgMaximumAmount FROM [INV].[Item] AS i WHERE i.Type = 3","SELECT AVG(i.MinimumAmount) AS AvgMinimumAmount, AVG(i.MaximumAmount) AS AvgMaximumAmount FROM [INV].[Item] AS i WHERE i.Type = 3",1,1,1,1,1.0,0.5,1.0,False,False,100.0,49069.081,4,6949,
+singleq_09_fa,fa,aggregation,aggregation|filter|group_by|order_by,4,"SELECT i.Sellable, COUNT(*) AS ItemCount
 FROM [INV].[Item] AS i
 WHERE i.TaxExempt = 0
 GROUP BY i.Sellable
@@ -429,7 +428,7 @@ FROM [INV].[Item] AS i
 WHERE i.TaxExempt = 0
 GROUP BY i.Sellable
 ORDER BY i.Sellable ASC",1,1,1,1,1.0,0.333333,1.0,False,False,100.0,61724.283,4,8507,
-singleq_09_en,en,aggregation,medium,"SELECT i.[Sellable], COUNT(*) AS ItemCount
+singleq_09_en,en,aggregation,aggregation|filter|group_by|order_by,4,"SELECT i.[Sellable], COUNT(*) AS ItemCount
 FROM [INV].[Item] AS i
 WHERE i.[TaxExempt] = 0
 GROUP BY i.[Sellable]
@@ -438,82 +437,82 @@ FROM [INV].[Item] AS i
 WHERE i.[TaxExempt] = 0
 GROUP BY i.[Sellable]
 ORDER BY i.[Sellable] ASC",1,1,1,1,1.0,0.333333,1.0,False,False,100.0,52226.183,4,7293,
-questions_invoice_intent_001_fa,fa,aggregation,medium,"SELECT TOP 20 i.[Number] AS InvoiceNumber, i.[CustomerRealName] AS CustomerName, SUM(ISNULL(ii.[NetPrice],0)) AS TotalNetPrice FROM [SLS].[Invoice] AS i INNER JOIN [SLS].[InvoiceItem] AS ii ON ii.[InvoiceRef] = i.[InvoiceId] GROUP BY i.[InvoiceId], i.[Number], i.[CustomerRealName] ORDER BY TotalNetPrice DESC","SELECT TOP 20 i.[Number] AS InvoiceNumber, i.[CustomerRealName] AS CustomerName, SUM(ISNULL(ii.[NetPrice],0)) AS TotalNetPrice FROM [SLS].[Invoice] AS i INNER JOIN [SLS].[InvoiceItem] AS ii ON ii.[InvoiceRef] = i.[InvoiceId] GROUP BY i.[InvoiceId], i.[Number], i.[CustomerRealName] ORDER BY TotalNetPrice DESC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,18055.727,4,8761,
-singleq_10_fa,fa,detail,easy,"SELECT TOP 20 s.[Code], s.[Title], s.[Title_En] FROM [INV].[Stock] AS s WHERE s.[IsActive] = 1 ORDER BY s.[Code] ASC","SELECT TOP 20 s.[Code], s.[Title], s.[Title_En] FROM [INV].[Stock] AS s WHERE s.[IsActive] = 1 ORDER BY s.[Code] ASC",1,1,1,1,1.0,0.5,1.0,False,False,100.0,48396.589,4,5712,
-singleq_10_en,en,detail,easy,"SELECT TOP 20 s.[Code], s.[Title], s.[Title_En] FROM [INV].[Stock] AS s WHERE s.[IsActive] = 1 ORDER BY s.[Code] ASC","SELECT TOP 20 s.[Code], s.[Title], s.[Title_En] FROM [INV].[Stock] AS s WHERE s.[IsActive] = 1 ORDER BY s.[Code] ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,40105.225,4,5331,
-singleq_11_en,en,detail,easy,"SELECT c.[Title], c.[ExchangeUnit], c.[PrecisionCount]
+questions_invoice_intent_001_fa,fa,aggregation,aggregation|group_by|join|order_by|top_limit,5,"SELECT TOP 20 i.[Number] AS InvoiceNumber, i.[CustomerRealName] AS CustomerName, SUM(ISNULL(ii.[NetPrice],0)) AS TotalNetPrice FROM [SLS].[Invoice] AS i INNER JOIN [SLS].[InvoiceItem] AS ii ON ii.[InvoiceRef] = i.[InvoiceId] GROUP BY i.[InvoiceId], i.[Number], i.[CustomerRealName] ORDER BY TotalNetPrice DESC","SELECT TOP 20 i.[Number] AS InvoiceNumber, i.[CustomerRealName] AS CustomerName, SUM(ISNULL(ii.[NetPrice],0)) AS TotalNetPrice FROM [SLS].[Invoice] AS i INNER JOIN [SLS].[InvoiceItem] AS ii ON ii.[InvoiceRef] = i.[InvoiceId] GROUP BY i.[InvoiceId], i.[Number], i.[CustomerRealName] ORDER BY TotalNetPrice DESC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,18055.727,4,8761,
+singleq_10_fa,fa,detail,filter|order_by|top_limit,3,"SELECT TOP 20 s.[Code], s.[Title], s.[Title_En] FROM [INV].[Stock] AS s WHERE s.[IsActive] = 1 ORDER BY s.[Code] ASC","SELECT TOP 20 s.[Code], s.[Title], s.[Title_En] FROM [INV].[Stock] AS s WHERE s.[IsActive] = 1 ORDER BY s.[Code] ASC",1,1,1,1,1.0,0.5,1.0,False,False,100.0,48396.589,4,5712,
+singleq_10_en,en,detail,filter|order_by|top_limit,3,"SELECT TOP 20 s.[Code], s.[Title], s.[Title_En] FROM [INV].[Stock] AS s WHERE s.[IsActive] = 1 ORDER BY s.[Code] ASC","SELECT TOP 20 s.[Code], s.[Title], s.[Title_En] FROM [INV].[Stock] AS s WHERE s.[IsActive] = 1 ORDER BY s.[Code] ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,40105.225,4,5331,
+singleq_11_en,en,detail,order_by,1,"SELECT c.[Title], c.[ExchangeUnit], c.[PrecisionCount]
 FROM [GNR].[Currency] AS c
 ORDER BY c.[PrecisionCount] ASC, c.[Title] ASC","SELECT c.[Title], c.[ExchangeUnit], c.[PrecisionCount]
 FROM [GNR].[Currency] AS c
 ORDER BY c.[PrecisionCount] ASC, c.[Title] ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,45243.389,4,5817,
-singleq_12_fa,fa,detail,easy,"SELECT c.[Title] AS PersianTitle, c.[Title_En] AS EnglishTitle
+singleq_12_fa,fa,detail,filter|order_by,2,"SELECT c.[Title] AS PersianTitle, c.[Title_En] AS EnglishTitle
 FROM [GNR].[Currency] AS c
 WHERE c.[PrecisionCount] = 2
 ORDER BY c.[Title] ASC","SELECT c.[Title] AS PersianTitle, c.[Title_En] AS EnglishTitle
 FROM [GNR].[Currency] AS c
 WHERE c.[PrecisionCount] = 2
 ORDER BY c.[Title] ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,36393.282,4,5200,
-singleq_12_en,en,detail,easy,"SELECT c.[Title] AS PersianTitle, c.[Title_En] AS EnglishTitle
+singleq_12_en,en,detail,filter|order_by,2,"SELECT c.[Title] AS PersianTitle, c.[Title_En] AS EnglishTitle
 FROM [GNR].[Currency] AS c
 WHERE c.[PrecisionCount] = 2
 ORDER BY c.[Title] ASC","SELECT c.[Title] AS PersianTitle, c.[Title_En] AS EnglishTitle
 FROM [GNR].[Currency] AS c
 WHERE c.[PrecisionCount] = 2
 ORDER BY c.[Title] ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,41176.117,4,5459,
-singleq_13_fa,fa,detail,easy,"SELECT TOP 20 b.[Title], b.[Title_En], b.[TaxFileCode] FROM [RPA].[Bank] AS b ORDER BY b.[Title] ASC","SELECT TOP 20 b.[Title], b.[Title_En], b.[TaxFileCode] FROM [RPA].[Bank] AS b ORDER BY b.[Title] ASC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,45348.707,4,6155,
-singleq_13_en,en,detail,easy,"SELECT TOP 20 b.[Title] AS PersianTitle, b.[Title_En] AS EnglishTitle, b.[TaxFileCode] FROM [RPA].[Bank] AS b ORDER BY b.[Title] ASC","SELECT TOP 20 b.[Title] AS PersianTitle, b.[Title_En] AS EnglishTitle, b.[TaxFileCode] FROM [RPA].[Bank] AS b ORDER BY b.[Title] ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,47396.101,4,6108,
-singleq_14_en,en,financial,easy,"SELECT c.[Title], c.[FirstAmount], c.[Balance] FROM [RPA].[Cash] AS c WHERE c.[Rate] = 1 ORDER BY c.[Title] ASC","SELECT c.[Title], c.[FirstAmount], c.[Balance] FROM [RPA].[Cash] AS c WHERE c.[Rate] = 1 ORDER BY c.[Title] ASC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,45282.088,4,5472,
-singleq_15_en,en,financial,easy,"SELECT TOP 20 i.[Number], i.[Date], i.[NetPrice] FROM [SLS].[Invoice] AS i WHERE i.[State] = 2 ORDER BY i.[Date] DESC, i.[Number] DESC","SELECT TOP 20 i.[Number], i.[Date], i.[NetPrice] FROM [SLS].[Invoice] AS i WHERE i.[State] = 2 ORDER BY i.[Date] DESC, i.[Number] DESC",1,1,1,1,1.0,0.333333,1.0,False,False,100.0,61918.977,4,8613,
-singleq_16_en,en,aggregation,medium,"SELECT i.[State] AS Status, COUNT(*) AS InvoiceCount, SUM(i.[NetPrice]) AS TotalNetPrice FROM [SLS].[Invoice] AS i GROUP BY i.[State] ORDER BY i.[State] ASC","SELECT i.[State] AS Status, COUNT(*) AS InvoiceCount, SUM(i.[NetPrice]) AS TotalNetPrice FROM [SLS].[Invoice] AS i GROUP BY i.[State] ORDER BY i.[State] ASC",1,1,1,1,1.0,0.5,1.0,False,False,100.0,10982.078,4,6640,
-singleq_17_en,en,aggregation,medium,"SELECT YEAR(i.[Date]) AS [Year], COUNT(*) AS InvoiceCount, SUM(i.[NetPrice]) AS TotalNetPrice FROM [SLS].[Invoice] AS i WHERE i.[SettlementType] = 1 GROUP BY YEAR(i.[Date]) ORDER BY YEAR(i.[Date]) ASC","SELECT YEAR(i.[Date]) AS [Year], COUNT(*) AS InvoiceCount, SUM(i.[NetPrice]) AS TotalNetPrice FROM [SLS].[Invoice] AS i WHERE i.[SettlementType] = 1 GROUP BY YEAR(i.[Date]) ORDER BY YEAR(i.[Date]) ASC",1,1,1,1,1.0,0.25,1.0,False,False,100.0,59098.935,4,7778,
-singleq_18_en,en,aggregation,medium,"SELECT AVG(i.[Discount]) AS AvgDiscount, AVG(i.[Tax]) AS AvgTax FROM [SLS].[Invoice] AS i WHERE i.[BaseOnInventoryDelivery] = 0","SELECT AVG(i.[Discount]) AS AvgDiscount, AVG(i.[Tax]) AS AvgTax FROM [SLS].[Invoice] AS i WHERE i.[BaseOnInventoryDelivery] = 0",1,1,1,1,1.0,0.5,1.0,False,False,100.0,53580.202,4,7182,
-singleq_19_fa,fa,detail,easy,"SELECT TOP 20 a.[PlaqueNumber], a.[Title], a.[PlaqueSerial] FROM [AST].[Asset] AS a WHERE a.[IsInitial] = 1 AND a.[State] = 3 ORDER BY a.[PlaqueNumber] ASC","SELECT TOP 20 a.[PlaqueNumber], a.[Title], a.[PlaqueSerial] FROM [AST].[Asset] AS a WHERE a.[IsInitial] = 1 AND a.[State] = 3 ORDER BY a.[PlaqueNumber] ASC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,49654.021,4,7051,
-singleq_19_en,en,detail,easy,"SELECT TOP 20 a.[PlaqueNumber], a.[Title], a.[PlaqueSerial] FROM [AST].[Asset] AS a WHERE a.[IsInitial] = 1 AND a.[State] = 3 ORDER BY a.[PlaqueNumber] ASC","SELECT TOP 20 a.[PlaqueNumber], a.[Title], a.[PlaqueSerial] FROM [AST].[Asset] AS a WHERE a.[IsInitial] = 1 AND a.[State] = 3 ORDER BY a.[PlaqueNumber] ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,53189.824,4,7190,
-singleq_20_fa,fa,aggregation,easy,"SELECT a.[State], a.[IsInitial], COUNT(*) AS AssetCount
+singleq_13_fa,fa,detail,order_by|top_limit,2,"SELECT TOP 20 b.[Title], b.[Title_En], b.[TaxFileCode] FROM [RPA].[Bank] AS b ORDER BY b.[Title] ASC","SELECT TOP 20 b.[Title], b.[Title_En], b.[TaxFileCode] FROM [RPA].[Bank] AS b ORDER BY b.[Title] ASC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,45348.707,4,6155,
+singleq_13_en,en,detail,order_by|top_limit,2,"SELECT TOP 20 b.[Title] AS PersianTitle, b.[Title_En] AS EnglishTitle, b.[TaxFileCode] FROM [RPA].[Bank] AS b ORDER BY b.[Title] ASC","SELECT TOP 20 b.[Title] AS PersianTitle, b.[Title_En] AS EnglishTitle, b.[TaxFileCode] FROM [RPA].[Bank] AS b ORDER BY b.[Title] ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,47396.101,4,6108,
+singleq_14_en,en,financial,filter|order_by,2,"SELECT c.[Title], c.[FirstAmount], c.[Balance] FROM [RPA].[Cash] AS c WHERE c.[Rate] = 1 ORDER BY c.[Title] ASC","SELECT c.[Title], c.[FirstAmount], c.[Balance] FROM [RPA].[Cash] AS c WHERE c.[Rate] = 1 ORDER BY c.[Title] ASC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,45282.088,4,5472,
+singleq_15_en,en,financial,filter|order_by|top_limit,3,"SELECT TOP 20 i.[Number], i.[Date], i.[NetPrice] FROM [SLS].[Invoice] AS i WHERE i.[State] = 2 ORDER BY i.[Date] DESC, i.[Number] DESC","SELECT TOP 20 i.[Number], i.[Date], i.[NetPrice] FROM [SLS].[Invoice] AS i WHERE i.[State] = 2 ORDER BY i.[Date] DESC, i.[Number] DESC",1,1,1,1,1.0,0.333333,1.0,False,False,100.0,61918.977,4,8613,
+singleq_16_en,en,aggregation,aggregation|group_by|order_by,3,"SELECT i.[State] AS Status, COUNT(*) AS InvoiceCount, SUM(i.[NetPrice]) AS TotalNetPrice FROM [SLS].[Invoice] AS i GROUP BY i.[State] ORDER BY i.[State] ASC","SELECT i.[State] AS Status, COUNT(*) AS InvoiceCount, SUM(i.[NetPrice]) AS TotalNetPrice FROM [SLS].[Invoice] AS i GROUP BY i.[State] ORDER BY i.[State] ASC",1,1,1,1,1.0,0.5,1.0,False,False,100.0,10982.078,4,6640,
+singleq_17_en,en,aggregation,aggregation|date_operation|filter|group_by|order_by,5,"SELECT YEAR(i.[Date]) AS [Year], COUNT(*) AS InvoiceCount, SUM(i.[NetPrice]) AS TotalNetPrice FROM [SLS].[Invoice] AS i WHERE i.[SettlementType] = 1 GROUP BY YEAR(i.[Date]) ORDER BY YEAR(i.[Date]) ASC","SELECT YEAR(i.[Date]) AS [Year], COUNT(*) AS InvoiceCount, SUM(i.[NetPrice]) AS TotalNetPrice FROM [SLS].[Invoice] AS i WHERE i.[SettlementType] = 1 GROUP BY YEAR(i.[Date]) ORDER BY YEAR(i.[Date]) ASC",1,1,1,1,1.0,0.25,1.0,False,False,100.0,59098.935,4,7778,
+singleq_18_en,en,aggregation,aggregation|filter,2,"SELECT AVG(i.[Discount]) AS AvgDiscount, AVG(i.[Tax]) AS AvgTax FROM [SLS].[Invoice] AS i WHERE i.[BaseOnInventoryDelivery] = 0","SELECT AVG(i.[Discount]) AS AvgDiscount, AVG(i.[Tax]) AS AvgTax FROM [SLS].[Invoice] AS i WHERE i.[BaseOnInventoryDelivery] = 0",1,1,1,1,1.0,0.5,1.0,False,False,100.0,53580.202,4,7182,
+singleq_19_fa,fa,detail,filter|order_by|top_limit,3,"SELECT TOP 20 a.[PlaqueNumber], a.[Title], a.[PlaqueSerial] FROM [AST].[Asset] AS a WHERE a.[IsInitial] = 1 AND a.[State] = 3 ORDER BY a.[PlaqueNumber] ASC","SELECT TOP 20 a.[PlaqueNumber], a.[Title], a.[PlaqueSerial] FROM [AST].[Asset] AS a WHERE a.[IsInitial] = 1 AND a.[State] = 3 ORDER BY a.[PlaqueNumber] ASC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,49654.021,4,7051,
+singleq_19_en,en,detail,filter|order_by|top_limit,3,"SELECT TOP 20 a.[PlaqueNumber], a.[Title], a.[PlaqueSerial] FROM [AST].[Asset] AS a WHERE a.[IsInitial] = 1 AND a.[State] = 3 ORDER BY a.[PlaqueNumber] ASC","SELECT TOP 20 a.[PlaqueNumber], a.[Title], a.[PlaqueSerial] FROM [AST].[Asset] AS a WHERE a.[IsInitial] = 1 AND a.[State] = 3 ORDER BY a.[PlaqueNumber] ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,53189.824,4,7190,
+singleq_20_fa,fa,aggregation,aggregation|group_by|order_by,3,"SELECT a.[State], a.[IsInitial], COUNT(*) AS AssetCount
 FROM [AST].[Asset] AS a
 GROUP BY a.[State], a.[IsInitial]
 ORDER BY a.[State] ASC, a.[IsInitial] ASC","SELECT a.[State], a.[IsInitial], COUNT(*) AS AssetCount
 FROM [AST].[Asset] AS a
 GROUP BY a.[State], a.[IsInitial]
 ORDER BY a.[State] ASC, a.[IsInitial] ASC",1,1,1,1,1.0,0.5,1.0,False,False,100.0,47648.81,4,6110,
-singleq_20_en,en,aggregation,easy,"SELECT [State], [IsInitial], COUNT(*) AS AssetCount FROM [AST].[Asset] GROUP BY [State], [IsInitial] ORDER BY [State] ASC, [IsInitial] ASC","SELECT [State], [IsInitial], COUNT(*) AS AssetCount FROM [AST].[Asset] GROUP BY [State], [IsInitial] ORDER BY [State] ASC, [IsInitial] ASC",1,1,1,1,1.0,0.333333,1.0,False,False,100.0,51898.197,4,7070,
-singleq_05_en,en,aggregation,easy,"SELECT fy.[Status], COUNT(*) AS FiscalYearCount
+singleq_20_en,en,aggregation,aggregation|group_by|order_by,3,"SELECT [State], [IsInitial], COUNT(*) AS AssetCount FROM [AST].[Asset] GROUP BY [State], [IsInitial] ORDER BY [State] ASC, [IsInitial] ASC","SELECT [State], [IsInitial], COUNT(*) AS AssetCount FROM [AST].[Asset] GROUP BY [State], [IsInitial] ORDER BY [State] ASC, [IsInitial] ASC",1,1,1,1,1.0,0.333333,1.0,False,False,100.0,51898.197,4,7070,
+singleq_05_en,en,aggregation,aggregation|group_by|order_by,3,"SELECT fy.[Status], COUNT(*) AS FiscalYearCount
 FROM [FMK].[FiscalYear] AS fy
 GROUP BY fy.[Status]
 ORDER BY fy.[Status] ASC","SELECT fy.[Status], COUNT(*) AS FiscalYearCount
 FROM [FMK].[FiscalYear] AS fy
 GROUP BY fy.[Status]
 ORDER BY fy.[Status] ASC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,8945.973,4,5477,
-singleq_07_fa,fa,aggregation,easy,"SELECT i.[Type], COUNT(*) AS ItemCount FROM [INV].[Item] AS i GROUP BY i.[Type] ORDER BY i.[Type] ASC","SELECT i.[Type], COUNT(*) AS ItemCount FROM [INV].[Item] AS i GROUP BY i.[Type] ORDER BY i.[Type] ASC",1,1,1,1,1.0,0.5,1.0,False,False,100.0,28934.147,4,6131,
-singleq_11_fa,fa,detail,easy,"SELECT c.Title, c.ExchangeUnit, c.PrecisionCount FROM [GNR].[Currency] AS c ORDER BY c.PrecisionCount ASC, c.Title ASC","SELECT c.Title, c.ExchangeUnit, c.PrecisionCount FROM [GNR].[Currency] AS c ORDER BY c.PrecisionCount ASC, c.Title ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,51574.923,4,5793,
-singleq_21_fa,fa,financial,easy,"SELECT TOP 20 ph.[Number], ph.[Date], ph.[TotalAmount] FROM [RPA].[PaymentHeader] AS ph WHERE ph.[Type] = 2 AND ph.[State] = 2 ORDER BY ph.[Date] DESC, ph.[Number] DESC","SELECT TOP 20 ph.[Number], ph.[Date], ph.[TotalAmount] FROM [RPA].[PaymentHeader] AS ph WHERE ph.[Type] = 2 AND ph.[State] = 2 ORDER BY ph.[Date] DESC, ph.[Number] DESC",1,1,1,1,1.0,0.5,1.0,False,False,100.0,51826.585,4,8368,
-singleq_21_en,en,financial,easy,"SELECT TOP 20 ph.[Number], ph.[Date], ph.[TotalAmount] 
+singleq_07_fa,fa,aggregation,aggregation|group_by|order_by,3,"SELECT i.[Type], COUNT(*) AS ItemCount FROM [INV].[Item] AS i GROUP BY i.[Type] ORDER BY i.[Type] ASC","SELECT i.[Type], COUNT(*) AS ItemCount FROM [INV].[Item] AS i GROUP BY i.[Type] ORDER BY i.[Type] ASC",1,1,1,1,1.0,0.5,1.0,False,False,100.0,28934.147,4,6131,
+singleq_11_fa,fa,detail,order_by,1,"SELECT c.Title, c.ExchangeUnit, c.PrecisionCount FROM [GNR].[Currency] AS c ORDER BY c.PrecisionCount ASC, c.Title ASC","SELECT c.Title, c.ExchangeUnit, c.PrecisionCount FROM [GNR].[Currency] AS c ORDER BY c.PrecisionCount ASC, c.Title ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,51574.923,4,5793,
+singleq_21_fa,fa,financial,filter|order_by|top_limit,3,"SELECT TOP 20 ph.[Number], ph.[Date], ph.[TotalAmount] FROM [RPA].[PaymentHeader] AS ph WHERE ph.[Type] = 2 AND ph.[State] = 2 ORDER BY ph.[Date] DESC, ph.[Number] DESC","SELECT TOP 20 ph.[Number], ph.[Date], ph.[TotalAmount] FROM [RPA].[PaymentHeader] AS ph WHERE ph.[Type] = 2 AND ph.[State] = 2 ORDER BY ph.[Date] DESC, ph.[Number] DESC",1,1,1,1,1.0,0.5,1.0,False,False,100.0,51826.585,4,8368,
+singleq_21_en,en,financial,filter|order_by|top_limit,3,"SELECT TOP 20 ph.[Number], ph.[Date], ph.[TotalAmount] 
 FROM [RPA].[PaymentHeader] AS ph 
 WHERE ph.[Type] = 2 AND ph.[State] = 2 
 ORDER BY ph.[Date] DESC, ph.[Number] DESC","SELECT TOP 20 ph.[Number], ph.[Date], ph.[TotalAmount] 
 FROM [RPA].[PaymentHeader] AS ph 
 WHERE ph.[Type] = 2 AND ph.[State] = 2 
 ORDER BY ph.[Date] DESC, ph.[Number] DESC",1,1,1,1,1.0,0.5,1.0,False,False,86.60254,65356.167,4,8567,
-singleq_22_en,en,aggregation,medium,"SELECT ph.[State] AS Status, COUNT(*) AS DocumentCount, SUM(ph.[TotalAmount]) AS TotalAmount
+singleq_22_en,en,aggregation,aggregation|group_by|order_by,3,"SELECT ph.[State] AS Status, COUNT(*) AS DocumentCount, SUM(ph.[TotalAmount]) AS TotalAmount
 FROM [RPA].[PaymentHeader] AS ph
 GROUP BY ph.[State]
 ORDER BY Status ASC","SELECT ph.[State] AS Status, COUNT(*) AS DocumentCount, SUM(ph.[TotalAmount]) AS TotalAmount
 FROM [RPA].[PaymentHeader] AS ph
 GROUP BY ph.[State]
 ORDER BY Status ASC",1,1,1,1,1.0,0.333333,1.0,False,False,86.60254,47250.394,4,7212,
-singleq_23_fa,fa,aggregation,medium,"SELECT ph.[Type], COUNT(*) AS DocumentCount FROM [RPA].[PaymentHeader] AS ph WHERE ph.[State] = 4 GROUP BY ph.[Type] ORDER BY ph.[Type] ASC","SELECT ph.[Type], COUNT(*) AS DocumentCount FROM [RPA].[PaymentHeader] AS ph WHERE ph.[State] = 4 GROUP BY ph.[Type] ORDER BY ph.[Type] ASC",1,1,1,1,1.0,0.5,1.0,False,False,86.60254,50161.009,4,6443,
-singleq_23_en,en,aggregation,medium,"SELECT ph.[Type], COUNT(*) AS DocumentCount FROM [RPA].[PaymentHeader] AS ph WHERE ph.[State] = 4 GROUP BY ph.[Type] ORDER BY ph.[Type] ASC","SELECT ph.[Type], COUNT(*) AS DocumentCount FROM [RPA].[PaymentHeader] AS ph WHERE ph.[State] = 4 GROUP BY ph.[Type] ORDER BY ph.[Type] ASC",1,1,1,1,1.0,0.333333,1.0,False,False,86.60254,49425.454,4,6608,
-singleq_24_fa,fa,aggregation,medium,"SELECT AVG(ph.[Amount]) AS AvgAmount, AVG(ph.[AmountInBaseCurrency]) AS AvgAmountInBaseCurrency FROM [RPA].[PaymentHeader] AS ph WHERE ph.[Type] = 64","SELECT AVG(ph.[Amount]) AS AvgAmount, AVG(ph.[AmountInBaseCurrency]) AS AvgAmountInBaseCurrency FROM [RPA].[PaymentHeader] AS ph WHERE ph.[Type] = 64",1,1,1,1,1.0,0.5,1.0,False,False,100.0,46710.738,4,6657,
-singleq_24_en,en,aggregation,medium,"SELECT AVG(ph.[Amount]) AS AvgAmount, AVG(ph.[AmountInBaseCurrency]) AS AvgAmountInBaseCurrency FROM [RPA].[PaymentHeader] ph WHERE ph.[Type] = 64","SELECT AVG(ph.[Amount]) AS AvgAmount, AVG(ph.[AmountInBaseCurrency]) AS AvgAmountInBaseCurrency FROM [RPA].[PaymentHeader] ph WHERE ph.[Type] = 64",1,1,1,1,1.0,0.5,1.0,False,False,100.0,15663.019,4,6686,
-singleq_25_en,en,aggregation,medium,"SELECT YEAR(ph.[Date]) AS DocumentYear, COUNT(*) AS DocumentCount, SUM(ph.[PaymentAmount]) AS TotalPaymentAmount FROM [RPA].[PaymentHeader] AS ph WHERE ph.[ItemType] = 4 GROUP BY YEAR(ph.[Date]) ORDER BY DocumentYear ASC","SELECT YEAR(ph.[Date]) AS DocumentYear, COUNT(*) AS DocumentCount, SUM(ph.[PaymentAmount]) AS TotalPaymentAmount FROM [RPA].[PaymentHeader] AS ph WHERE ph.[ItemType] = 4 GROUP BY YEAR(ph.[Date]) ORDER BY DocumentYear ASC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,9478.466,4,6474,
-singleq_26_fa,fa,financial,easy,"SELECT TOP 20 rh.[Number], rh.[Date], rh.[TotalAmount] FROM [RPA].[ReceiptHeader] AS rh WHERE rh.[Type] = 2 AND rh.[State] = 2 ORDER BY rh.[Date] DESC, rh.[Number] DESC","SELECT TOP 20 rh.[Number], rh.[Date], rh.[TotalAmount] FROM [RPA].[ReceiptHeader] AS rh WHERE rh.[Type] = 2 AND rh.[State] = 2 ORDER BY rh.[Date] DESC, rh.[Number] DESC",1,1,1,1,1.0,0.5,1.0,False,False,100.0,52165.285,4,8623,
-singleq_28_fa,fa,aggregation,medium,"SELECT AVG(rh.TotalAmount) AS AvgTotalAmount, AVG(rh.Discount) AS AvgDiscount FROM [RPA].[ReceiptHeader] AS rh WHERE rh.[State] = 4","SELECT AVG(rh.TotalAmount) AS AvgTotalAmount, AVG(rh.Discount) AS AvgDiscount FROM [RPA].[ReceiptHeader] AS rh WHERE rh.[State] = 4",1,1,1,1,1.0,0.5,1.0,False,False,86.60254,50321.407,4,6591,
-singleq_28_en,en,aggregation,medium,"SELECT AVG(rh.[TotalAmount]) AS AvgTotalAmount, AVG(rh.[Discount]) AS AvgDiscount
+singleq_23_fa,fa,aggregation,aggregation|filter|group_by|order_by,4,"SELECT ph.[Type], COUNT(*) AS DocumentCount FROM [RPA].[PaymentHeader] AS ph WHERE ph.[State] = 4 GROUP BY ph.[Type] ORDER BY ph.[Type] ASC","SELECT ph.[Type], COUNT(*) AS DocumentCount FROM [RPA].[PaymentHeader] AS ph WHERE ph.[State] = 4 GROUP BY ph.[Type] ORDER BY ph.[Type] ASC",1,1,1,1,1.0,0.5,1.0,False,False,86.60254,50161.009,4,6443,
+singleq_23_en,en,aggregation,aggregation|filter|group_by|order_by,4,"SELECT ph.[Type], COUNT(*) AS DocumentCount FROM [RPA].[PaymentHeader] AS ph WHERE ph.[State] = 4 GROUP BY ph.[Type] ORDER BY ph.[Type] ASC","SELECT ph.[Type], COUNT(*) AS DocumentCount FROM [RPA].[PaymentHeader] AS ph WHERE ph.[State] = 4 GROUP BY ph.[Type] ORDER BY ph.[Type] ASC",1,1,1,1,1.0,0.333333,1.0,False,False,86.60254,49425.454,4,6608,
+singleq_24_fa,fa,aggregation,aggregation|filter,2,"SELECT AVG(ph.[Amount]) AS AvgAmount, AVG(ph.[AmountInBaseCurrency]) AS AvgAmountInBaseCurrency FROM [RPA].[PaymentHeader] AS ph WHERE ph.[Type] = 64","SELECT AVG(ph.[Amount]) AS AvgAmount, AVG(ph.[AmountInBaseCurrency]) AS AvgAmountInBaseCurrency FROM [RPA].[PaymentHeader] AS ph WHERE ph.[Type] = 64",1,1,1,1,1.0,0.5,1.0,False,False,100.0,46710.738,4,6657,
+singleq_24_en,en,aggregation,aggregation|filter,2,"SELECT AVG(ph.[Amount]) AS AvgAmount, AVG(ph.[AmountInBaseCurrency]) AS AvgAmountInBaseCurrency FROM [RPA].[PaymentHeader] ph WHERE ph.[Type] = 64","SELECT AVG(ph.[Amount]) AS AvgAmount, AVG(ph.[AmountInBaseCurrency]) AS AvgAmountInBaseCurrency FROM [RPA].[PaymentHeader] ph WHERE ph.[Type] = 64",1,1,1,1,1.0,0.5,1.0,False,False,100.0,15663.019,4,6686,
+singleq_25_en,en,aggregation,aggregation|date_operation|filter|group_by|order_by,5,"SELECT YEAR(ph.[Date]) AS DocumentYear, COUNT(*) AS DocumentCount, SUM(ph.[PaymentAmount]) AS TotalPaymentAmount FROM [RPA].[PaymentHeader] AS ph WHERE ph.[ItemType] = 4 GROUP BY YEAR(ph.[Date]) ORDER BY DocumentYear ASC","SELECT YEAR(ph.[Date]) AS DocumentYear, COUNT(*) AS DocumentCount, SUM(ph.[PaymentAmount]) AS TotalPaymentAmount FROM [RPA].[PaymentHeader] AS ph WHERE ph.[ItemType] = 4 GROUP BY YEAR(ph.[Date]) ORDER BY DocumentYear ASC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,9478.466,4,6474,
+singleq_26_fa,fa,financial,filter|order_by|top_limit,3,"SELECT TOP 20 rh.[Number], rh.[Date], rh.[TotalAmount] FROM [RPA].[ReceiptHeader] AS rh WHERE rh.[Type] = 2 AND rh.[State] = 2 ORDER BY rh.[Date] DESC, rh.[Number] DESC","SELECT TOP 20 rh.[Number], rh.[Date], rh.[TotalAmount] FROM [RPA].[ReceiptHeader] AS rh WHERE rh.[Type] = 2 AND rh.[State] = 2 ORDER BY rh.[Date] DESC, rh.[Number] DESC",1,1,1,1,1.0,0.5,1.0,False,False,100.0,52165.285,4,8623,
+singleq_28_fa,fa,aggregation,aggregation|filter,2,"SELECT AVG(rh.TotalAmount) AS AvgTotalAmount, AVG(rh.Discount) AS AvgDiscount FROM [RPA].[ReceiptHeader] AS rh WHERE rh.[State] = 4","SELECT AVG(rh.TotalAmount) AS AvgTotalAmount, AVG(rh.Discount) AS AvgDiscount FROM [RPA].[ReceiptHeader] AS rh WHERE rh.[State] = 4",1,1,1,1,1.0,0.5,1.0,False,False,86.60254,50321.407,4,6591,
+singleq_28_en,en,aggregation,aggregation|filter,2,"SELECT AVG(rh.[TotalAmount]) AS AvgTotalAmount, AVG(rh.[Discount]) AS AvgDiscount
 FROM [RPA].[ReceiptHeader] AS rh
 WHERE rh.[State] = 4","SELECT AVG(rh.[TotalAmount]) AS AvgTotalAmount, AVG(rh.[Discount]) AS AvgDiscount
 FROM [RPA].[ReceiptHeader] AS rh
 WHERE rh.[State] = 4",1,1,1,1,1.0,0.166667,1.0,False,False,86.60254,29005.621,4,3638,
-singleq_29_en,en,aggregation,medium,"SELECT YEAR(rh.[Date]) AS DocumentYear,
+singleq_29_en,en,aggregation,aggregation|date_operation|filter|group_by|order_by,5,"SELECT YEAR(rh.[Date]) AS DocumentYear,
        COUNT(*) AS DocumentCount,
        SUM(rh.[ReceiptAmount]) AS TotalReceiptAmount
 FROM [RPA].[ReceiptHeader] AS rh
@@ -526,18 +525,18 @@ FROM [RPA].[ReceiptHeader] AS rh
 WHERE rh.[Type] = 32
 GROUP BY YEAR(rh.[Date])
 ORDER BY YEAR(rh.[Date]) ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,50181.536,4,6758,
-singleq_30_fa,fa,financial,easy,"SELECT TOP 20 rh.[Number], rh.[Date], rh.[ReceiptAmount] FROM [RPA].[ReceiptHeader] AS rh WHERE rh.[ItemType] = 8 ORDER BY rh.[ReceiptAmount] DESC, rh.[Number] ASC","SELECT TOP 20 rh.[Number], rh.[Date], rh.[ReceiptAmount] FROM [RPA].[ReceiptHeader] AS rh WHERE rh.[ItemType] = 8 ORDER BY rh.[ReceiptAmount] DESC, rh.[Number] ASC",1,1,1,1,1.0,0.5,1.0,False,False,86.60254,69589.797,4,8972,
-singleq_30_en,en,financial,easy,"SELECT TOP 20 rh.[Number], rh.[Date], rh.[ReceiptAmount] FROM [RPA].[ReceiptHeader] AS rh WHERE rh.[ItemType] = 8 ORDER BY rh.[ReceiptAmount] DESC, rh.[Number] ASC","SELECT TOP 20 rh.[Number], rh.[Date], rh.[ReceiptAmount] FROM [RPA].[ReceiptHeader] AS rh WHERE rh.[ItemType] = 8 ORDER BY rh.[ReceiptAmount] DESC, rh.[Number] ASC",1,1,1,1,1.0,0.5,1.0,False,False,100.0,11458.17,4,8139,
-singleq_31_fa,fa,detail,easy,"SELECT ag.[Code], ag.[Title], ag.[DepreciationRate], ag.[UsefulLife] FROM [AST].[AssetGroup] AS ag WHERE ag.[DepreciationMethod] = 1 ORDER BY ag.[Code] ASC","SELECT ag.[Code], ag.[Title], ag.[DepreciationRate], ag.[UsefulLife] FROM [AST].[AssetGroup] AS ag WHERE ag.[DepreciationMethod] = 1 ORDER BY ag.[Code] ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,52184.407,4,7055,
-singleq_31_en,en,detail,easy,"SELECT ag.[Code], ag.[Title], ag.[DepreciationRate], ag.[UsefulLife]
+singleq_30_fa,fa,financial,filter|order_by|top_limit,3,"SELECT TOP 20 rh.[Number], rh.[Date], rh.[ReceiptAmount] FROM [RPA].[ReceiptHeader] AS rh WHERE rh.[ItemType] = 8 ORDER BY rh.[ReceiptAmount] DESC, rh.[Number] ASC","SELECT TOP 20 rh.[Number], rh.[Date], rh.[ReceiptAmount] FROM [RPA].[ReceiptHeader] AS rh WHERE rh.[ItemType] = 8 ORDER BY rh.[ReceiptAmount] DESC, rh.[Number] ASC",1,1,1,1,1.0,0.5,1.0,False,False,86.60254,69589.797,4,8972,
+singleq_30_en,en,financial,filter|order_by|top_limit,3,"SELECT TOP 20 rh.[Number], rh.[Date], rh.[ReceiptAmount] FROM [RPA].[ReceiptHeader] AS rh WHERE rh.[ItemType] = 8 ORDER BY rh.[ReceiptAmount] DESC, rh.[Number] ASC","SELECT TOP 20 rh.[Number], rh.[Date], rh.[ReceiptAmount] FROM [RPA].[ReceiptHeader] AS rh WHERE rh.[ItemType] = 8 ORDER BY rh.[ReceiptAmount] DESC, rh.[Number] ASC",1,1,1,1,1.0,0.5,1.0,False,False,100.0,11458.17,4,8139,
+singleq_31_fa,fa,detail,filter|order_by,2,"SELECT ag.[Code], ag.[Title], ag.[DepreciationRate], ag.[UsefulLife] FROM [AST].[AssetGroup] AS ag WHERE ag.[DepreciationMethod] = 1 ORDER BY ag.[Code] ASC","SELECT ag.[Code], ag.[Title], ag.[DepreciationRate], ag.[UsefulLife] FROM [AST].[AssetGroup] AS ag WHERE ag.[DepreciationMethod] = 1 ORDER BY ag.[Code] ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,52184.407,4,7055,
+singleq_31_en,en,detail,filter|order_by,2,"SELECT ag.[Code], ag.[Title], ag.[DepreciationRate], ag.[UsefulLife]
 FROM [AST].[AssetGroup] AS ag
 WHERE ag.[DepreciationMethod] = 1
 ORDER BY ag.[Code] ASC","SELECT ag.[Code], ag.[Title], ag.[DepreciationRate], ag.[UsefulLife]
 FROM [AST].[AssetGroup] AS ag
 WHERE ag.[DepreciationMethod] = 1
 ORDER BY ag.[Code] ASC",1,1,1,1,1.0,0.142857,1.0,False,False,86.60254,27990.234,4,4296,
-singleq_32_fa,fa,aggregation,medium,"SELECT ag.[DepreciationMethod], COUNT(*) AS GroupCount, AVG(ag.[DepreciationRate]) AS AvgDepreciationRate FROM [AST].[AssetGroup] AS ag GROUP BY ag.[DepreciationMethod] ORDER BY ag.[DepreciationMethod] ASC","SELECT ag.[DepreciationMethod], COUNT(*) AS GroupCount, AVG(ag.[DepreciationRate]) AS AvgDepreciationRate FROM [AST].[AssetGroup] AS ag GROUP BY ag.[DepreciationMethod] ORDER BY ag.[DepreciationMethod] ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,14112.823,4,6540,
-singleq_32_en,en,aggregation,medium,"SELECT ag.[DepreciationMethod],
+singleq_32_fa,fa,aggregation,aggregation|group_by|order_by,3,"SELECT ag.[DepreciationMethod], COUNT(*) AS GroupCount, AVG(ag.[DepreciationRate]) AS AvgDepreciationRate FROM [AST].[AssetGroup] AS ag GROUP BY ag.[DepreciationMethod] ORDER BY ag.[DepreciationMethod] ASC","SELECT ag.[DepreciationMethod], COUNT(*) AS GroupCount, AVG(ag.[DepreciationRate]) AS AvgDepreciationRate FROM [AST].[AssetGroup] AS ag GROUP BY ag.[DepreciationMethod] ORDER BY ag.[DepreciationMethod] ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,14112.823,4,6540,
+singleq_32_en,en,aggregation,aggregation|group_by|order_by,3,"SELECT ag.[DepreciationMethod],
        COUNT(*) AS AssetGroupCount,
        AVG(ag.[DepreciationRate]) AS AvgDepreciationRate
 FROM [AST].[AssetGroup] AS ag
@@ -548,24 +547,229 @@ ORDER BY ag.[DepreciationMethod] ASC","SELECT ag.[DepreciationMethod],
 FROM [AST].[AssetGroup] AS ag
 GROUP BY ag.[DepreciationMethod]
 ORDER BY ag.[DepreciationMethod] ASC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,35272.983,4,6324,
-singleq_33_fa,fa,ranking,easy,"SELECT TOP 10 ag.[Code], ag.[Title], ag.[UsefulLife] FROM [AST].[AssetGroup] AS ag ORDER BY ag.[UsefulLife] DESC, ag.[Code] ASC","SELECT TOP 10 ag.[Code], ag.[Title], ag.[UsefulLife] FROM [AST].[AssetGroup] AS ag ORDER BY ag.[UsefulLife] DESC, ag.[Code] ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,50043.514,4,6976,
-singleq_33_en,en,ranking,easy,"SELECT TOP 10 AG.[Code], AG.[Title], AG.[UsefulLife] FROM [AST].[AssetGroup] AS AG ORDER BY AG.[UsefulLife] DESC, AG.[Code] ASC","SELECT TOP 10 AG.[Code], AG.[Title], AG.[UsefulLife] FROM [AST].[AssetGroup] AS AG ORDER BY AG.[UsefulLife] DESC, AG.[Code] ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,50751.779,4,6615,
-singleq_34_fa,fa,financial,easy,"SELECT TOP 20 ri.[Number], ri.[Date], ri.[Price], ri.[Discount], ri.[NetPrice] FROM [POS].[ReturnedInvoice] AS ri ORDER BY ri.[Date] DESC, ri.[Number] DESC","SELECT TOP 20 ri.[Number], ri.[Date], ri.[Price], ri.[Discount], ri.[NetPrice] FROM [POS].[ReturnedInvoice] AS ri ORDER BY ri.[Date] DESC, ri.[Number] DESC",0,0,1,1,0.0,0.0,0.0,True,False,0.0,53999.922,3,7130,
-singleq_22_fa,fa,aggregation,medium,"SELECT ph.[State] AS [State], COUNT(*) AS [HeaderCount], SUM(ph.[TotalAmount]) AS [TotalAmountSum] FROM [RPA].[PaymentHeader] AS ph GROUP BY ph.[State] ORDER BY ph.[State] ASC","SELECT ph.[State] AS [State], COUNT(*) AS [HeaderCount], SUM(ph.[TotalAmount]) AS [TotalAmountSum] FROM [RPA].[PaymentHeader] AS ph GROUP BY ph.[State] ORDER BY ph.[State] ASC",1,1,1,1,1.0,0.25,1.0,False,False,86.60254,13617.42,4,8070,
-singleq_25_fa,fa,aggregation,medium,"SELECT YEAR(ph.[Date]) AS [Year], COUNT(*) AS [HeaderCount], SUM(ph.[PaymentAmount]) AS [TotalPaymentAmount] FROM [RPA].[PaymentHeader] AS ph WHERE ph.[ItemType] = 4 GROUP BY YEAR(ph.[Date]) ORDER BY YEAR(ph.[Date]) ASC","SELECT YEAR(ph.[Date]) AS [Year], COUNT(*) AS [HeaderCount], SUM(ph.[PaymentAmount]) AS [TotalPaymentAmount] FROM [RPA].[PaymentHeader] AS ph WHERE ph.[ItemType] = 4 GROUP BY YEAR(ph.[Date]) ORDER BY YEAR(ph.[Date]) ASC",1,1,1,1,1.0,0.5,1.0,False,False,100.0,53835.588,4,7494,
-singleq_26_en,en,financial,easy,"SELECT TOP 20 rh.[Number], rh.[Date], rh.[TotalAmount] FROM [RPA].[ReceiptHeader] AS rh WHERE rh.[Type] = 2 AND rh.[State] = 2 ORDER BY rh.[Date] DESC, rh.[Number] DESC","SELECT TOP 20 rh.[Number], rh.[Date], rh.[TotalAmount] FROM [RPA].[ReceiptHeader] AS rh WHERE rh.[Type] = 2 AND rh.[State] = 2 ORDER BY rh.[Date] DESC, rh.[Number] DESC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,55877.393,4,7508,
-singleq_27_fa,fa,aggregation,medium,"SELECT rh.[State] AS State, COUNT(*) AS HeaderCount, SUM(rh.[TotalAmount]) AS TotalAmountSum
+singleq_33_fa,fa,ranking,order_by|top_limit,2,"SELECT TOP 10 ag.[Code], ag.[Title], ag.[UsefulLife] FROM [AST].[AssetGroup] AS ag ORDER BY ag.[UsefulLife] DESC, ag.[Code] ASC","SELECT TOP 10 ag.[Code], ag.[Title], ag.[UsefulLife] FROM [AST].[AssetGroup] AS ag ORDER BY ag.[UsefulLife] DESC, ag.[Code] ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,50043.514,4,6976,
+singleq_33_en,en,ranking,order_by|top_limit,2,"SELECT TOP 10 AG.[Code], AG.[Title], AG.[UsefulLife] FROM [AST].[AssetGroup] AS AG ORDER BY AG.[UsefulLife] DESC, AG.[Code] ASC","SELECT TOP 10 AG.[Code], AG.[Title], AG.[UsefulLife] FROM [AST].[AssetGroup] AS AG ORDER BY AG.[UsefulLife] DESC, AG.[Code] ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,50751.779,4,6615,
+singleq_22_fa,fa,aggregation,aggregation|group_by|order_by,3,"SELECT ph.[State] AS [State], COUNT(*) AS [HeaderCount], SUM(ph.[TotalAmount]) AS [TotalAmountSum] FROM [RPA].[PaymentHeader] AS ph GROUP BY ph.[State] ORDER BY ph.[State] ASC","SELECT ph.[State] AS [State], COUNT(*) AS [HeaderCount], SUM(ph.[TotalAmount]) AS [TotalAmountSum] FROM [RPA].[PaymentHeader] AS ph GROUP BY ph.[State] ORDER BY ph.[State] ASC",1,1,1,1,1.0,0.25,1.0,False,False,86.60254,13617.42,4,8070,
+singleq_25_fa,fa,aggregation,aggregation|date_operation|filter|group_by|order_by,5,"SELECT YEAR(ph.[Date]) AS [Year], COUNT(*) AS [HeaderCount], SUM(ph.[PaymentAmount]) AS [TotalPaymentAmount] FROM [RPA].[PaymentHeader] AS ph WHERE ph.[ItemType] = 4 GROUP BY YEAR(ph.[Date]) ORDER BY YEAR(ph.[Date]) ASC","SELECT YEAR(ph.[Date]) AS [Year], COUNT(*) AS [HeaderCount], SUM(ph.[PaymentAmount]) AS [TotalPaymentAmount] FROM [RPA].[PaymentHeader] AS ph WHERE ph.[ItemType] = 4 GROUP BY YEAR(ph.[Date]) ORDER BY YEAR(ph.[Date]) ASC",1,1,1,1,1.0,0.5,1.0,False,False,100.0,53835.588,4,7494,
+singleq_26_en,en,financial,filter|order_by|top_limit,3,"SELECT TOP 20 rh.[Number], rh.[Date], rh.[TotalAmount] FROM [RPA].[ReceiptHeader] AS rh WHERE rh.[Type] = 2 AND rh.[State] = 2 ORDER BY rh.[Date] DESC, rh.[Number] DESC","SELECT TOP 20 rh.[Number], rh.[Date], rh.[TotalAmount] FROM [RPA].[ReceiptHeader] AS rh WHERE rh.[Type] = 2 AND rh.[State] = 2 ORDER BY rh.[Date] DESC, rh.[Number] DESC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,55877.393,4,7508,
+singleq_27_fa,fa,aggregation,aggregation|group_by|order_by,3,"SELECT rh.[State] AS State, COUNT(*) AS HeaderCount, SUM(rh.[TotalAmount]) AS TotalAmountSum
 FROM [RPA].[ReceiptHeader] AS rh
 GROUP BY rh.[State]
 ORDER BY rh.[State] ASC","SELECT rh.[State] AS State, COUNT(*) AS HeaderCount, SUM(rh.[TotalAmount]) AS TotalAmountSum
 FROM [RPA].[ReceiptHeader] AS rh
 GROUP BY rh.[State]
 ORDER BY rh.[State] ASC",1,1,1,1,1.0,0.5,1.0,False,False,86.60254,49348.763,4,7128,
-singleq_27_en,en,aggregation,medium,"SELECT rh.[State], COUNT(*) AS HeaderCount, SUM(rh.[TotalAmount]) AS TotalAmountSum
+singleq_27_en,en,aggregation,aggregation|group_by|order_by,3,"SELECT rh.[State], COUNT(*) AS HeaderCount, SUM(rh.[TotalAmount]) AS TotalAmountSum
 FROM [RPA].[ReceiptHeader] AS rh
 GROUP BY rh.[State]
 ORDER BY rh.[State] ASC","SELECT rh.[State], COUNT(*) AS HeaderCount, SUM(rh.[TotalAmount]) AS TotalAmountSum
 FROM [RPA].[ReceiptHeader] AS rh
 GROUP BY rh.[State]
 ORDER BY rh.[State] ASC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,47589.991,4,6628,
-singleq_29_fa,fa,aggregation,medium,"SELECT DATEPART(year, h.[Date]) AS Year, COUNT(*) AS HeaderCount, SUM(h.[Amount]) AS TotalAmount FROM [RPA].[ReceiptHeader] AS h WHERE h.[Type] = 32 GROUP BY DATEPART(year, h.[Date]) ORDER BY DATEPART(year, h.[Date]) ASC","SELECT DATEPART(year, h.[Date]) AS Year, COUNT(*) AS HeaderCount, SUM(h.[Amount]) AS TotalAmount FROM [RPA].[ReceiptHeader] AS h WHERE h.[Type] = 32 GROUP BY DATEPART(year, h.[Date]) ORDER BY DATEPART(year, h.[Date]) ASC",0,0,1,1,1.0,0.5,1.0,False,False,0.0,50068.392,4,7436,
+singleq_29_fa,fa,aggregation,aggregation|date_operation|filter|group_by|order_by,5,"SELECT YEAR(rh.[Date]) AS [Year], COUNT(*) AS [DocumentCount], SUM(rh.[ReceiptAmount]) AS [TotalReceiptAmount] FROM [RPA].[ReceiptHeader] AS rh WHERE rh.[Type] = 32 GROUP BY YEAR(rh.[Date]) ORDER BY YEAR(rh.[Date]) ASC","SELECT YEAR(rh.[Date]) AS [Year], COUNT(*) AS [DocumentCount], SUM(rh.[ReceiptAmount]) AS [TotalReceiptAmount] FROM [RPA].[ReceiptHeader] AS rh WHERE rh.[Type] = 32 GROUP BY YEAR(rh.[Date]) ORDER BY YEAR(rh.[Date]) ASC",1,1,1,1,1.0,0.5,1.0,False,False,100.0,14781.156,4,7438,
+singleq_34_en,en,financial,order_by|top_limit,2,"SELECT TOP 20 ri.[Number], ri.[Date], ri.[Price], ri.[Discount], ri.[NetPrice] FROM [SLS].[ReturnedInvoice] AS ri ORDER BY ri.[Date] DESC, ri.[Number] DESC","SELECT TOP 20 ri.[Number], ri.[Date], ri.[Price], ri.[Discount], ri.[NetPrice] FROM [SLS].[ReturnedInvoice] AS ri ORDER BY ri.[Date] DESC, ri.[Number] DESC",1,1,1,1,1.0,0.5,1.0,False,False,100.0,67862.19,4,9254,
+singleq_35_fa,fa,aggregation,aggregation|date_operation|group_by|order_by,4,"SELECT YEAR(ri.[Date]) AS [Year], COUNT(*) AS [InvoiceCount], SUM(ri.[NetPrice]) AS [TotalNetPrice] FROM [SLS].[ReturnedInvoice] AS ri GROUP BY YEAR(ri.[Date]) ORDER BY YEAR(ri.[Date]) ASC","SELECT YEAR(ri.[Date]) AS [Year], COUNT(*) AS [InvoiceCount], SUM(ri.[NetPrice]) AS [TotalNetPrice] FROM [SLS].[ReturnedInvoice] AS ri GROUP BY YEAR(ri.[Date]) ORDER BY YEAR(ri.[Date]) ASC",1,1,1,1,1.0,0.333333,1.0,False,False,86.60254,59281.458,4,7782,
+singleq_36_fa,fa,aggregation,aggregation|date_operation|filter|range_filter,4,"SELECT COUNT(*) AS InvoiceCount, SUM(Tax) AS TotalTax, SUM(NetPrice) AS TotalNetPrice
+FROM [SLS].[ReturnedInvoice] AS ri
+WHERE ri.[Date] >= '20260101' AND ri.[Date] < '20270101'","SELECT COUNT(*) AS InvoiceCount, SUM(Tax) AS TotalTax, SUM(NetPrice) AS TotalNetPrice
+FROM [SLS].[ReturnedInvoice] AS ri
+WHERE ri.[Date] >= '20260101' AND ri.[Date] < '20270101'",1,1,1,1,1.0,0.5,1.0,False,False,86.60254,48908.362,4,6816,
+singleq_36_en,en,aggregation,aggregation|date_operation|filter|range_filter,4,"SELECT COUNT(*) AS InvoiceCount, SUM(ri.Tax) AS TotalTax, SUM(ri.NetPrice) AS TotalNetPrice
+FROM [SLS].[ReturnedInvoice] AS ri
+WHERE ri.[Date] >= '20260101' AND ri.[Date] < '20270101'","SELECT COUNT(*) AS InvoiceCount, SUM(ri.Tax) AS TotalTax, SUM(ri.NetPrice) AS TotalNetPrice
+FROM [SLS].[ReturnedInvoice] AS ri
+WHERE ri.[Date] >= '20260101' AND ri.[Date] < '20270101'",1,1,1,1,1.0,0.333333,1.0,False,False,100.0,55920.878,4,7483,
+singleq_37_fa,fa,detail,filter|order_by,2,"SELECT cc.[CostCenterId], cc.[DLRef] FROM [GNR].[CostCenter] AS cc WHERE cc.[Type] = 1 ORDER BY cc.[CostCenterId] ASC","SELECT cc.[CostCenterId], cc.[DLRef] FROM [GNR].[CostCenter] AS cc WHERE cc.[Type] = 1 ORDER BY cc.[CostCenterId] ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,31338.36,4,5691,
+singleq_37_en,en,detail,filter|order_by,2,"SELECT [CostCenterId], [DLRef] FROM [GNR].[CostCenter] WHERE [Type] = 1 ORDER BY [CostCenterId] ASC","SELECT [CostCenterId], [DLRef] FROM [GNR].[CostCenter] WHERE [Type] = 1 ORDER BY [CostCenterId] ASC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,40372.961,4,5468,
+singleq_35_en,en,aggregation,aggregation|date_operation|group_by|order_by,4,"SELECT YEAR(ri.[Date]) AS [Year], COUNT(*) AS [InvoiceCount], SUM(ri.[NetPrice]) AS [TotalNetPrice] FROM [SLS].[ReturnedInvoice] AS ri GROUP BY YEAR(ri.[Date]) ORDER BY [Year] ASC","SELECT YEAR(ri.[Date]) AS [Year], COUNT(*) AS [InvoiceCount], SUM(ri.[NetPrice]) AS [TotalNetPrice] FROM [SLS].[ReturnedInvoice] AS ri GROUP BY YEAR(ri.[Date]) ORDER BY [Year] ASC",1,1,1,1,1.0,0.5,1.0,False,False,86.60254,10026.376,4,7718,
+singleq_38_fa,fa,aggregation,aggregation|group_by|order_by,3,"SELECT cc.[Type] AS CostCenterType, COUNT(*) AS CostCenterCount
+FROM [GNR].[CostCenter] AS cc
+GROUP BY cc.[Type]
+ORDER BY cc.[Type] ASC","SELECT cc.[Type] AS CostCenterType, COUNT(*) AS CostCenterCount
+FROM [GNR].[CostCenter] AS cc
+GROUP BY cc.[Type]
+ORDER BY cc.[Type] ASC",1,1,1,1,1.0,0.333333,1.0,False,False,100.0,49163.193,4,6307,
+singleq_38_en,en,aggregation,aggregation|group_by|order_by,3,"SELECT cc.[Type], COUNT(*) AS Count FROM [GNR].[CostCenter] AS cc GROUP BY cc.[Type] ORDER BY cc.[Type] ASC","SELECT cc.[Type], COUNT(*) AS Count FROM [GNR].[CostCenter] AS cc GROUP BY cc.[Type] ORDER BY cc.[Type] ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,41348.163,4,5183,
+singleq_39_en,en,detail,filter|order_by|range_filter,3,"SELECT w.[Code], w.[Title], w.[Title_En] FROM [PAY].[Worksite] AS w WHERE w.[Code] BETWEEN 1001 AND 1005 ORDER BY w.[Code] ASC","SELECT w.[Code], w.[Title], w.[Title_En] FROM [PAY].[Worksite] AS w WHERE w.[Code] BETWEEN 1001 AND 1005 ORDER BY w.[Code] ASC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,13673.183,4,5307,
+singleq_40_en,en,detail,order_by,1,"SELECT w.[WorksiteId], w.[Code], w.[Title] FROM [PAY].[Worksite] AS w ORDER BY w.[Code] DESC","SELECT w.[WorksiteId], w.[Code], w.[Title] FROM [PAY].[Worksite] AS w ORDER BY w.[Code] DESC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,36146.497,4,4922,
+questions_payments_receipts_intent_001_en,en,payment_receipt,join|order_by|top_limit,3,"SELECT TOP 20 ph.[Number] AS PaymentNumber, ph.[Date] AS PaymentDate, ph.[Amount], rh.[Number] AS ReceiptNumber, rh.[Date] AS ReceiptDate
+FROM [RPA].[PaymentHeader] ph
+INNER JOIN [RPA].[ReceiptHeader] rh ON rh.[ReceiptHeaderId] = ph.[ReceiptHeaderRef]
+WHERE ph.[ReceiptHeaderRef] IS NOT NULL
+ORDER BY ph.[Date] DESC","SELECT TOP 20 ph.[Number] AS PaymentNumber, ph.[Date] AS PaymentDate, ph.[Amount], rh.[Number] AS ReceiptNumber, rh.[Date] AS ReceiptDate
+FROM [RPA].[PaymentHeader] ph
+INNER JOIN [RPA].[ReceiptHeader] rh ON rh.[ReceiptHeaderId] = ph.[ReceiptHeaderRef]
+WHERE ph.[ReceiptHeaderRef] IS NOT NULL
+ORDER BY ph.[Date] DESC",1,1,1,1,1.0,0.666667,1.0,False,False,86.60254,71366.805,4,10060,
+singleq_39_fa,fa,detail,filter|order_by|range_filter,3,"SELECT [Code], [Title], [Title_En] FROM [PAY].[Worksite] WHERE [Code] BETWEEN 1001 AND 1005 ORDER BY [Code] ASC","SELECT [Code], [Title], [Title_En] FROM [PAY].[Worksite] WHERE [Code] BETWEEN 1001 AND 1005 ORDER BY [Code] ASC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,8224.966,4,5267,
+singleq_40_fa,fa,detail,order_by,1,"SELECT w.[WorksiteId], w.[Code], w.[Title] FROM [PAY].[Worksite] AS w ORDER BY w.[Code] DESC","SELECT w.[WorksiteId], w.[Code], w.[Title] FROM [PAY].[Worksite] AS w ORDER BY w.[Code] DESC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,7502.187,4,5169,
+singleq_34_fa,fa,financial,order_by|top_limit,2,"SELECT TOP 20 ri.[Number], ri.[Date], ri.[Price], ri.[Discount], ri.[NetPrice] FROM [SLS].[ReturnedInvoice] AS ri ORDER BY ri.[Date] DESC, ri.[Number] DESC","SELECT TOP 20 ri.[Number], ri.[Date], ri.[Price], ri.[Discount], ri.[NetPrice] FROM [SLS].[ReturnedInvoice] AS ri ORDER BY ri.[Date] DESC, ri.[Number] DESC",1,1,1,1,1.0,0.333333,1.0,False,False,100.0,22238.481,4,10687,
+questions_payments_receipts_intent_005_fa,fa,aggregation,aggregation|group_by|order_by|top_limit,4,"SELECT ph.[Type],
+       SUM(ph.[PaymentAmount]) AS TotalPaymentAmount,
+       SUM(ph.[AmountInBaseCurrency]) AS TotalAmountInBaseCurrency
+FROM [RPA].[PaymentHeader] AS ph
+GROUP BY ph.[Type]
+ORDER BY ph.[Type]","SELECT ph.[Type],
+       SUM(ph.[PaymentAmount]) AS TotalPaymentAmount,
+       SUM(ph.[AmountInBaseCurrency]) AS TotalAmountInBaseCurrency
+FROM [RPA].[PaymentHeader] AS ph
+GROUP BY ph.[Type]
+ORDER BY ph.[Type]",1,1,1,1,1.0,0.333333,1.0,False,False,86.60254,61604.982,4,8274,
+questions_payments_receipts_intent_004_fa,fa,aggregation,aggregation|group_by|order_by,3,"SELECT rh.[State],
+       SUM(rh.[TotalAmount]) AS TotalAmountSum,
+       AVG(rh.[TotalAmount]) AS AvgTotalAmount,
+       COUNT(*) AS ReceiptCount
+FROM [RPA].[ReceiptHeader] AS rh
+GROUP BY rh.[State]
+ORDER BY SUM(rh.[TotalAmount]) DESC","SELECT rh.[State],
+       SUM(rh.[TotalAmount]) AS TotalAmountSum,
+       AVG(rh.[TotalAmount]) AS AvgTotalAmount,
+       COUNT(*) AS ReceiptCount
+FROM [RPA].[ReceiptHeader] AS rh
+GROUP BY rh.[State]
+ORDER BY SUM(rh.[TotalAmount]) DESC",1,1,1,1,1.0,0.5,1.0,False,False,86.60254,57887.034,4,7211,
+questions_payments_receipts_intent_004_en,en,aggregation,aggregation|group_by|order_by,3,"SELECT [State], SUM([TotalAmount]) AS TotalAmountSum, AVG([TotalAmount]) AS AvgTotalAmount, COUNT(*) AS ReceiptCount FROM [RPA].[ReceiptHeader] GROUP BY [State] ORDER BY TotalAmountSum DESC;","SELECT [State], SUM([TotalAmount]) AS TotalAmountSum, AVG([TotalAmount]) AS AvgTotalAmount, COUNT(*) AS ReceiptCount FROM [RPA].[ReceiptHeader] GROUP BY [State] ORDER BY TotalAmountSum DESC;",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,26303.192,3,5380,
+questions_payments_receipts_intent_005_en,en,aggregation,aggregation|group_by|order_by|top_limit,4,"SELECT TOP 20 ph.[Type],
+       SUM(ph.[PaymentAmount]) AS TotalPaymentAmount,
+       SUM(ph.[AmountInBaseCurrency]) AS TotalAmountInBaseCurrency
+FROM [RPA].[PaymentHeader] ph
+GROUP BY ph.[Type]
+ORDER BY SUM(ph.[PaymentAmount]) DESC","SELECT TOP 20 ph.[Type],
+       SUM(ph.[PaymentAmount]) AS TotalPaymentAmount,
+       SUM(ph.[AmountInBaseCurrency]) AS TotalAmountInBaseCurrency
+FROM [RPA].[PaymentHeader] ph
+GROUP BY ph.[Type]
+ORDER BY SUM(ph.[PaymentAmount]) DESC",1,1,1,1,1.0,0.333333,1.0,False,False,86.60254,14710.878,4,8157,
+questions_personnel_intent_001_fa,fa,list,join|order_by|top_limit,3,"SELECT TOP 20 bb.[BankBranchId], bb.[Title] AS BranchTitle, bb.[Code] AS BranchCode, b.[Title] AS BankTitle
+FROM [RPA].[BankBranch] bb
+INNER JOIN [RPA].[Bank] b ON bb.[BankRef] = b.[BankId]
+ORDER BY bb.[BankBranchId]","SELECT TOP 20 bb.[BankBranchId], bb.[Title] AS BranchTitle, bb.[Code] AS BranchCode, b.[Title] AS BankTitle
+FROM [RPA].[BankBranch] bb
+INNER JOIN [RPA].[Bank] b ON bb.[BankRef] = b.[BankId]
+ORDER BY bb.[BankBranchId]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,9154.129,4,7817,
+questions_personnel_intent_001_en,en,list,join|order_by|top_limit,3,"SELECT TOP 20 bb.[BankBranchId], bb.[Title] AS BranchTitle, bb.[Code] AS BranchCode, b.[Title] AS BankTitle
+FROM [RPA].[BankBranch] bb
+INNER JOIN [RPA].[Bank] b ON bb.[BankRef] = b.[BankId]
+ORDER BY bb.[BankBranchId]","SELECT TOP 20 bb.[BankBranchId], bb.[Title] AS BranchTitle, bb.[Code] AS BranchCode, b.[Title] AS BankTitle
+FROM [RPA].[BankBranch] bb
+INNER JOIN [RPA].[Bank] b ON bb.[BankRef] = b.[BankId]
+ORDER BY bb.[BankBranchId]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,53297.566,4,7460,
+questions_personnel_intent_003_fa,fa,detail,join|order_by|outer_join|top_limit,4,"SELECT TOP 20 p.[PersonnelId], p.[AccountNo], at.[Title_En] 
+FROM [PAY].[Personnel] AS p 
+LEFT JOIN [RPA].[AccountType] AS at ON p.[AccountTypeRef] = at.[AccountTypeId] 
+ORDER BY p.[PersonnelId]","SELECT TOP 20 p.[PersonnelId], p.[AccountNo], at.[Title_En] 
+FROM [PAY].[Personnel] AS p 
+LEFT JOIN [RPA].[AccountType] AS at ON p.[AccountTypeRef] = at.[AccountTypeId] 
+ORDER BY p.[PersonnelId]",1,1,1,1,1.0,0.666667,1.0,False,False,100.0,54607.744,4,8360,
+questions_personnel_intent_003_en,en,detail,join|order_by|outer_join|top_limit,4,"SELECT TOP 20 p.PersonnelId, p.AccountNo, at.Title_En
+FROM [PAY].[Personnel] AS p
+LEFT JOIN [RPA].[AccountType] AS at ON p.AccountTypeRef = at.AccountTypeId
+ORDER BY p.PersonnelId","SELECT TOP 20 p.PersonnelId, p.AccountNo, at.Title_En
+FROM [PAY].[Personnel] AS p
+LEFT JOIN [RPA].[AccountType] AS at ON p.AccountTypeRef = at.AccountTypeId
+ORDER BY p.PersonnelId",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,43738.479,4,6833,
+questions_personnel_intent_005_fa,fa,aggregation,aggregation|group_by,2,"SELECT bb.LocationRef, COUNT(*) AS BranchCount FROM [RPA].[BankBranch] AS bb GROUP BY bb.LocationRef","SELECT bb.LocationRef, COUNT(*) AS BranchCount FROM [RPA].[BankBranch] AS bb GROUP BY bb.LocationRef",1,1,1,1,1.0,0.333333,1.0,False,False,86.60254,63430.534,4,2162,"Answer generation failed: RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01kzb42441ekbarf4js67ssa3p` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199312, Requested 1044. Please try again in 2m33.792s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+questions_personnel_intent_005_en,en,aggregation,aggregation|group_by,2,"SELECT bb.[LocationRef] AS LocationId, COUNT(*) AS BranchCount
+FROM [RPA].[BankBranch] AS bb
+GROUP BY bb.[LocationRef]","SELECT bb.[LocationRef] AS LocationId, COUNT(*) AS BranchCount
+FROM [RPA].[BankBranch] AS bb
+GROUP BY bb.[LocationRef]",1,1,1,1,1.0,0.5,1.0,False,False,86.60254,11930.797,4,6387,
+questions_tax_intent_002_fa,fa,aggregation,aggregation|group_by|join|order_by|top_limit,5,"SELECT TOP 20 TG.Title, TG.Title_En, COUNT(TT.TaxTableId) AS TableCount
+FROM [PAY].[TaxGroup] TG
+LEFT JOIN [PAY].[TaxTable] TT ON TT.TaxGroupRef = TG.TaxGroupId
+GROUP BY TG.Title, TG.Title_En
+ORDER BY TableCount DESC","SELECT TOP 20 TG.Title, TG.Title_En, COUNT(TT.TaxTableId) AS TableCount
+FROM [PAY].[TaxGroup] TG
+LEFT JOIN [PAY].[TaxTable] TT ON TT.TaxGroupRef = TG.TaxGroupId
+GROUP BY TG.Title, TG.Title_En
+ORDER BY TableCount DESC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,45437.664,4,5675,
+questions_tax_intent_002_en,en,aggregation,aggregation|group_by|join|order_by|top_limit,5,"SELECT TOP 20 tg.Title, tg.Title_En, COUNT(tt.TaxTableId) AS TaxTableCount
+FROM [PAY].[TaxGroup] tg
+INNER JOIN [PAY].[TaxTable] tt ON tt.TaxGroupRef = tg.TaxGroupId
+GROUP BY tg.Title, tg.Title_En
+ORDER BY TaxTableCount DESC","SELECT TOP 20 tg.Title, tg.Title_En, COUNT(tt.TaxTableId) AS TaxTableCount
+FROM [PAY].[TaxGroup] tg
+INNER JOIN [PAY].[TaxTable] tt ON tt.TaxGroupRef = tg.TaxGroupId
+GROUP BY tg.Title, tg.Title_En
+ORDER BY TaxTableCount DESC",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,49612.356,4,5994,
+questions_tax_intent_004_fa,fa,aggregation,aggregation|group_by|order_by,3,"SELECT tg.[Type], COUNT(*) AS GroupCount
+FROM [PAY].[TaxGroup] AS tg
+GROUP BY tg.[Type]","SELECT tg.[Type], COUNT(*) AS GroupCount
+FROM [PAY].[TaxGroup] AS tg
+GROUP BY tg.[Type]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,40482.536,4,4898,
+questions_tax_intent_001_fa,fa,aggregation,aggregation|group_by|join|order_by|top_limit,5,"SELECT TOP 20 t.[Title], t.[Title_En], COUNT(*) AS ItemCount
+FROM [PAY].[TaxTable] AS t
+INNER JOIN [PAY].[TaxTableItem] AS i ON i.[TaxTableRef] = t.[TaxTableId]
+GROUP BY t.[TaxTableId], t.[Title], t.[Title_En]
+ORDER BY COUNT(*) DESC","SELECT TOP 20 t.[Title], t.[Title_En], COUNT(*) AS ItemCount
+FROM [PAY].[TaxTable] AS t
+INNER JOIN [PAY].[TaxTableItem] AS i ON i.[TaxTableRef] = t.[TaxTableId]
+GROUP BY t.[TaxTableId], t.[Title], t.[Title_En]
+ORDER BY COUNT(*) DESC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,19877.201,4,7129,
+questions_tax_intent_001_en,en,aggregation,aggregation|group_by|join|order_by|top_limit,5,"SELECT TOP 20 t.[Title], t.[Title_En], COUNT(*) AS ItemCount
+FROM [PAY].[TaxTable] AS t
+INNER JOIN [PAY].[TaxTableItem] AS i ON i.[TaxTableRef] = t.[TaxTableId]
+GROUP BY t.[TaxTableId], t.[Title], t.[Title_En]
+ORDER BY COUNT(*) DESC","SELECT TOP 20 t.[Title], t.[Title_En], COUNT(*) AS ItemCount
+FROM [PAY].[TaxTable] AS t
+INNER JOIN [PAY].[TaxTableItem] AS i ON i.[TaxTableRef] = t.[TaxTableId]
+GROUP BY t.[TaxTableId], t.[Title], t.[Title_En]
+ORDER BY COUNT(*) DESC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,39992.991,4,7463,
+questions_tax_intent_004_en,en,aggregation,aggregation|group_by|order_by,3,"SELECT tg.[Type], COUNT(*) AS GroupCount FROM [PAY].[TaxGroup] AS tg GROUP BY tg.[Type]","SELECT tg.[Type], COUNT(*) AS GroupCount FROM [PAY].[TaxGroup] AS tg GROUP BY tg.[Type]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,41761.297,4,5151,
+questions_tax_intent_005_fa,fa,aggregation,aggregation|group_by,2,"SELECT t.[TaxType], COUNT(*) AS RecordCount FROM [PAY].[TaxTable] AS t GROUP BY t.[TaxType] ORDER BY t.[TaxType]","SELECT t.[TaxType], COUNT(*) AS RecordCount FROM [PAY].[TaxTable] AS t GROUP BY t.[TaxType] ORDER BY t.[TaxType]",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,40168.171,4,5008,
+questions_tax_intent_005_en,en,aggregation,aggregation|group_by,2,"SELECT t.[TaxType], COUNT(*) AS RecordCount FROM [PAY].[TaxTable] AS t GROUP BY t.[TaxType]","SELECT t.[TaxType], COUNT(*) AS RecordCount FROM [PAY].[TaxTable] AS t GROUP BY t.[TaxType]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,36780.461,4,4985,
+questions_worksite_intent_003_fa,fa,Personnel,join|order_by|top_limit,3,"SELECT TOP 20 p.PersonnelId, p.EmployeeStatus, md.MonthlyDataRef
+FROM [PAY].[Personnel] AS p
+INNER JOIN [PAY].[MonthlyDataPersonnel] AS md ON md.PersonnelRef = p.PersonnelId
+ORDER BY p.PersonnelId","SELECT TOP 20 p.PersonnelId, p.EmployeeStatus, md.MonthlyDataRef
+FROM [PAY].[Personnel] AS p
+INNER JOIN [PAY].[MonthlyDataPersonnel] AS md ON md.PersonnelRef = p.PersonnelId
+ORDER BY p.PersonnelId",1,1,1,1,1.0,1.0,1.0,False,False,100.0,44457.142,4,6365,
+questions_worksite_intent_003_en,en,Personnel,join|order_by|top_limit,3,"SELECT TOP 20 p.PersonnelId, p.EmployeeStatus, mdp.MonthlyDataRef FROM [PAY].[Personnel] AS p INNER JOIN [PAY].[MonthlyDataPersonnel] AS mdp ON mdp.PersonnelRef = p.PersonnelId ORDER BY p.PersonnelId","SELECT TOP 20 p.PersonnelId, p.EmployeeStatus, mdp.MonthlyDataRef FROM [PAY].[Personnel] AS p INNER JOIN [PAY].[MonthlyDataPersonnel] AS mdp ON mdp.PersonnelRef = p.PersonnelId ORDER BY p.PersonnelId",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,12590.238,4,5666,
+questions_worksite_intent_004_fa,fa,aggregation,aggregation|date_operation|group_by|order_by,4,"SELECT DATEPART(year, ws.[CreationDate]) AS [Year], COUNT(*) AS [WorksiteCount] FROM [PAY].[Worksite] AS ws GROUP BY DATEPART(year, ws.[CreationDate]) ORDER BY [Year]","SELECT DATEPART(year, ws.[CreationDate]) AS [Year], COUNT(*) AS [WorksiteCount] FROM [PAY].[Worksite] AS ws GROUP BY DATEPART(year, ws.[CreationDate]) ORDER BY [Year]",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,19739.01,4,5282,
+questions_worksite_intent_004_en,en,aggregation,aggregation|date_operation|group_by|order_by,4,"SELECT YEAR(w.[CreationDate]) AS [Year], COUNT(*) AS [WorksiteCount] FROM [PAY].[Worksite] AS w GROUP BY YEAR(w.[CreationDate]) ORDER BY YEAR(w.[CreationDate])","SELECT YEAR(w.[CreationDate]) AS [Year], COUNT(*) AS [WorksiteCount] FROM [PAY].[Worksite] AS w GROUP BY YEAR(w.[CreationDate]) ORDER BY YEAR(w.[CreationDate])",1,1,1,1,1.0,1.0,1.0,False,False,100.0,37657.409,4,5099,
+questions_worksite_intent_002_en,en,join,join|order_by|top_limit,3,"SELECT TOP 20 p.PersonnelId, p.EmployeeStatus, c.ContractType, c.EmploymentDate
+FROM [PAY].[Personnel] AS p
+INNER JOIN [PAY].[Contract] AS c ON c.PersonnelRef = p.PersonnelId
+ORDER BY p.PersonnelId;","SELECT TOP 20 p.PersonnelId, p.EmployeeStatus, c.ContractType, c.EmploymentDate
+FROM [PAY].[Personnel] AS p
+INNER JOIN [PAY].[Contract] AS c ON c.PersonnelRef = p.PersonnelId
+ORDER BY p.PersonnelId;",1,1,1,1,1.0,0.333333,1.0,False,False,86.60254,27829.419,4,4223,
+questions_worksite_intent_005_fa,fa,aggregation,aggregation|group_by,2,"SELECT p.[Sex], COUNT(*) AS EmployeeCount FROM [PAY].[Personnel] AS p GROUP BY p.[Sex]","SELECT p.[Sex], COUNT(*) AS EmployeeCount FROM [PAY].[Personnel] AS p GROUP BY p.[Sex]",1,1,1,1,1.0,1.0,1.0,False,False,100.0,22877.667,4,5584,
+questions_worksite_intent_005_en,en,aggregation,aggregation|group_by,2,"SELECT p.Sex, COUNT(*) AS EmployeeCount
+FROM [PAY].[Personnel] AS p
+INNER JOIN [GNR].[Party] AS pt ON p.PartyRef = pt.PartyId
+WHERE pt.IsEmployee = 1
+GROUP BY p.Sex","SELECT p.Sex, COUNT(*) AS EmployeeCount
+FROM [PAY].[Personnel] AS p
+INNER JOIN [GNR].[Party] AS pt ON p.PartyRef = pt.PartyId
+WHERE pt.IsEmployee = 1
+GROUP BY p.Sex",1,1,1,1,1.0,0.5,1.0,False,False,50.0,27286.849,4,6346,
+questions_worksite_intent_002_fa,fa,join,join|order_by|top_limit,3,"SELECT TOP 20 p.PersonnelId, p.EmployeeStatus, c.ContractType, c.EmploymentDate
+FROM [PAY].[Personnel] p
+INNER JOIN [PAY].[Contract] c ON c.PersonnelRef = p.PersonnelId
+ORDER BY p.PersonnelId","SELECT TOP 20 p.PersonnelId, p.EmployeeStatus, c.ContractType, c.EmploymentDate
+FROM [PAY].[Personnel] p
+INNER JOIN [PAY].[Contract] c ON c.PersonnelRef = p.PersonnelId
+ORDER BY p.PersonnelId",1,1,1,1,1.0,1.0,1.0,False,False,100.0,41982.893,4,7083,
+questions_assets_intent_006_en,en,join,date_operation|distinct|filter|join|multi_join|range_filter,6,"SELECT d.CreationDate
+FROM [AST].[Depreciation] AS d
+INNER JOIN [AST].[DepreciationItem] AS di ON di.DepreciationRef = d.DepreciationID
+INNER JOIN [AST].[Asset] AS a ON a.AssetId = d.AssetRef
+WHERE a.PlaqueNumber = N'120100565'
+  AND di.CalculationDate >= '20240419' AND di.CalculationDate < '20240420'","SELECT d.CreationDate
+FROM [AST].[Depreciation] AS d
+INNER JOIN [AST].[DepreciationItem] AS di ON di.DepreciationRef = d.DepreciationID
+INNER JOIN [AST].[Asset] AS a ON a.AssetId = d.AssetRef
+WHERE a.PlaqueNumber = N'120100565'
+  AND di.CalculationDate >= '20240419' AND di.CalculationDate < '20240420'",1,1,1,1,1.0,1.0,1.0,False,False,100.0,13892.374,4,7490,
+questions_bank_typo_intent_001_fa,fa,filter,filter|typo,2,SELECT TOP 1 [BankId] FROM [RPA].[Bank] WHERE [Title] = N'اقتصاد نويين',SELECT TOP 1 [BankId] FROM [RPA].[Bank] WHERE [Title] = N'اقتصاد نوين',0,1,1,1,1.0,1.0,1.0,True,True,100.0,38415.359,5,5860,
+questions_bank_typo_intent_002_en,en,filter,filter|typo,2,SELECT TOP 1 b.[BankId] FROM [RPA].[Bank] AS b WHERE b.[Title] = N'رفاه كارگرن',SELECT TOP 1 b.[BankId] FROM [RPA].[Bank] AS b WHERE b.[Title] = N'رفاه كارگران',0,1,1,1,1.0,1.0,1.0,True,True,86.60254,57674.748,5,6298,
+questions_item_typo_intent_001_fa,fa,filter,filter|typo,2,SELECT TOP 1 i.[Code] FROM [INV].[Item] AS i WHERE i.[Title] = N'صندلي مديرتي',SELECT TOP 1 i.[Code] FROM [INV].[Item] AS i WHERE i.[Title] = N'صندلي مديريتي',0,1,1,1,1.0,0.5,1.0,True,True,100.0,15732.481,5,7518,
+questions_coefficient_typo_intent_001_fa,fa,filter,filter|top_limit|typo,3,SELECT TOP 1 c.[Percent] FROM [CNT].[Coefficient] AS c WHERE c.[Title] = N'حسن انجام کاز',SELECT TOP 1 c.[Percent] FROM [CNT].[Coefficient] AS c WHERE c.[Title] = N'حسن انجام كار',0,1,1,1,1.0,1.0,1.0,True,True,86.60254,28757.779,5,5880,
+questions_coefficient_typo_intent_002_en,en,filter,filter|typo,2,SELECT c.[Percent] FROM [CNT].[Coefficient] AS c WHERE c.[Title_En] = N'Performnace Bond',SELECT c.[Percent] FROM [CNT].[Coefficient] AS c WHERE c.[Title_En] = N'Performance Bond',0,1,1,1,1.0,1.0,1.0,True,True,100.0,13745.005,5,5965,
+questions_worksite_typo_intent_002_en,en,filter,filter|typo,2,SELECT w.[Code] FROM [PAY].[Worksite] AS w WHERE w.[Title] = N'دفتر زرتشيان',SELECT w.[Code] FROM [PAY].[Worksite] AS w WHERE w.[Title] = N'دفتر زرتشتيان',0,1,1,1,1.0,1.0,1.0,True,True,111.803399,41549.667,5,5436,
+questions_template_typo_intent_002_en,en,filter,filter|typo,2,SELECT [TemplateID] FROM [MSG].[Template] WHERE [Title] = N'ثبت رسيد خرريد',SELECT [TemplateID] FROM [MSG].[Template] WHERE [Title] = N'ثبت رسيد خريد',0,1,1,1,1.0,1.0,1.0,True,True,100.0,53596.086,5,5581,
+questions_worksite_typo_intent_001_fa,fa,filter,filter|typo,2,SELECT TOP 1 w.[Code] FROM [PAY].[Worksite] AS w WHERE w.[Title] = N'دفتر دارالفون',SELECT TOP 1 w.[Code] FROM [PAY].[Worksite] AS w WHERE w.[Title] = N'دفتر دارالفنون',0,1,1,1,1.0,1.0,1.0,True,True,100.0,31804.721,5,5585,
+questions_item_typo_intent_002_en,en,filter,filter|typo,2,SELECT i.[Code] FROM [INV].[Item] AS i WHERE i.[Title] = N'Flash Memroy HP 32 GB',SELECT i.[Code] FROM [INV].[Item] AS i WHERE i.[Title] = N'Flash Memory HP 32 GB ',0,1,1,1,1.0,0.5,1.0,True,True,100.0,14769.529,5,7976,
+questions_template_typo_intent_001_fa,fa,filter,filter|typo,2,SELECT t.[TemplateID] FROM [MSG].[Template] AS t WHERE t.[Title] = N'مانده حساب مشري',SELECT t.[TemplateID] FROM [MSG].[Template] AS t WHERE t.[Title] = N'مانده حساب مشتري',0,1,1,1,1.0,1.0,1.0,True,True,86.60254,14225.225,5,5495,

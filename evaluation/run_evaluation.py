@@ -38,6 +38,7 @@ from api.config import Settings
 from api.database_manager import DatabaseManager
 from api.model_logging import LoggedChatModel, LoggedOllamaEmbeddings, ModelCallLogger
 from pipeline import Pipeline
+from evaluation.query_features import annotate, classify, feature_summary
 
 
 EVALUATOR_VERSION = 2
@@ -401,6 +402,7 @@ def grouped(records: list[dict], field: str) -> dict[str, dict[str, Any]]:
 
 
 def make_summary(records: list[dict], manifest: dict) -> dict[str, Any]:
+    annotate(records)
     total_tokens = sum(r.get("tokens", {}).get("total_tokens", 0) for r in records)
     total_calls = sum(r.get("tokens", {}).get("calls", 0) for r in records)
     attempted = [r for r in records if r.get("correction", {}).get("attempted")]
@@ -443,8 +445,8 @@ def make_summary(records: list[dict], manifest: dict) -> dict[str, Any]:
             "average_tokens": round(total_tokens / len(records), 3) if records else None,
         },
         "by_language": grouped(records, "language"),
-        "by_category": grouped(records, "category"),
-        "by_difficulty": grouped(records, "difficulty"),
+        "by_feature": feature_summary(records),
+        "by_feature_count": grouped(records, "feature_count"),
         "most_missed_tables": missing_tables.most_common(15),
         "most_missed_columns": missing_columns.most_common(15),
     }
@@ -452,7 +454,7 @@ def make_summary(records: list[dict], manifest: dict) -> dict[str, Any]:
 
 def write_csv(path: Path, records: list[dict]) -> None:
     fields = [
-        "id", "language", "category", "difficulty", "initial_sql", "final_sql",
+        "id", "language", "category", "features", "feature_count", "initial_sql", "final_sql",
         "initial_ex", "final_ex", "initial_valid_sql", "final_valid_sql",
         "table_recall", "table_precision", "column_recall", "correction_attempted",
         "correction_success", "r_ves_score", "end_to_end_ms", "llm_calls",
@@ -468,7 +470,8 @@ def write_csv(path: Path, records: list[dict]) -> None:
                 "id": record["id"],
                 "language": record.get("language"),
                 "category": record.get("category"),
-                "difficulty": record.get("difficulty"),
+                "features": "|".join(record.get("features", [])),
+                "feature_count": record.get("feature_count"),
                 "initial_sql": record.get("initial_sql"),
                 "final_sql": record.get("final_sql"),
                 "initial_ex": metrics.get("initial_ex"),
@@ -639,7 +642,7 @@ code{{direction:ltr}}@media(max-width:650px){{.bar-row{{grid-template-columns:10
 <div class="cards">{''.join(f'<div class="card"><span>{html.escape(k)}</span><b>{html.escape(v)}</b></div>' for k,v in cards)}</div>
 {bar_chart('Execution Accuracy بر اساس زبان', summary['by_language'], 'execution_accuracy')}
 {bar_chart('Execution Accuracy بر اساس دسته', summary['by_category'], 'execution_accuracy')}
-{bar_chart('Execution Accuracy بر اساس سختی', summary['by_difficulty'], 'execution_accuracy')}
+{bar_chart('Execution Accuracy by Feature', summary['by_feature'], 'execution_accuracy')}
 {bar_chart('Table Recall بر اساس دسته', summary['by_category'], 'table_recall')}
 {bar_chart('Column Recall بر اساس دسته', summary['by_category'], 'column_recall')}
 <section><h2>سؤال‌های ناموفق ({len(failed)})</h2><table><thead><tr><th>ID</th><th>سؤال</th><th>خطا/نتیجه</th></tr></thead><tbody>{failed_rows}</tbody></table></section>
@@ -756,16 +759,52 @@ def _report_distribution_block(title: str, records: list[dict], field: str, colo
 
 def _report_dataset_profile(records: list[dict]) -> str:
     content = "".join([
-        _report_distribution_block("Difficulty mix", records, "difficulty", 0),
-        _report_distribution_block("Category mix", records, "category", 2),
+        _report_feature_distribution(records),
+        '<div class="distribution-stack">',
         _report_distribution_block("Language mix", records, "language", 4),
+        _report_distribution_block("Feature count (not difficulty)", records, "feature_count", 0),
+        '</div>',
     ])
     return (
         '<article class="section wide">'
         '<h2>Dataset composition</h2>'
         f'<div class="distribution-grid">{content}</div>'
+        '<p>Features describe the reference SQL; typo marks intentional input errors. '
+        'Groups overlap, so counts must not be added. Feature count is descriptive, not a difficulty score. '
+        'EX uses stored execution results, including recorded failures; no queries were rerun.</p>'
+        + _report_feature_table(records) +
         '</article>'
     )
+
+
+def _report_feature_table(records: list[dict]) -> str:
+    rows = []
+    for label, values in feature_summary(records).items():
+        rows.append('<tr><td title="' + html.escape(values['description']) + '">' + label + '</td>'
+            + f"<td>{values['questions']}</td><td>{values['scored_questions']}</td>"
+            + f"<td>{format_percent(values['initial_execution_accuracy'])}</td>"
+            + f"<td>{format_percent(values['execution_accuracy'])}</td>"
+            + f"<td>{format_percent(values['correction_gain'])}</td>"
+            + f"<td>{values['correction_attempted']}</td><td>{values['recovered_questions']}</td>"
+            + f"<td>{values['errors']}</td></tr>")
+    return ('<h3>Results by required feature</h3><div class="table-wrap"><table><thead><tr>'
+        '<th>Feature</th><th>Questions</th><th>Scored</th><th>Initial EX</th><th>Final EX</th>'
+        '<th>Gain</th><th>Correction attempts</th><th>Recovered (0 → 1)</th><th>Errors</th>'
+        '</tr></thead><tbody>' + ''.join(rows) + '</tbody></table></div>')
+
+
+def _report_feature_distribution(records: list[dict]) -> str:
+    rows = []
+    palette = ["#748da4", "#d28378", "#a6b7a1", "#c4936a", "#e5b0a0", "#547a6e", "#eac8ab", "#8e8e6c"]
+    for index, (label, values) in enumerate(feature_summary(records).items()):
+        percent = values['questions'] / len(records) * 100 if records else 0
+        rows.append(
+            f'<div class="distribution-row" style="--bar-color:{palette[index % len(palette)]}">'
+            f'<span title="{html.escape(values["description"])}">{html.escape(label)}</span>'
+            f'<b>{values["questions"]} / {len(records)} ({percent:.1f}%)</b>'
+            f'<div class="mini-track"><i style="width:{percent:.1f}%"></i></div></div>'
+        )
+    return '<div class="distribution"><h3>Required features (overlapping)</h3>' + ''.join(rows) + '</div>'
 
 
 def _report_missed_items(items: list[tuple[str, int]]) -> str:
@@ -798,15 +837,14 @@ def write_html(path: Path, summary: dict, records: list[dict]) -> None:
             "<tr>"
             f"<td>{html.escape(r['id'])}</td>"
             f"<td>{html.escape(str(r.get('question', '')))}</td>"
-            f"<td>{html.escape(str(r.get('category') or '—'))}</td>"
-            f"<td>{html.escape(str(r.get('difficulty') or '—'))}</td>"
+            f"<td>{html.escape(', '.join(r.get('features', [])))}</td>"
             f"<td>{html.escape(str(r.get('error') or 'Wrong result'))}</td>"
             "</tr>"
             for r in failed[:100]
         )
         failed_table = (
             '<div class="table-wrap"><table><thead><tr>'
-            '<th>ID</th><th>Question</th><th>Category</th><th>Difficulty</th><th>Error / result</th>'
+            '<th>ID</th><th>Question</th><th>Features</th><th>Error / result</th>'
             f'</tr></thead><tbody>{failed_rows}</tbody></table></div>'
         )
     else:
@@ -841,10 +879,9 @@ def write_html(path: Path, summary: dict, records: list[dict]) -> None:
         ]),
         "charts": "\n".join([
             _report_bar_chart("Execution Accuracy by Language", summary["by_language"], "execution_accuracy"),
-            _report_vertical_chart("Execution Accuracy by Category", summary["by_category"], "execution_accuracy"),
-            _report_vertical_chart("Execution Accuracy by Difficulty", summary["by_difficulty"], "execution_accuracy"),
-            _report_bar_chart("Table Recall by Category", summary["by_category"], "table_recall"),
-            _report_bar_chart("Column Recall by Category", summary["by_category"], "column_recall"),
+            _report_bar_chart("Execution Accuracy by Feature (overlapping groups)", summary["by_feature"], "execution_accuracy"),
+            _report_bar_chart("Table Recall by Feature", summary["by_feature"], "table_recall"),
+            _report_bar_chart("Column Recall by Feature", summary["by_feature"], "column_recall"),
         ]),
         "missed_tables": _report_missed_items(summary["most_missed_tables"]),
         "missed_columns": _report_missed_items(summary["most_missed_columns"]),
@@ -997,7 +1034,7 @@ def evaluate_one(record: dict, pipeline: Pipeline, manager: DatabaseManager,
         "intent_id": record.get("intent_id"),
         "language": record.get("language"),
         "category": record.get("category"),
-        "difficulty": record.get("difficulty"),
+        **classify(record),
         "order_sensitive": order_sensitive,
         "question": record["question"],
         "reference_sql": record["reference_sql"],

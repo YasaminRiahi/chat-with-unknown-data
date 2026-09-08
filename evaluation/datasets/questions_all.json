@@ -1,10 +1,11 @@
 {
     "metadata":  {
+        "classification": {"version": 1, "method": "reference_sql_lexical_plus_explicit_typo_marker", "multi_label": true, "feature_count_is_difficulty": false},
                      "database":  "Sepidar02-back",
                      "dialect":  "mssql",
                      "status":  "candidate_not_gold",
-                     "intent_count":  71,
-                     "question_count":  141,
+                     "intent_count": 109,
+                     "question_count": 200,
                      "languages":  [
                                        "fa",
                                        "en"
@@ -50,7 +51,7 @@
                                              "PAY.Element.AccountRef"
                                          ],
                         "category":  "account-element",
-                        "difficulty":  "easy",
+                        "features": ["join", "order_by", "top_limit"], "feature_count": 3, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -74,7 +75,7 @@
                                              "PAY.Element.AccountRef"
                                          ],
                         "category":  "account-element",
-                        "difficulty":  "easy",
+                        "features": ["join", "order_by", "top_limit"], "feature_count": 3, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -99,7 +100,7 @@
                                              "PAY.Element.AccountRef"
                                          ],
                         "category":  "account",
-                        "difficulty":  "medium",
+                        "features": ["join", "order_by", "top_limit"], "feature_count": 3, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -124,7 +125,7 @@
                                              "PAY.Element.AccountRef"
                                          ],
                         "category":  "account",
-                        "difficulty":  "medium",
+                        "features": ["join", "order_by", "outer_join", "top_limit"], "feature_count": 4, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -145,7 +146,7 @@
                                              "ACC.Account.IsActive"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -166,7 +167,7 @@
                                              "ACC.Account.IsActive"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -188,7 +189,7 @@
                                              "ACC.AccVchHdr.Amount"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -210,7 +211,7 @@
                                              "ACC.AccVchHdr.Amount"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -235,7 +236,7 @@
                                              "AST.AcquisitionReceiptItem.AssetRef"
                                          ],
                         "category":  "financial",
-                        "difficulty":  "medium",
+                        "features": ["aggregation", "group_by", "join", "order_by", "outer_join", "top_limit"], "feature_count": 6, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -260,7 +261,7 @@
                                              "AST.AcquisitionReceiptItem.AssetRef"
                                          ],
                         "category":  "financial",
-                        "difficulty":  "medium",
+                        "features": ["aggregation", "group_by", "join", "order_by", "outer_join", "top_limit"], "feature_count": 6, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -285,7 +286,7 @@
                                              "AST.AssetGroup.AssetClassRef"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "medium",
+                        "features": ["aggregation", "group_by", "join", "order_by", "outer_join"], "feature_count": 5, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -310,7 +311,7 @@
                                              "AST.AssetGroup.AssetClassRef"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "medium",
+                        "features": ["aggregation", "group_by", "join", "order_by", "outer_join"], "feature_count": 5, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -335,7 +336,7 @@
                                              "AST.AssetTransaction.AssetRef"
                                          ],
                         "category":  "detail",
-                        "difficulty":  "medium",
+                        "features": ["aggregation", "group_by", "join", "order_by", "top_limit"], "feature_count": 5, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -355,7 +356,7 @@
                                              "AST.AssetClass.CreationDate"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "medium",
+                        "features": ["aggregation", "date_operation", "group_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -375,7 +376,7 @@
                                              "AST.AssetClass.CreationDate"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "medium",
+                        "features": ["aggregation", "date_operation", "group_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -395,7 +396,7 @@
                                              "AST.Asset.State"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -415,7 +416,7 @@
                                              "AST.Asset.State"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -441,7 +442,7 @@
                                              "RPA.Bank.BankId"
                                          ],
                         "category":  "listing",
-                        "difficulty":  "easy",
+                        "features": ["join", "order_by", "top_limit"], "feature_count": 3, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -467,7 +468,7 @@
                                              "RPA.Bank.BankId"
                                          ],
                         "category":  "listing",
-                        "difficulty":  "easy",
+                        "features": ["join", "order_by", "top_limit"], "feature_count": 3, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -490,7 +491,7 @@
                                              "RPA.BankAccount.BankAccountId"
                                          ],
                         "category":  "analytics",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by", "join", "order_by", "outer_join", "top_limit"], "feature_count": 6, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -513,30 +514,7 @@
                                              "RPA.BankAccount.BankAccountId"
                                          ],
                         "category":  "analytics",
-                        "difficulty":  "easy",
-                        "review_status":  "candidate",
-                        "review_notes":  ""
-                    },
-                    {
-                        "id":  "questions_bank_intent_003_fa",
-                        "language":  "fa",
-                        "question":  "مجموع مبلغ چک‌های دریافتی به ازای هر بانک چه مقدار است؟",
-                        "intent_id":  "questions_bank_intent_003",
-                        "db_name":  "Sepidar02-back",
-                        "schema":  "RPA",
-                        "table":  "Bank",
-                        "reference_sql":  "SELECT b.[Title], b.[Title_En], SUM(rc.[Amount]) AS TotalAmount FROM [RPA].[Bank] AS b INNER JOIN [RPA].[ReceiptCheque] AS rc ON rc.[BankRef] = b.[BankId] GROUP BY b.[Title], b.[Title_En]",
-                        "gold_tables":  [
-                                            "RPA.Bank",
-                                            "RPA.ReceiptCheque"
-                                        ],
-                        "gold_columns":  [
-                                             "RPA.Bank.Title",
-                                             "RPA.Bank.Title_En",
-                                             "RPA.ReceiptCheque.Amount"
-                                         ],
-                        "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by", "join", "order_by", "outer_join", "top_limit"], "feature_count": 6, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -558,7 +536,7 @@
                                              "RPA.ReceiptCheque.Amount"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by", "join"], "feature_count": 3, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -582,7 +560,7 @@
                                              "RPA.BankBranch.BankRef"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by", "join", "outer_join"], "feature_count": 4, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -606,7 +584,7 @@
                                              "RPA.BankBranch.BankRef"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by", "join", "outer_join"], "feature_count": 4, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -626,7 +604,7 @@
                                              "RPA.Bank.Creator"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -646,7 +624,7 @@
                                              "RPA.Bank.Creator"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -669,7 +647,7 @@
                                              "RPA.BankAccountBalance.Balance"
                                          ],
                         "category":  "financial",
-                        "difficulty":  "easy",
+                        "features": ["join", "order_by", "top_limit"], "feature_count": 3, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -692,7 +670,7 @@
                                              "RPA.BankAccountBalance.Balance"
                                          ],
                         "category":  "financial",
-                        "difficulty":  "easy",
+                        "features": ["join", "order_by", "top_limit"], "feature_count": 3, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -716,7 +694,7 @@
                                              "RPA.AccountType.Title_En"
                                          ],
                         "category":  "account_overview",
-                        "difficulty":  "easy",
+                        "features": ["join", "order_by", "top_limit"], "feature_count": 3, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -740,7 +718,7 @@
                                              "RPA.AccountType.Title_En"
                                          ],
                         "category":  "account_overview",
-                        "difficulty":  "easy",
+                        "features": ["join", "order_by", "top_limit"], "feature_count": 3, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -763,7 +741,7 @@
                                              "RPA.BankBranch.Title"
                                          ],
                         "category":  "account",
-                        "difficulty":  "easy",
+                        "features": ["join", "order_by", "top_limit"], "feature_count": 3, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -786,7 +764,7 @@
                                              "RPA.BankBranch.Title"
                                          ],
                         "category":  "account",
-                        "difficulty":  "easy",
+                        "features": ["join", "order_by", "top_limit"], "feature_count": 3, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -807,7 +785,7 @@
                                              "RPA.BankAccountBalance.Balance"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -828,7 +806,7 @@
                                              "RPA.BankAccountBalance.Balance"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -849,7 +827,7 @@
                                              "RPA.BankAccount.Balance"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -870,7 +848,7 @@
                                              "RPA.BankAccount.Balance"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -894,7 +872,7 @@
                                              "RPA.CashBalance.Balance"
                                          ],
                         "category":  "financial",
-                        "difficulty":  "medium",
+                        "features": ["aggregation", "group_by", "join", "order_by", "top_limit"], "feature_count": 5, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -918,7 +896,7 @@
                                              "RPA.CashBalance.Balance"
                                          ],
                         "category":  "financial",
-                        "difficulty":  "medium",
+                        "features": ["aggregation", "group_by", "join", "order_by", "top_limit"], "feature_count": 5, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -941,7 +919,7 @@
                                              "RPA.PaymentHeader.Amount"
                                          ],
                         "category":  "financial",
-                        "difficulty":  "medium",
+                        "features": ["aggregation", "group_by", "join", "null_handling", "outer_join"], "feature_count": 5, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -964,7 +942,7 @@
                                              "RPA.PaymentHeader.Amount"
                                          ],
                         "category":  "financial",
-                        "difficulty":  "medium",
+                        "features": ["aggregation", "group_by", "join", "order_by", "outer_join", "top_limit"], "feature_count": 6, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -987,7 +965,7 @@
                                              "RPA.ReceiptCheque.Amount"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "medium",
+                        "features": ["aggregation", "group_by", "join", "null_handling", "order_by", "outer_join", "top_limit"], "feature_count": 7, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1010,7 +988,7 @@
                                              "RPA.ReceiptCheque.Amount"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "medium",
+                        "features": ["aggregation", "group_by", "join", "null_handling", "order_by", "outer_join", "top_limit"], "feature_count": 7, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1031,7 +1009,7 @@
                                              "RPA.CashBalance.Balance"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1052,7 +1030,7 @@
                                              "RPA.CashBalance.Balance"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1073,7 +1051,7 @@
                                              "RPA.Cash.Balance"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1094,7 +1072,7 @@
                                              "RPA.Cash.Balance"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1115,7 +1093,7 @@
                                              "CNT.Coefficient.Percent"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1136,7 +1114,7 @@
                                              "CNT.Coefficient.Percent"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1156,7 +1134,7 @@
                                              "CNT.Cost.Creator"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1176,7 +1154,7 @@
                                              "CNT.Cost.Creator"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1197,7 +1175,7 @@
                                              "CNT.Warranty.CreationDate"
                                          ],
                         "category":  "detail",
-                        "difficulty":  "easy",
+                        "features": ["order_by", "top_limit"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1218,7 +1196,7 @@
                                              "CNT.Warranty.CreationDate"
                                          ],
                         "category":  "detail",
-                        "difficulty":  "easy",
+                        "features": ["order_by", "top_limit"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1239,7 +1217,7 @@
                                              "CNT.Coefficient.Percent"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1260,7 +1238,7 @@
                                              "CNT.Coefficient.Percent"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1280,7 +1258,7 @@
                                              "CNT.Cost.Creator"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1300,7 +1278,7 @@
                                              "CNT.Cost.Creator"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1322,7 +1300,7 @@
                                              "AST.AcquisitionReceipt.AcquisitionReceiptID"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "medium",
+                        "features": ["aggregation", "group_by", "join", "order_by", "outer_join", "top_limit"], "feature_count": 6, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1344,7 +1322,7 @@
                                              "AST.AcquisitionReceipt.AcquisitionReceiptID"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "medium",
+                        "features": ["aggregation", "group_by", "join", "order_by", "outer_join", "top_limit"], "feature_count": 6, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1368,7 +1346,7 @@
                                              "FMK.FiscalYear.Title"
                                          ],
                         "category":  "detail",
-                        "difficulty":  "medium",
+                        "features": ["join", "order_by", "top_limit"], "feature_count": 3, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1392,7 +1370,7 @@
                                              "FMK.FiscalYear.Title"
                                          ],
                         "category":  "detail",
-                        "difficulty":  "medium",
+                        "features": ["join", "order_by", "top_limit"], "feature_count": 3, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1416,7 +1394,7 @@
                                              "GNR.ClosingOperation.ClosingOperationId"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "medium",
+                        "features": ["aggregation", "group_by", "join", "outer_join"], "feature_count": 4, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1440,7 +1418,7 @@
                                              "GNR.ClosingOperation.ClosingOperationId"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "medium",
+                        "features": ["aggregation", "group_by", "join", "order_by", "outer_join"], "feature_count": 5, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1460,7 +1438,7 @@
                                              "FMK.FiscalYear.Status"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1480,7 +1458,7 @@
                                              "FMK.FiscalYear.Status"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1502,7 +1480,7 @@
                                              "GNR.PartyAddress.Title"
                                          ],
                         "category":  "party_address",
-                        "difficulty":  "medium",
+                        "features": ["filter", "join", "order_by", "top_limit"], "feature_count": 4, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1524,7 +1502,7 @@
                                              "GNR.PartyAddress.Title"
                                          ],
                         "category":  "party_address",
-                        "difficulty":  "medium",
+                        "features": ["filter", "join", "order_by", "top_limit"], "feature_count": 4, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1549,7 +1527,7 @@
                                              "GNR.PartyOpeningBalance.FiscalYearRef"
                                          ],
                         "category":  "balance",
-                        "difficulty":  "medium",
+                        "features": ["join", "order_by", "top_limit"], "feature_count": 3, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1574,7 +1552,7 @@
                                              "GNR.PartyOpeningBalance.FiscalYearRef"
                                          ],
                         "category":  "balance",
-                        "difficulty":  "medium",
+                        "features": ["join", "order_by", "top_limit"], "feature_count": 3, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1598,7 +1576,7 @@
                                              "GNR.PartyPhone.IsMain"
                                          ],
                         "category":  "party_phone",
-                        "difficulty":  "medium",
+                        "features": ["filter", "join", "order_by", "top_limit"], "feature_count": 4, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1622,7 +1600,7 @@
                                              "GNR.PartyPhone.IsMain"
                                          ],
                         "category":  "party_phone",
-                        "difficulty":  "medium",
+                        "features": ["filter", "join", "order_by", "top_limit"], "feature_count": 4, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1642,7 +1620,7 @@
                                              "GNR.Party.Type"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1662,7 +1640,7 @@
                                              "GNR.Party.Type"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1684,7 +1662,7 @@
                                              "GNR.Currency.PrecisionCount"
                                          ],
                         "category":  "listing",
-                        "difficulty":  "easy",
+                        "features": ["order_by", "top_limit"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1706,7 +1684,7 @@
                                              "GNR.Currency.PrecisionCount"
                                          ],
                         "category":  "listing",
-                        "difficulty":  "easy",
+                        "features": ["order_by", "top_limit"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1729,7 +1707,7 @@
                                              "SLS.InvoiceItem.NetPrice"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "medium",
+                        "features": ["aggregation", "group_by", "join", "order_by", "top_limit"], "feature_count": 5, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1752,7 +1730,7 @@
                                              "SLS.InvoiceItem.NetPrice"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "medium",
+                        "features": ["aggregation", "group_by", "join", "order_by", "top_limit"], "feature_count": 5, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1774,7 +1752,7 @@
                                              "SLS.InvoiceItemAdditionFactor.Value"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "medium",
+                        "features": ["aggregation", "group_by", "join", "order_by", "top_limit"], "feature_count": 5, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1796,7 +1774,7 @@
                                              "SLS.InvoiceItemAdditionFactor.Value"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "medium",
+                        "features": ["aggregation", "group_by", "join", "order_by", "top_limit"], "feature_count": 5, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1818,7 +1796,7 @@
                                              "MSG.TemplateContact.TemplateContactID"
                                          ],
                         "category":  "analytics",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by", "join", "order_by", "outer_join", "top_limit"], "feature_count": 6, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1840,7 +1818,7 @@
                                              "MSG.TemplateContact.TemplateContactID"
                                          ],
                         "category":  "analytics",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by", "join", "order_by", "outer_join", "top_limit"], "feature_count": 6, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1862,7 +1840,7 @@
                                              "MSG.TemplateFilter.TemplateFilterID"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by", "join", "order_by", "outer_join", "top_limit"], "feature_count": 6, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1884,7 +1862,7 @@
                                              "MSG.TemplateFilter.TemplateFilterID"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by", "join", "order_by", "outer_join", "top_limit"], "feature_count": 6, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1907,7 +1885,7 @@
                                              "MSG.TemplateScheduling.SchedulingRef"
                                          ],
                         "category":  "template_management",
-                        "difficulty":  "easy",
+                        "features": ["join", "order_by", "outer_join", "top_limit"], "feature_count": 4, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1930,7 +1908,7 @@
                                              "MSG.TemplateScheduling.SchedulingRef"
                                          ],
                         "category":  "template_management",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by", "join", "order_by", "outer_join", "top_limit"], "feature_count": 6, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1950,7 +1928,7 @@
                                              "MSG.TemplateScheduling.TemplateRef"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1970,7 +1948,7 @@
                                              "MSG.TemplateScheduling.TemplateRef"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -1990,7 +1968,7 @@
                                              "MSG.Template.Creator"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -2010,7 +1988,7 @@
                                              "MSG.Template.Creator"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -2035,7 +2013,7 @@
                                              "RPA.ReceiptHeader.Date"
                                          ],
                         "category":  "payment_receipt",
-                        "difficulty":  "medium",
+                        "features": ["join", "order_by", "top_limit"], "feature_count": 3, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -2058,7 +2036,7 @@
                         "ACC.Account.Title_En"
                         ],
                         "category": "detail",
-                        "difficulty": "easy",
+                        "features": ["filter", "order_by", "top_limit"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2080,7 +2058,7 @@
                         "ACC.Account.Title_En"
                         ],
                         "category": "detail",
-                        "difficulty": "easy",
+                        "features": ["filter", "order_by", "top_limit"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2100,7 +2078,7 @@
                         "ACC.Account.BalanceType"
                         ],
                         "category": "aggregation",
-                        "difficulty": "medium",
+                        "features": ["aggregation", "filter", "group_by", "order_by"], "feature_count": 4, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2120,7 +2098,7 @@
                         "ACC.Account.BalanceType"
                         ],
                         "category": "aggregation",
-                        "difficulty": "medium",
+                        "features": ["aggregation", "filter", "group_by", "order_by"], "feature_count": 4, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2142,7 +2120,7 @@
                         "FMK.FiscalYear.EndDate"
                         ],
                         "category": "detail",
-                        "difficulty": "easy",
+                        "features": ["filter", "order_by"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2164,7 +2142,7 @@
                         "FMK.FiscalYear.EndDate"
                         ],
                         "category": "detail",
-                        "difficulty": "easy",
+                        "features": ["filter", "order_by"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2184,7 +2162,7 @@
                         "FMK.FiscalYear.Status"
                         ],
                         "category": "aggregation",
-                        "difficulty": "easy",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2204,7 +2182,7 @@
                         "FMK.FiscalYear.Status"
                         ],
                         "category": "aggregation",
-                        "difficulty": "easy",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2226,7 +2204,7 @@
                         "INV.Item.BarCode"
                         ],
                         "category": "detail",
-                        "difficulty": "easy",
+                        "features": ["filter", "order_by", "top_limit"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2248,7 +2226,7 @@
                         "INV.Item.BarCode"
                         ],
                         "category": "detail",
-                        "difficulty": "easy",
+                        "features": ["filter", "order_by", "top_limit"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2268,7 +2246,7 @@
                         "INV.Item.Type"
                         ],
                         "category": "aggregation",
-                        "difficulty": "easy",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2288,7 +2266,7 @@
                         "INV.Item.Type"
                         ],
                         "category": "aggregation",
-                        "difficulty": "easy",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2309,7 +2287,7 @@
                         "INV.Item.MaximumAmount"
                         ],
                         "category": "aggregation",
-                        "difficulty": "medium",
+                        "features": ["aggregation", "filter"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2330,7 +2308,7 @@
                         "INV.Item.MaximumAmount"
                         ],
                         "category": "aggregation",
-                        "difficulty": "medium",
+                        "features": ["aggregation", "filter"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2350,7 +2328,7 @@
                         "INV.Item.Sellable"
                         ],
                         "category": "aggregation",
-                        "difficulty": "medium",
+                        "features": ["aggregation", "filter", "group_by", "order_by"], "feature_count": 4, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2370,7 +2348,7 @@
                         "INV.Item.Sellable"
                         ],
                         "category": "aggregation",
-                        "difficulty": "medium",
+                        "features": ["aggregation", "filter", "group_by", "order_by"], "feature_count": 4, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2392,7 +2370,7 @@
                         "INV.Stock.Title_En"
                         ],
                         "category": "detail",
-                        "difficulty": "easy",
+                        "features": ["filter", "order_by", "top_limit"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2414,7 +2392,7 @@
                         "INV.Stock.Title_En"
                         ],
                         "category": "detail",
-                        "difficulty": "easy",
+                        "features": ["filter", "order_by", "top_limit"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2436,7 +2414,7 @@
                         "GNR.Currency.PrecisionCount"
                         ],
                         "category": "detail",
-                        "difficulty": "easy",
+                        "features": ["order_by"], "feature_count": 1, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2458,7 +2436,7 @@
                         "GNR.Currency.PrecisionCount"
                         ],
                         "category": "detail",
-                        "difficulty": "easy",
+                        "features": ["order_by"], "feature_count": 1, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2479,7 +2457,7 @@
                         "GNR.Currency.Title_En"
                         ],
                         "category": "detail",
-                        "difficulty": "easy",
+                        "features": ["filter", "order_by"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2500,7 +2478,7 @@
                         "GNR.Currency.Title_En"
                         ],
                         "category": "detail",
-                        "difficulty": "easy",
+                        "features": ["filter", "order_by"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2522,7 +2500,7 @@
                         "RPA.Bank.TaxFileCode"
                         ],
                         "category": "detail",
-                        "difficulty": "easy",
+                        "features": ["order_by", "top_limit"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2544,7 +2522,7 @@
                         "RPA.Bank.TaxFileCode"
                         ],
                         "category": "detail",
-                        "difficulty": "easy",
+                        "features": ["order_by", "top_limit"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2566,7 +2544,7 @@
                         "RPA.Cash.Balance"
                         ],
                         "category": "financial",
-                        "difficulty": "easy",
+                        "features": ["filter", "order_by"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2588,7 +2566,7 @@
                         "SLS.Invoice.NetPrice"
                         ],
                         "category": "financial",
-                        "difficulty": "easy",
+                        "features": ["filter", "order_by", "top_limit"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2609,7 +2587,7 @@
                         "SLS.Invoice.NetPrice"
                         ],
                         "category": "aggregation",
-                        "difficulty": "medium",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2630,7 +2608,7 @@
                         "SLS.Invoice.NetPrice"
                         ],
                         "category": "aggregation",
-                        "difficulty": "medium",
+                        "features": ["aggregation", "date_operation", "filter", "group_by", "order_by"], "feature_count": 5, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2651,7 +2629,7 @@
                         "SLS.Invoice.Tax"
                         ],
                         "category": "aggregation",
-                        "difficulty": "medium",
+                        "features": ["aggregation", "filter"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2673,7 +2651,7 @@
                         "AST.Asset.PlaqueSerial"
                         ],
                         "category": "detail",
-                        "difficulty": "easy",
+                        "features": ["filter", "order_by", "top_limit"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2695,7 +2673,7 @@
                         "AST.Asset.PlaqueSerial"
                         ],
                         "category": "detail",
-                        "difficulty": "easy",
+                        "features": ["filter", "order_by", "top_limit"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2716,7 +2694,7 @@
                         "AST.Asset.IsInitial"
                         ],
                         "category": "aggregation",
-                        "difficulty": "easy",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2737,7 +2715,7 @@
                         "AST.Asset.IsInitial"
                         ],
                         "category": "aggregation",
-                        "difficulty": "easy",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2759,7 +2737,7 @@
                         "RPA.PaymentHeader.TotalAmount"
                         ],
                         "category": "financial",
-                        "difficulty": "easy",
+                        "features": ["filter", "order_by", "top_limit"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2781,7 +2759,7 @@
                         "RPA.PaymentHeader.TotalAmount"
                         ],
                         "category": "financial",
-                        "difficulty": "easy",
+                        "features": ["filter", "order_by", "top_limit"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2802,7 +2780,7 @@
                         "RPA.PaymentHeader.TotalAmount"
                         ],
                         "category": "aggregation",
-                        "difficulty": "medium",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2823,7 +2801,7 @@
                         "RPA.PaymentHeader.TotalAmount"
                         ],
                         "category": "aggregation",
-                        "difficulty": "medium",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2843,7 +2821,7 @@
                         "RPA.PaymentHeader.Type"
                         ],
                         "category": "aggregation",
-                        "difficulty": "medium",
+                        "features": ["aggregation", "filter", "group_by", "order_by"], "feature_count": 4, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2863,7 +2841,7 @@
                         "RPA.PaymentHeader.Type"
                         ],
                         "category": "aggregation",
-                        "difficulty": "medium",
+                        "features": ["aggregation", "filter", "group_by", "order_by"], "feature_count": 4, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2884,7 +2862,7 @@
                         "RPA.PaymentHeader.AmountInBaseCurrency"
                         ],
                         "category": "aggregation",
-                        "difficulty": "medium",
+                        "features": ["aggregation", "filter"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2905,7 +2883,7 @@
                         "RPA.PaymentHeader.AmountInBaseCurrency"
                         ],
                         "category": "aggregation",
-                        "difficulty": "medium",
+                        "features": ["aggregation", "filter"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2926,7 +2904,7 @@
                         "RPA.PaymentHeader.PaymentAmount"
                         ],
                         "category": "aggregation",
-                        "difficulty": "medium",
+                        "features": ["aggregation", "date_operation", "filter", "group_by", "order_by"], "feature_count": 5, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2947,7 +2925,7 @@
                         "RPA.PaymentHeader.PaymentAmount"
                         ],
                         "category": "aggregation",
-                        "difficulty": "medium",
+                        "features": ["aggregation", "date_operation", "filter", "group_by", "order_by"], "feature_count": 5, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2969,7 +2947,7 @@
                         "RPA.ReceiptHeader.TotalAmount"
                         ],
                         "category": "financial",
-                        "difficulty": "easy",
+                        "features": ["filter", "order_by", "top_limit"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -2991,7 +2969,7 @@
                         "RPA.ReceiptHeader.TotalAmount"
                         ],
                         "category": "financial",
-                        "difficulty": "easy",
+                        "features": ["filter", "order_by", "top_limit"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -3012,7 +2990,7 @@
                         "RPA.ReceiptHeader.TotalAmount"
                         ],
                         "category": "aggregation",
-                        "difficulty": "medium",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -3033,7 +3011,7 @@
                         "RPA.ReceiptHeader.TotalAmount"
                         ],
                         "category": "aggregation",
-                        "difficulty": "medium",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -3054,7 +3032,7 @@
                         "RPA.ReceiptHeader.Discount"
                         ],
                         "category": "aggregation",
-                        "difficulty": "medium",
+                        "features": ["aggregation", "filter"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -3075,14 +3053,14 @@
                         "RPA.ReceiptHeader.Discount"
                         ],
                         "category": "aggregation",
-                        "difficulty": "medium",
+                        "features": ["aggregation", "filter"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
                     {
                         "id": "singleq_29_fa",
                         "language": "fa",
-                        "question": "سرصفحه‌های اسناد دریافت را که نوع سند ثبت‌شده در آن‌ها دقیقاً برابر با ۳۲ است، بر اساس سالِ تاریخ سند گروه‌بندی کنید. برای هر سال، تعداد سرصفحه‌های دریافت و مجموع مبلغ دریافت ثبت‌شده در آن‌ها را محاسبه کنید. سال‌ها را به‌ترتیب صعودی مرتب کنید.",
+                        "question": "اسناد دریافت با نوع ۳۲ را بر اساس سالِ تاریخ سند گروه بندی کن و تعداد اسناد و مجموع مبالغ رسیدها را برای هر سال نشان بده؛ سال ها را صعودی مرتب کن.",
                         "intent_id": "singleq_29",
                         "db_name": "Sepidar02-back",
                         "schema": "RPA",
@@ -3096,7 +3074,7 @@
                         "RPA.ReceiptHeader.ReceiptAmount"
                         ],
                         "category": "aggregation",
-                        "difficulty": "medium",
+                        "features": ["aggregation", "date_operation", "filter", "group_by", "order_by"], "feature_count": 5, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -3117,7 +3095,7 @@
                         "RPA.ReceiptHeader.ReceiptAmount"
                         ],
                         "category": "aggregation",
-                        "difficulty": "medium",
+                        "features": ["aggregation", "date_operation", "filter", "group_by", "order_by"], "feature_count": 5, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -3139,7 +3117,7 @@
                         "RPA.ReceiptHeader.ReceiptAmount"
                         ],
                         "category": "financial",
-                        "difficulty": "easy",
+                        "features": ["filter", "order_by", "top_limit"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -3161,7 +3139,7 @@
                         "RPA.ReceiptHeader.ReceiptAmount"
                         ],
                         "category": "financial",
-                        "difficulty": "easy",
+                        "features": ["filter", "order_by", "top_limit"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -3184,7 +3162,7 @@
                         "AST.AssetGroup.UsefulLife"
                         ],
                         "category": "detail",
-                        "difficulty": "easy",
+                        "features": ["filter", "order_by"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -3207,7 +3185,7 @@
                         "AST.AssetGroup.UsefulLife"
                         ],
                         "category": "detail",
-                        "difficulty": "easy",
+                        "features": ["filter", "order_by"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -3228,7 +3206,7 @@
                         "AST.AssetGroup.DepreciationRate"
                         ],
                         "category": "aggregation",
-                        "difficulty": "medium",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -3249,7 +3227,7 @@
                         "AST.AssetGroup.DepreciationRate"
                         ],
                         "category": "aggregation",
-                        "difficulty": "medium",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -3271,7 +3249,7 @@
                         "AST.AssetGroup.UsefulLife"
                         ],
                         "category": "ranking",
-                        "difficulty": "easy",
+                        "features": ["order_by", "top_limit"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -3293,14 +3271,14 @@
                         "AST.AssetGroup.UsefulLife"
                         ],
                         "category": "ranking",
-                        "difficulty": "easy",
+                        "features": ["order_by", "top_limit"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
                     {
                         "id": "singleq_34_fa",
                         "language": "fa",
-                        "question": "۲۰ فاکتور برگشتی جدیدتر را با شماره، تاریخ، مبلغ، تخفیف و مبلغ خالص نمایش دهید؛ نتایج را ابتدا بر اساس تاریخ و سپس شماره، هر دو به‌صورت نزولی، مرتب کنید.",
+                        "question": "۲۰ فاکتور برگشت از فروش جدیدتر در ماژول فروش (SLS) را با شماره، تاریخ، مبلغ، تخفیف و مبلغ خالص نمایش بده؛ ابتدا تاریخ و سپس شماره، هر دو نزولی باشند.",
                         "intent_id": "singleq_34",
                         "db_name": "Sepidar02-back",
                         "schema": "SLS",
@@ -3317,14 +3295,14 @@
                         "SLS.ReturnedInvoice.NetPrice"
                         ],
                         "category": "financial",
-                        "difficulty": "easy",
+                        "features": ["order_by", "top_limit"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
                     {
                         "id": "singleq_34_en",
                         "language": "en",
-                        "question": "List the 20 most recent returned invoices with their number, date, price, discount, and net price. Sort first by date and then by number, both in descending order.",
+                        "question": "List the 20 most recent sales return invoices in the Sales (SLS) module, showing their number, date, price, discount, and net price. Sort by date descending, then by number descending.",
                         "intent_id": "singleq_34",
                         "db_name": "Sepidar02-back",
                         "schema": "SLS",
@@ -3341,19 +3319,19 @@
                         "SLS.ReturnedInvoice.NetPrice"
                         ],
                         "category": "financial",
-                        "difficulty": "easy",
+                        "features": ["order_by", "top_limit"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
                     {
                         "id": "singleq_35_fa",
                         "language": "fa",
-                        "question": "تعداد فاکتورهای برگشتی و مجموع مبلغ خالص آن‌ها را به تفکیک سال تاریخ فاکتور محاسبه کنید و سال‌ها را به‌صورت صعودی مرتب کنید.",
+                        "question": "تعداد فاکتورهای برگشت از فروش در ماژول فروش (SLS) و مجموع مبلغ خالص آن ها را به تفکیک سالِ تاریخ فاکتور محاسبه کن و سال ها را صعودی مرتب کن.",
                         "intent_id": "singleq_35",
                         "db_name": "Sepidar02-back",
                         "schema": "SLS",
                         "table": "ReturnedInvoice",
-                        "reference_sql": "SELECT YEAR([Date]) AS [ReturnYear], COUNT(*) AS [ReturnedInvoiceCount], SUM([NetPrice]) AS [TotalNetPrice] FROM [SLS].[ReturnedInvoice] GROUP BY YEAR([Date]) ORDER BY [ReturnYear] ASC",
+                        "reference_sql": "SELECT YEAR([Date]) AS ReturnYear, COUNT(*) AS ReturnedInvoiceCount, SUM([NetPrice]) AS TotalNetPrice FROM [SLS].[ReturnedInvoice] GROUP BY YEAR([Date]) ORDER BY ReturnYear ASC",
                         "gold_tables": [
                         "SLS.ReturnedInvoice"
                         ],
@@ -3362,19 +3340,19 @@
                         "SLS.ReturnedInvoice.NetPrice"
                         ],
                         "category": "aggregation",
-                        "difficulty": "medium",
+                        "features": ["aggregation", "date_operation", "group_by", "order_by"], "feature_count": 4, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
                     {
                         "id": "singleq_35_en",
                         "language": "en",
-                        "question": "Calculate the returned invoice count and total net price by invoice year. Sort the years in ascending order.",
+                        "question": "Calculate the count and total net price of sales return invoices in the Sales (SLS) module by invoice date year. Sort the years ascending.",
                         "intent_id": "singleq_35",
                         "db_name": "Sepidar02-back",
                         "schema": "SLS",
                         "table": "ReturnedInvoice",
-                        "reference_sql": "SELECT YEAR([Date]) AS [ReturnYear], COUNT(*) AS [ReturnedInvoiceCount], SUM([NetPrice]) AS [TotalNetPrice] FROM [SLS].[ReturnedInvoice] GROUP BY YEAR([Date]) ORDER BY [ReturnYear] ASC",
+                        "reference_sql": "SELECT YEAR([Date]) AS ReturnYear, COUNT(*) AS ReturnedInvoiceCount, SUM([NetPrice]) AS TotalNetPrice FROM [SLS].[ReturnedInvoice] GROUP BY YEAR([Date]) ORDER BY ReturnYear ASC",
                         "gold_tables": [
                         "SLS.ReturnedInvoice"
                         ],
@@ -3383,19 +3361,19 @@
                         "SLS.ReturnedInvoice.NetPrice"
                         ],
                         "category": "aggregation",
-                        "difficulty": "medium",
+                        "features": ["aggregation", "date_operation", "group_by", "order_by"], "feature_count": 4, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
                     {
                         "id": "singleq_36_fa",
                         "language": "fa",
-                        "question": "برای فاکتورهای برگشتی سال ۲۰۲۶، تعداد فاکتورها، مجموع مالیات و مجموع مبلغ خالص را محاسبه کنید.",
+                        "question": "برای فاکتورهای برگشت از فروش ماژول فروش (SLS) در سال میلادی ۲۰۲۶، تعداد فاکتورها، مجموع مالیات و مجموع مبلغ خالص را محاسبه کن.",
                         "intent_id": "singleq_36",
                         "db_name": "Sepidar02-back",
                         "schema": "SLS",
                         "table": "ReturnedInvoice",
-                        "reference_sql": "SELECT COUNT(*) AS [ReturnedInvoiceCount], SUM([Tax]) AS [TotalTax], SUM([NetPrice]) AS [TotalNetPrice] FROM [SLS].[ReturnedInvoice] WHERE [Date] >= '2026-01-01' AND [Date] < '2027-01-01'",
+                        "reference_sql": "SELECT COUNT(*) AS ReturnedInvoiceCount, SUM([Tax]) AS TotalTax, SUM([NetPrice]) AS TotalNetPrice FROM [SLS].[ReturnedInvoice] WHERE [Date] >= '2026-01-01' AND [Date] < '2027-01-01'",
                         "gold_tables": [
                         "SLS.ReturnedInvoice"
                         ],
@@ -3404,19 +3382,19 @@
                         "SLS.ReturnedInvoice.NetPrice"
                         ],
                         "category": "aggregation",
-                        "difficulty": "medium",
+                        "features": ["aggregation", "date_operation", "filter", "range_filter"], "feature_count": 4, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
                     {
                         "id": "singleq_36_en",
                         "language": "en",
-                        "question": "For returned invoices from 2026, calculate the invoice count, total tax, and total net price.",
+                        "question": "For sales return invoices in the Sales (SLS) module dated in 2026, calculate the invoice count, total tax, and total net price",
                         "intent_id": "singleq_36",
                         "db_name": "Sepidar02-back",
                         "schema": "SLS",
                         "table": "ReturnedInvoice",
-                        "reference_sql": "SELECT COUNT(*) AS [ReturnedInvoiceCount], SUM([Tax]) AS [TotalTax], SUM([NetPrice]) AS [TotalNetPrice] FROM [SLS].[ReturnedInvoice] WHERE [Date] >= '2026-01-01' AND [Date] < '2027-01-01'",
+                        "reference_sql": "SELECT COUNT(*) AS ReturnedInvoiceCount, SUM([Tax]) AS TotalTax, SUM([NetPrice]) AS TotalNetPrice FROM [SLS].[ReturnedInvoice] WHERE [Date] >= '2026-01-01' AND [Date] < '2027-01-01';",
                         "gold_tables": [
                         "SLS.ReturnedInvoice"
                         ],
@@ -3425,7 +3403,7 @@
                         "SLS.ReturnedInvoice.NetPrice"
                         ],
                         "category": "aggregation",
-                        "difficulty": "medium",
+                        "features": ["aggregation", "date_operation", "filter", "range_filter"], "feature_count": 4, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -3446,7 +3424,7 @@
                         "GNR.CostCenter.DLRef"
                         ],
                         "category": "detail",
-                        "difficulty": "easy",
+                        "features": ["filter", "order_by"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -3467,7 +3445,7 @@
                         "GNR.CostCenter.DLRef"
                         ],
                         "category": "detail",
-                        "difficulty": "easy",
+                        "features": ["filter", "order_by"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -3487,7 +3465,7 @@
                         "GNR.CostCenter.Type"
                         ],
                         "category": "aggregation",
-                        "difficulty": "easy",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -3507,14 +3485,14 @@
                         "GNR.CostCenter.Type"
                         ],
                         "category": "aggregation",
-                        "difficulty": "easy",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
                     {
                         "id": "singleq_39_fa",
                         "language": "fa",
-                        "question": "کارگاه‌هایی را که کد آن‌ها بین ۱۰۰۱ و ۱۰۰۵ است، با کد، عنوان فارسی و عنوان انگلیسی نمایش دهید و بر اساس کد به‌صورت صعودی مرتب کنید.",
+                        "question": "سایت های کاری ماژول حقوق و دستمزد با کد بین ۱۰۰۱ و ۱۰۰۵ را همراه کد، عنوان فارسی و انگلیسی نمایش بده؛ به ترتیب صعودی کد.",
                         "intent_id": "singleq_39",
                         "db_name": "Sepidar02-back",
                         "schema": "PAY",
@@ -3529,7 +3507,7 @@
                         "PAY.Worksite.Title_En"
                         ],
                         "category": "detail",
-                        "difficulty": "easy",
+                        "features": ["filter", "order_by", "range_filter"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -3551,14 +3529,14 @@
                         "PAY.Worksite.Title_En"
                         ],
                         "category": "detail",
-                        "difficulty": "easy",
+                        "features": ["filter", "order_by", "range_filter"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
                     {
                         "id": "singleq_40_fa",
                         "language": "fa",
-                        "question": "فهرست همه کارگاه‌ها را با شناسه، کد و عنوان نمایش دهید و بر اساس کد به‌صورت نزولی مرتب کنید.",
+                        "question": "فهرست همه سایت های کاری را با شناسه، کد و عنوان نمایش دهید و بر اساس کد به‌صورت نزولی مرتب کنید.",
                         "intent_id": "singleq_40",
                         "db_name": "Sepidar02-back",
                         "schema": "PAY",
@@ -3573,7 +3551,7 @@
                         "PAY.Worksite.Title"
                         ],
                         "category": "detail",
-                        "difficulty": "easy",
+                        "features": ["order_by"], "feature_count": 1, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -3595,7 +3573,7 @@
                         "PAY.Worksite.Title"
                         ],
                         "category": "detail",
-                        "difficulty": "easy",
+                        "features": ["order_by"], "feature_count": 1, "join_count": 0, "classification_version": 1,
                         "review_status": "candidate",
                         "review_notes": ""
                     },
@@ -3607,12 +3585,12 @@
                     {
                         "id":  "questions_payments_receipts_intent_001_en",
                         "language":  "en",
-                        "question":  "Show the payment number, payment date, payment amount, and the corresponding receipt number and receipt date for the latest 20 payments that have an associated receipt.",
+                        "question":  "Show the payment number, payment date, amount recorded in the Amount field, and the associated receipt number and date for the latest 20 payments with a receipt, ordered by payment date descending.",
                         "intent_id":  "questions_payments_receipts_intent_001",
                         "db_name":  "Sepidar02-back",
                         "schema":  "RPA",
                         "table":  "PaymentHeader",
-                        "reference_sql":  "SELECT TOP (20) ph.[Number] AS PaymentNumber, ph.[Date] AS PaymentDate, ph.[Amount] AS PaymentAmount, rh.[Number] AS ReceiptNumber, rh.[Date] AS ReceiptDate FROM [RPA].[PaymentHeader] ph INNER JOIN [RPA].[ReceiptHeader] rh ON ph.[ReceiptHeaderRef] = rh.[ReceiptHeaderId] ORDER BY ph.[Date] DESC",
+                        "reference_sql":  "SELECT TOP (20) ph.[Number] AS PaymentNumber, ph.[Date] AS PaymentDate, ph.[Amount] AS PaymentAmount, rh.[Number] AS ReceiptNumber, rh.[Date] AS ReceiptDate FROM [RPA].[PaymentHeader] AS ph INNER JOIN [RPA].[ReceiptHeader] AS rh ON ph.[ReceiptHeaderRef] = rh.[ReceiptHeaderId] ORDER BY ph.[Date] DESC",
                         "gold_tables":  [
                                             "RPA.PaymentHeader",
                                             "RPA.ReceiptHeader"
@@ -3625,63 +3603,19 @@
                                              "RPA.ReceiptHeader.Date"
                                          ],
                         "category":  "payment_receipt",
-                        "difficulty":  "medium",
-                        "review_status":  "candidate",
-                        "review_notes":  ""
-                    },
-                    {
-                        "id":  "questions_payments_receipts_intent_003_fa",
-                        "language":  "fa",
-                        "question":  "برای هر سرعنوان پرداخت، چند چک مرتبط است را نشان دهید؛ شماره سرعنوان و تعداد چک‌ها را به‌صورت مرتب‌شده بر اساس بیشترین تعداد نمایش دهید.",
-                        "intent_id":  "questions_payments_receipts_intent_003",
-                        "db_name":  "Sepidar02-back",
-                        "schema":  "RPA",
-                        "table":  "PaymentHeader",
-                        "reference_sql":  "SELECT TOP (20) ph.[Number] AS HeaderNumber, COUNT(pc.[PaymentChequeId]) AS ChequeCount FROM [RPA].[PaymentHeader] ph INNER JOIN [RPA].[PaymentCheque] pc ON pc.[PaymentHeaderRef] = ph.[PaymentHeaderId] GROUP BY ph.[Number] ORDER BY ChequeCount DESC",
-                        "gold_tables":  [
-                                            "RPA.PaymentHeader",
-                                            "RPA.PaymentCheque"
-                                        ],
-                        "gold_columns":  [
-                                             "RPA.PaymentHeader.Number",
-                                             "RPA.PaymentCheque.PaymentChequeId"
-                                         ],
-                        "category":  "join-aggregation",
-                        "difficulty":  "medium",
-                        "review_status":  "candidate",
-                        "review_notes":  ""
-                    },
-                    {
-                        "id":  "questions_payments_receipts_intent_003_en",
-                        "language":  "en",
-                        "question":  "For each payment header, how many cheques are linked, showing the header number and the count of cheques, ordered by the highest count?",
-                        "intent_id":  "questions_payments_receipts_intent_003",
-                        "db_name":  "Sepidar02-back",
-                        "schema":  "RPA",
-                        "table":  "PaymentHeader",
-                        "reference_sql":  "SELECT TOP (20) ph.[Number] AS HeaderNumber, COUNT(pc.[PaymentChequeId]) AS ChequeCount FROM [RPA].[PaymentHeader] ph INNER JOIN [RPA].[PaymentCheque] pc ON pc.[PaymentHeaderRef] = ph.[PaymentHeaderId] GROUP BY ph.[Number] ORDER BY ChequeCount DESC",
-                        "gold_tables":  [
-                                            "RPA.PaymentHeader",
-                                            "RPA.PaymentCheque"
-                                        ],
-                        "gold_columns":  [
-                                             "RPA.PaymentHeader.Number",
-                                             "RPA.PaymentCheque.PaymentChequeId"
-                                         ],
-                        "category":  "join-aggregation",
-                        "difficulty":  "medium",
+                        "features": ["join", "order_by", "top_limit"], "feature_count": 3, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
                     {
                         "id":  "questions_payments_receipts_intent_004_fa",
                         "language":  "fa",
-                        "question":  "مجموع و متوسط مبلغ رسید برای هر وضعیت چیست و در هر وضعیت چند رسید وجود دارد؟",
+                        "question":  "برای هر وضعیت سند دریافت، مجموع و میانگین مبلغ کل و تعداد اسناد دریافت را نمایش بده؛ به ترتیب نزولی مجموع مبلغ کل.",
                         "intent_id":  "questions_payments_receipts_intent_004",
                         "db_name":  "Sepidar02-back",
                         "schema":  "RPA",
                         "table":  "ReceiptHeader",
-                        "reference_sql":  "SELECT [RPA].[ReceiptHeader].[State],SUM([RPA].[ReceiptHeader].[TotalAmount]) AS TotalAmountSum,AVG([RPA].[ReceiptHeader].[TotalAmount]) AS AvgTotalAmount,COUNT(*) AS ReceiptCount FROM [RPA].[ReceiptHeader] GROUP BY [RPA].[ReceiptHeader].[State] ORDER BY TotalAmountSum DESC",
+                        "reference_sql":  "SELECT [State], SUM([TotalAmount]) AS TotalAmountSum, AVG([TotalAmount]) AS AvgTotalAmount, COUNT(*) AS ReceiptCount FROM [RPA].[ReceiptHeader] GROUP BY [State] ORDER BY TotalAmountSum DESC",
                         "gold_tables":  [
                                             "RPA.ReceiptHeader"
                                         ],
@@ -3690,19 +3624,19 @@
                                              "RPA.ReceiptHeader.TotalAmount"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "medium",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
                     {
                         "id":  "questions_payments_receipts_intent_004_en",
                         "language":  "en",
-                        "question":  "What is the total and average receipt amount for each state, and how many receipts are in each state?",
+                        "question":  "SELECT [State], SUM([TotalAmount]) AS TotalAmountSum, AVG([TotalAmount]) AS AvgTotalAmount, COUNT(*) AS ReceiptCount FROM [RPA].[ReceiptHeader] GROUP BY [State] ORDER BY TotalAmountSum DESC;",
                         "intent_id":  "questions_payments_receipts_intent_004",
                         "db_name":  "Sepidar02-back",
                         "schema":  "RPA",
                         "table":  "ReceiptHeader",
-                        "reference_sql":  "SELECT [RPA].[ReceiptHeader].[State],SUM([RPA].[ReceiptHeader].[TotalAmount]) AS TotalAmountSum,AVG([RPA].[ReceiptHeader].[TotalAmount]) AS AvgTotalAmount,COUNT(*) AS ReceiptCount FROM [RPA].[ReceiptHeader] GROUP BY [RPA].[ReceiptHeader].[State] ORDER BY TotalAmountSum DESC",
+                        "reference_sql":  "SELECT [State], SUM([TotalAmount]) AS TotalAmountSum, AVG([TotalAmount]) AS AvgTotalAmount, COUNT(*) AS ReceiptCount FROM [RPA].[ReceiptHeader] GROUP BY [State] ORDER BY TotalAmountSum DESC",
                         "gold_tables":  [
                                             "RPA.ReceiptHeader"
                                         ],
@@ -3711,7 +3645,7 @@
                                              "RPA.ReceiptHeader.TotalAmount"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "medium",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -3733,19 +3667,19 @@
                                              "RPA.PaymentHeader.AmountInBaseCurrency"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "medium",
+                        "features": ["aggregation", "group_by", "order_by", "top_limit"], "feature_count": 4, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
                     {
                         "id":  "questions_payments_receipts_intent_005_en",
                         "language":  "en",
-                        "question":  "What is the total payment amount and total amount in base currency for each payment type?",
+                        "question":  "Show the top 20 payment types with the highest total payment amount, displaying the total payment amount and the total amount in base currency for each type, ordered by total payment amount descending.",
                         "intent_id":  "questions_payments_receipts_intent_005",
                         "db_name":  "Sepidar02-back",
                         "schema":  "RPA",
                         "table":  "PaymentHeader",
-                        "reference_sql":  "SELECT TOP (20) [RPA].[PaymentHeader].[Type], SUM([RPA].[PaymentHeader].[PaymentAmount]) AS TotalPaymentAmount, SUM([RPA].[PaymentHeader].[AmountInBaseCurrency]) AS TotalBaseAmount FROM [RPA].[PaymentHeader] GROUP BY [RPA].[PaymentHeader].[Type] ORDER BY TotalPaymentAmount DESC",
+                        "reference_sql":  "SELECT TOP (20) [Type], SUM([PaymentAmount]) AS TotalPaymentAmount, SUM([AmountInBaseCurrency]) AS TotalBaseAmount FROM [RPA].[PaymentHeader] GROUP BY [Type] ORDER BY TotalPaymentAmount DESC;",
                         "gold_tables":  [
                                             "RPA.PaymentHeader"
                                         ],
@@ -3755,14 +3689,14 @@
                                              "RPA.PaymentHeader.AmountInBaseCurrency"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "medium",
+                        "features": ["aggregation", "group_by", "order_by", "top_limit"], "feature_count": 4, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
                     {
                         "id":  "questions_personnel_intent_001_fa",
                         "language":  "fa",
-                        "question":  "لیست 20 شعبهٔ بانکی اول به همراه عنوان شعبه، کد و نام بانکی که به آن تعلق دارند را نمایش دهید.",
+                        "question":  "۲۰ شعبهٔ بانکی اول به ترتیب شناسهٔ شعبه را با شناسه، عنوان شعبه، کد شعبه و نام بانک مربوطه نمایش بده.",
                         "intent_id":  "questions_personnel_intent_001",
                         "db_name":  "Sepidar02-back",
                         "schema":  "RPA",
@@ -3779,14 +3713,14 @@
                                              "RPA.Bank.Title"
                                          ],
                         "category":  "list",
-                        "difficulty":  "easy",
+                        "features": ["join", "order_by", "top_limit"], "feature_count": 3, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
                     {
                         "id":  "questions_personnel_intent_001_en",
                         "language":  "en",
-                        "question":  "List the first 20 bank branches with their branch title, code, and the name of the bank they belong to.",
+                        "question":  "List the first 20 bank branches ordered by branch ID, showing the branch ID, branch title, branch code, and the name of their bank.",
                         "intent_id":  "questions_personnel_intent_001",
                         "db_name":  "Sepidar02-back",
                         "schema":  "RPA",
@@ -3803,71 +3737,19 @@
                                              "RPA.Bank.Title"
                                          ],
                         "category":  "list",
-                        "difficulty":  "easy",
-                        "review_status":  "candidate",
-                        "review_notes":  ""
-                    },
-                    {
-                        "id":  "questions_personnel_intent_002_fa",
-                        "language":  "fa",
-                        "question":  "لیست 20 شعبه بانکی اول به همراه کد، عنوان (فارسی و انگلیسی) و عناوین (فارسی و انگلیسی) مکان‌های مربوطه را نمایش دهید.",
-                        "intent_id":  "questions_personnel_intent_002",
-                        "db_name":  "Sepidar02-back",
-                        "schema":  "RPA",
-                        "table":  "BankBranch",
-                        "reference_sql":  "SELECT TOP (20) bb.[BankBranchId], bb.[Code] AS BranchCode, bb.[Title] AS BranchTitle, bb.[Title_En] AS BranchTitleEn, loc.[Title] AS LocationTitle, loc.[Title_En] AS LocationTitleEn FROM [RPA].[BankBranch] AS bb INNER JOIN [GNR].[Location] AS loc ON bb.[LocationRef] = loc.[LocationId] ORDER BY bb.[BankBranchId]",
-                        "gold_tables":  [
-                                            "RPA.BankBranch",
-                                            "GNR.Location"
-                                        ],
-                        "gold_columns":  [
-                                             "RPA.BankBranch.BankBranchId",
-                                             "RPA.BankBranch.Code",
-                                             "RPA.BankBranch.Title",
-                                             "RPA.BankBranch.Title_En",
-                                             "GNR.Location.Title",
-                                             "GNR.Location.Title_En"
-                                         ],
-                        "category":  "detail",
-                        "difficulty":  "easy",
-                        "review_status":  "candidate",
-                        "review_notes":  ""
-                    },
-                    {
-                        "id":  "questions_personnel_intent_002_en",
-                        "language":  "en",
-                        "question":  "List the first 20 bank branches with their codes, titles (both Persian and English), and the titles (both Persian and English) of their locations.",
-                        "intent_id":  "questions_personnel_intent_002",
-                        "db_name":  "Sepidar02-back",
-                        "schema":  "RPA",
-                        "table":  "BankBranch",
-                        "reference_sql":  "SELECT TOP (20) bb.[BankBranchId], bb.[Code] AS BranchCode, bb.[Title] AS BranchTitle, bb.[Title_En] AS BranchTitleEn, loc.[Title] AS LocationTitle, loc.[Title_En] AS LocationTitleEn FROM [RPA].[BankBranch] AS bb INNER JOIN [GNR].[Location] AS loc ON bb.[LocationRef] = loc.[LocationId] ORDER BY bb.[BankBranchId]",
-                        "gold_tables":  [
-                                            "RPA.BankBranch",
-                                            "GNR.Location"
-                                        ],
-                        "gold_columns":  [
-                                             "RPA.BankBranch.BankBranchId",
-                                             "RPA.BankBranch.Code",
-                                             "RPA.BankBranch.Title",
-                                             "RPA.BankBranch.Title_En",
-                                             "GNR.Location.Title",
-                                             "GNR.Location.Title_En"
-                                         ],
-                        "category":  "detail",
-                        "difficulty":  "easy",
+                        "features": ["join", "order_by", "top_limit"], "feature_count": 3, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
                     {
                         "id":  "questions_personnel_intent_003_fa",
                         "language":  "fa",
-                        "question":  "شناسه پرسنل، شماره حساب و عنوان انگلیسی نوع حساب را برای هر پرسنل به ترتیب شناسه پرسنل نشان دهید (اولین ۲۰ رکورد).",
+                        "question":  "۲۰ پرسنل اول به ترتیب شناسه را با شناسه، شماره حساب و عنوان انگلیسی نوع حساب نمایش بده؛ پرسنل بدون نوع حساب مرتبط را هم بیاور.",
                         "intent_id":  "questions_personnel_intent_003",
                         "db_name":  "Sepidar02-back",
                         "schema":  "PAY",
                         "table":  "Personnel",
-                        "reference_sql":  "SELECT TOP (20) p.[PersonnelId], p.[AccountNo], at.[Title_En]\nFROM [PAY].[Personnel] AS p\nLEFT JOIN [RPA].[AccountType] AS at ON p.[AccountTypeRef] = at.[AccountTypeId]\nORDER BY p.[PersonnelId]",
+                        "reference_sql":  "SELECT TOP (20) p.[PersonnelId], p.[AccountNo], at.[Title_En] FROM [PAY].[Personnel] AS p LEFT JOIN [RPA].[AccountType] AS at ON p.[AccountTypeRef] = at.[AccountTypeId] ORDER BY p.[PersonnelId]",
                         "gold_tables":  [
                                             "PAY.Personnel",
                                             "RPA.AccountType"
@@ -3878,19 +3760,19 @@
                                              "RPA.AccountType.Title_En"
                                          ],
                         "category":  "detail",
-                        "difficulty":  "easy",
+                        "features": ["join", "order_by", "outer_join", "top_limit"], "feature_count": 4, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
                     {
                         "id":  "questions_personnel_intent_003_en",
                         "language":  "en",
-                        "question":  "Show the PersonnelId, AccountNo, and the English title of the account type for each personnel, ordered by PersonnelId (top 20).",
+                        "question":  "Show the first 20 personnel ordered by PersonnelId, with their PersonnelId, AccountNo, and account type’s English title. Include personnel without an associated account type.",
                         "intent_id":  "questions_personnel_intent_003",
                         "db_name":  "Sepidar02-back",
                         "schema":  "PAY",
                         "table":  "Personnel",
-                        "reference_sql":  "SELECT TOP (20) p.[PersonnelId], p.[AccountNo], at.[Title_En]\nFROM [PAY].[Personnel] AS p\nLEFT JOIN [RPA].[AccountType] AS at ON p.[AccountTypeRef] = at.[AccountTypeId]\nORDER BY p.[PersonnelId]",
+                        "reference_sql":  "SELECT TOP (20) p.[PersonnelId], p.[AccountNo], at.[Title_En] FROM [PAY].[Personnel] AS p LEFT JOIN [RPA].[AccountType] AS at ON p.[AccountTypeRef] = at.[AccountTypeId] ORDER BY p.[PersonnelId]",
                         "gold_tables":  [
                                             "PAY.Personnel",
                                             "RPA.AccountType"
@@ -3901,47 +3783,7 @@
                                              "RPA.AccountType.Title_En"
                                          ],
                         "category":  "detail",
-                        "difficulty":  "easy",
-                        "review_status":  "candidate",
-                        "review_notes":  ""
-                    },
-                    {
-                        "id":  "questions_personnel_intent_004_fa",
-                        "language":  "fa",
-                        "question":  "در هر سال چه تعداد بانک ایجاد شده‌اند؟",
-                        "intent_id":  "questions_personnel_intent_004",
-                        "db_name":  "Sepidar02-back",
-                        "schema":  "RPA",
-                        "table":  "Bank",
-                        "reference_sql":  "SELECT YEAR([RPA].[Bank].[CreationDate]) AS [Year], COUNT(*) AS [BankCount] FROM [RPA].[Bank] GROUP BY YEAR([RPA].[Bank].[CreationDate]) ORDER BY [Year]",
-                        "gold_tables":  [
-                                            "RPA.Bank"
-                                        ],
-                        "gold_columns":  [
-                                             "RPA.Bank.CreationDate"
-                                         ],
-                        "category":  "aggregation",
-                        "difficulty":  "easy",
-                        "review_status":  "candidate",
-                        "review_notes":  ""
-                    },
-                    {
-                        "id":  "questions_personnel_intent_004_en",
-                        "language":  "en",
-                        "question":  "How many banks were created each year?",
-                        "intent_id":  "questions_personnel_intent_004",
-                        "db_name":  "Sepidar02-back",
-                        "schema":  "RPA",
-                        "table":  "Bank",
-                        "reference_sql":  "SELECT YEAR([RPA].[Bank].[CreationDate]) AS [Year], COUNT(*) AS [BankCount] FROM [RPA].[Bank] GROUP BY YEAR([RPA].[Bank].[CreationDate]) ORDER BY [Year]",
-                        "gold_tables":  [
-                                            "RPA.Bank"
-                                        ],
-                        "gold_columns":  [
-                                             "RPA.Bank.CreationDate"
-                                         ],
-                        "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["join", "order_by", "outer_join", "top_limit"], "feature_count": 4, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -3961,14 +3803,14 @@
                                              "RPA.BankBranch.LocationRef"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
                     {
                         "id":  "questions_personnel_intent_005_en",
                         "language":  "en",
-                        "question":  "How many bank branches are there for each location?",
+                        "question":  "Count bank branches by their recorded location ID, showing only the location ID and branch count. Include branches with no location ID as a separate group.",
                         "intent_id":  "questions_personnel_intent_005",
                         "db_name":  "Sepidar02-back",
                         "schema":  "RPA",
@@ -3981,247 +3823,19 @@
                                              "RPA.BankBranch.LocationRef"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
-                        "review_status":  "candidate",
-                        "review_notes":  ""
-                    },
-                    {
-                        "id":  "questions_sales_intent_001_fa",
-                        "language":  "fa",
-                        "question":  "فهرست ۲۰ کالای برتر بر اساس کل مقدار خریداری‌شده، به‌همراه کد هر کالا و مجموع مقدار خریداری‌شده.",
-                        "intent_id":  "questions_sales_intent_001",
-                        "db_name":  "Sepidar02-back",
-                        "schema":  "INV",
-                        "table":  "Item",
-                        "reference_sql":  "SELECT TOP (20) i.[Code] AS ItemCode, SUM(ii.[Quantity]) AS TotalQuantity FROM [INV].[Item] AS i JOIN [INV].[InventoryPurchaseInvoiceItem] AS ii ON ii.[ItemRef] = i.[ItemID] GROUP BY i.[Code] ORDER BY SUM(ii.[Quantity]) DESC",
-                        "gold_tables":  [
-                                            "INV.Item",
-                                            "INV.InventoryPurchaseInvoiceItem"
-                                        ],
-                        "gold_columns":  [
-                                             "INV.Item.Code",
-                                             "INV.InventoryPurchaseInvoiceItem.Quantity"
-                                         ],
-                        "category":  "aggregation",
-                        "difficulty":  "medium",
-                        "review_status":  "candidate",
-                        "review_notes":  ""
-                    },
-                    {
-                        "id":  "questions_sales_intent_001_en",
-                        "language":  "en",
-                        "question":  "List the top 20 items by total purchased quantity, showing each item\u0027s code and the total quantity purchased.",
-                        "intent_id":  "questions_sales_intent_001",
-                        "db_name":  "Sepidar02-back",
-                        "schema":  "INV",
-                        "table":  "Item",
-                        "reference_sql":  "SELECT TOP (20) i.[Code] AS ItemCode, SUM(ii.[Quantity]) AS TotalQuantity FROM [INV].[Item] AS i JOIN [INV].[InventoryPurchaseInvoiceItem] AS ii ON ii.[ItemRef] = i.[ItemID] GROUP BY i.[Code] ORDER BY SUM(ii.[Quantity]) DESC",
-                        "gold_tables":  [
-                                            "INV.Item",
-                                            "INV.InventoryPurchaseInvoiceItem"
-                                        ],
-                        "gold_columns":  [
-                                             "INV.Item.Code",
-                                             "INV.InventoryPurchaseInvoiceItem.Quantity"
-                                         ],
-                        "category":  "aggregation",
-                        "difficulty":  "medium",
-                        "review_status":  "candidate",
-                        "review_notes":  ""
-                    },
-                    {
-                        "id":  "questions_sales_intent_002_fa",
-                        "language":  "fa",
-                        "question":  "20 مورد برتر آیتم‌های فاکتور با مقدار Quantity، Price، ضریب افزودنی موثر بر مالیات بر ارزش افزوده و مجموع مقدار افزودنی در ارز پایه چیست؟",
-                        "intent_id":  "questions_sales_intent_002",
-                        "db_name":  "Sepidar02-back",
-                        "schema":  "SLS",
-                        "table":  "InvoiceItem",
-                        "reference_sql":  "SELECT TOP (20)       ii.[InvoiceItemID],       ii.[Quantity],       ii.[Price],       ii.[AdditionFactor_VatEffective],       SUM(iiaf.[ValueInBaseCurrency]) AS TotalAdditionFactorBase   FROM [SLS].[InvoiceItem] AS ii   LEFT JOIN [SLS].[InvoiceItemAdditionFactor] AS iiaf       ON iiaf.[InvoiceItemRef] = ii.[InvoiceItemID]   GROUP BY ii.[InvoiceItemID], ii.[Quantity], ii.[Price], ii.[AdditionFactor_VatEffective]   ORDER BY ii.[InvoiceItemID]",
-                        "gold_tables":  [
-                                            "SLS.InvoiceItem",
-                                            "SLS.InvoiceItemAdditionFactor"
-                                        ],
-                        "gold_columns":  [
-                                             "SLS.InvoiceItem.InvoiceItemID",
-                                             "SLS.InvoiceItem.Quantity",
-                                             "SLS.InvoiceItem.Price",
-                                             "SLS.InvoiceItem.AdditionFactor_VatEffective",
-                                             "SLS.InvoiceItemAdditionFactor.ValueInBaseCurrency"
-                                         ],
-                        "category":  "financial",
-                        "difficulty":  "medium",
-                        "review_status":  "candidate",
-                        "review_notes":  ""
-                    },
-                    {
-                        "id":  "questions_sales_intent_002_en",
-                        "language":  "en",
-                        "question":  "What are the top 20 invoice items with their Quantity, Price, VAT‑effective addition factor, and total addition‑factor value in base currency?",
-                        "intent_id":  "questions_sales_intent_002",
-                        "db_name":  "Sepidar02-back",
-                        "schema":  "SLS",
-                        "table":  "InvoiceItem",
-                        "reference_sql":  "SELECT TOP (20)       ii.[InvoiceItemID],       ii.[Quantity],       ii.[Price],       ii.[AdditionFactor_VatEffective],       SUM(iiaf.[ValueInBaseCurrency]) AS TotalAdditionFactorBase   FROM [SLS].[InvoiceItem] AS ii   LEFT JOIN [SLS].[InvoiceItemAdditionFactor] AS iiaf       ON iiaf.[InvoiceItemRef] = ii.[InvoiceItemID]   GROUP BY ii.[InvoiceItemID], ii.[Quantity], ii.[Price], ii.[AdditionFactor_VatEffective]   ORDER BY ii.[InvoiceItemID]",
-                        "gold_tables":  [
-                                            "SLS.InvoiceItem",
-                                            "SLS.InvoiceItemAdditionFactor"
-                                        ],
-                        "gold_columns":  [
-                                             "SLS.InvoiceItem.InvoiceItemID",
-                                             "SLS.InvoiceItem.Quantity",
-                                             "SLS.InvoiceItem.Price",
-                                             "SLS.InvoiceItem.AdditionFactor_VatEffective",
-                                             "SLS.InvoiceItemAdditionFactor.ValueInBaseCurrency"
-                                         ],
-                        "category":  "financial",
-                        "difficulty":  "medium",
-                        "review_status":  "candidate",
-                        "review_notes":  ""
-                    },
-                    {
-                        "id":  "questions_sales_intent_003_fa",
-                        "language":  "fa",
-                        "question":  "فهرست ۲۰ مورد برتر فاکتور با شماره فاکتور، نام مشتری، مقدار و قیمت خالص به ارز پایه، به ترتیب نزولی قیمت خالص را نمایش دهید.",
-                        "intent_id":  "questions_sales_intent_003",
-                        "db_name":  "Sepidar02-back",
-                        "schema":  "SLS",
-                        "table":  "InvoiceItem",
-                        "reference_sql":  "SELECT TOP (20) ii.InvoiceRef, i.Number AS InvoiceNumber, i.CustomerRealName, ii.Quantity, ii.NetPriceInBaseCurrency FROM [SLS].[InvoiceItem] AS ii JOIN [SLS].[Invoice] AS i ON ii.InvoiceRef = i.InvoiceId ORDER BY ii.NetPriceInBaseCurrency DESC",
-                        "gold_tables":  [
-                                            "SLS.InvoiceItem",
-                                            "SLS.Invoice"
-                                        ],
-                        "gold_columns":  [
-                                             "SLS.InvoiceItem.InvoiceRef",
-                                             "SLS.Invoice.Number",
-                                             "SLS.Invoice.CustomerRealName",
-                                             "SLS.InvoiceItem.Quantity",
-                                             "SLS.InvoiceItem.NetPriceInBaseCurrency"
-                                         ],
-                        "category":  "detail",
-                        "difficulty":  "medium",
-                        "review_status":  "candidate",
-                        "review_notes":  ""
-                    },
-                    {
-                        "id":  "questions_sales_intent_003_en",
-                        "language":  "en",
-                        "question":  "List the top 20 invoice items with their invoice number, customer name, quantity, and net price in base currency, ordered by net price descending.",
-                        "intent_id":  "questions_sales_intent_003",
-                        "db_name":  "Sepidar02-back",
-                        "schema":  "SLS",
-                        "table":  "InvoiceItem",
-                        "reference_sql":  "SELECT TOP (20) ii.InvoiceRef, i.Number AS InvoiceNumber, i.CustomerRealName, ii.Quantity, ii.NetPriceInBaseCurrency FROM [SLS].[InvoiceItem] AS ii JOIN [SLS].[Invoice] AS i ON ii.InvoiceRef = i.InvoiceId ORDER BY ii.NetPriceInBaseCurrency DESC",
-                        "gold_tables":  [
-                                            "SLS.InvoiceItem",
-                                            "SLS.Invoice"
-                                        ],
-                        "gold_columns":  [
-                                             "SLS.InvoiceItem.InvoiceRef",
-                                             "SLS.Invoice.Number",
-                                             "SLS.Invoice.CustomerRealName",
-                                             "SLS.InvoiceItem.Quantity",
-                                             "SLS.InvoiceItem.NetPriceInBaseCurrency"
-                                         ],
-                        "category":  "detail",
-                        "difficulty":  "medium",
-                        "review_status":  "candidate",
-                        "review_notes":  ""
-                    },
-                    {
-                        "id":  "questions_sales_intent_004_fa",
-                        "language":  "fa",
-                        "question":  "کل قیمت خالص به ارز پایه و کل مقدار برای هر توضیح آیتم فاکتور چیست، به‌صورت 20 توضیح برتر بر اساس کل قیمت خالص نمایش داده شود؟",
-                        "intent_id":  "questions_sales_intent_004",
-                        "db_name":  "Sepidar02-back",
-                        "schema":  "SLS",
-                        "table":  "InvoiceItem",
-                        "reference_sql":  "SELECT TOP (20) [SLS].[InvoiceItem].[Description], SUM([SLS].[InvoiceItem].[NetPriceInBaseCurrency]) AS TotalNetPriceInBaseCurrency, SUM([SLS].[InvoiceItem].[Quantity]) AS TotalQuantity FROM [SLS].[InvoiceItem] GROUP BY [SLS].[InvoiceItem].[Description] ORDER BY TotalNetPriceInBaseCurrency DESC",
-                        "gold_tables":  [
-                                            "SLS.InvoiceItem"
-                                        ],
-                        "gold_columns":  [
-                                             "SLS.InvoiceItem.Description",
-                                             "SLS.InvoiceItem.NetPriceInBaseCurrency",
-                                             "SLS.InvoiceItem.Quantity"
-                                         ],
-                        "category":  "aggregation",
-                        "difficulty":  "medium",
-                        "review_status":  "candidate",
-                        "review_notes":  ""
-                    },
-                    {
-                        "id":  "questions_sales_intent_004_en",
-                        "language":  "en",
-                        "question":  "What are the total net price in base currency and total quantity for each invoice item description, showing the top 20 descriptions by total net price?",
-                        "intent_id":  "questions_sales_intent_004",
-                        "db_name":  "Sepidar02-back",
-                        "schema":  "SLS",
-                        "table":  "InvoiceItem",
-                        "reference_sql":  "SELECT TOP (20) [SLS].[InvoiceItem].[Description], SUM([SLS].[InvoiceItem].[NetPriceInBaseCurrency]) AS TotalNetPriceInBaseCurrency, SUM([SLS].[InvoiceItem].[Quantity]) AS TotalQuantity FROM [SLS].[InvoiceItem] GROUP BY [SLS].[InvoiceItem].[Description] ORDER BY TotalNetPriceInBaseCurrency DESC",
-                        "gold_tables":  [
-                                            "SLS.InvoiceItem"
-                                        ],
-                        "gold_columns":  [
-                                             "SLS.InvoiceItem.Description",
-                                             "SLS.InvoiceItem.NetPriceInBaseCurrency",
-                                             "SLS.InvoiceItem.Quantity"
-                                         ],
-                        "category":  "aggregation",
-                        "difficulty":  "medium",
-                        "review_status":  "candidate",
-                        "review_notes":  ""
-                    },
-                    {
-                        "id":  "questions_sales_intent_005_fa",
-                        "language":  "fa",
-                        "question":  "برای هر نوع کالا، چند مورد وجود دارد؟",
-                        "intent_id":  "questions_sales_intent_005",
-                        "db_name":  "Sepidar02-back",
-                        "schema":  "INV",
-                        "table":  "Item",
-                        "reference_sql":  "SELECT TOP 20 [Type] AS ItemType, COUNT(*) AS ItemCount FROM [INV].[Item] GROUP BY [Type] ORDER BY ItemCount DESC",
-                        "gold_tables":  [
-                                            "INV.Item"
-                                        ],
-                        "gold_columns":  [
-                                             "INV.Item.Type"
-                                         ],
-                        "category":  "aggregation",
-                        "difficulty":  "easy",
-                        "review_status":  "candidate",
-                        "review_notes":  ""
-                    },
-                    {
-                        "id":  "questions_sales_intent_005_en",
-                        "language":  "en",
-                        "question":  "How many items are there for each item type?",
-                        "intent_id":  "questions_sales_intent_005",
-                        "db_name":  "Sepidar02-back",
-                        "schema":  "INV",
-                        "table":  "Item",
-                        "reference_sql":  "SELECT TOP 20 [Type] AS ItemType, COUNT(*) AS ItemCount FROM [INV].[Item] GROUP BY [Type] ORDER BY ItemCount DESC",
-                        "gold_tables":  [
-                                            "INV.Item"
-                                        ],
-                        "gold_columns":  [
-                                             "INV.Item.Type"
-                                         ],
-                        "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
                     {
                         "id":  "questions_tax_intent_001_fa",
                         "language":  "fa",
-                        "question":  "برای هر جدول مالیات، چند مورد مالیاتی تعریف شده است و عنوان آن‌ها چیست؟",
+                        "question":  "۲۰ جدول مالیات با بیشترین تعداد موارد مالیاتی را با عنوان فارسی، عنوان انگلیسی و تعداد موارد نمایش بده؛ هر جدول را جدا حساب کن، حتی اگر عنوان ها یکسان باشند. فقط جدول های دارای مورد را بیاور و تعداد بیشتر اول باشد.",
                         "intent_id":  "questions_tax_intent_001",
                         "db_name":  "Sepidar02-back",
                         "schema":  "PAY",
                         "table":  "TaxTable",
-                        "reference_sql":  "SELECT TOP (20) tt.[Title], tt.[Title_En], COUNT(ti.[TaxTableItemId]) AS ItemCount FROM [PAY].[TaxTable] AS tt JOIN [PAY].[TaxTableItem] AS ti ON ti.[TaxTableRef] = tt.[TaxTableId] GROUP BY tt.[Title], tt.[Title_En] ORDER BY ItemCount DESC",
+                        "reference_sql":  "SELECT TOP (20) tt.[Title], tt.[Title_En], COUNT(ti.[TaxTableItemId]) AS ItemCount FROM [PAY].[TaxTable] AS tt INNER JOIN [PAY].[TaxTableItem] AS ti ON ti.[TaxTableRef] = tt.[TaxTableId] GROUP BY tt.[TaxTableId], tt.[Title], tt.[Title_En] ORDER BY ItemCount DESC;",
                         "gold_tables":  [
                                             "PAY.TaxTable",
                                             "PAY.TaxTableItem"
@@ -4232,19 +3846,19 @@
                                              "PAY.TaxTableItem.TaxTableItemId"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by", "join", "order_by", "top_limit"], "feature_count": 5, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
                     {
                         "id":  "questions_tax_intent_001_en",
                         "language":  "en",
-                        "question":  "How many tax items are defined for each tax table, and what are their titles?",
+                        "question":  "List the top 20 tax tables with the most tax items, showing their Persian title, English title, and item count. Count each tax table separately, even when titles match. Include only tables with tax items and order by item count descending.",
                         "intent_id":  "questions_tax_intent_001",
                         "db_name":  "Sepidar02-back",
                         "schema":  "PAY",
                         "table":  "TaxTable",
-                        "reference_sql":  "SELECT TOP (20) tt.[Title], tt.[Title_En], COUNT(ti.[TaxTableItemId]) AS ItemCount FROM [PAY].[TaxTable] AS tt JOIN [PAY].[TaxTableItem] AS ti ON ti.[TaxTableRef] = tt.[TaxTableId] GROUP BY tt.[Title], tt.[Title_En] ORDER BY ItemCount DESC",
+                        "reference_sql":  "SELECT TOP (20) tt.[Title], tt.[Title_En], COUNT(ti.[TaxTableItemId]) AS ItemCount FROM [PAY].[TaxTable] AS tt INNER JOIN [PAY].[TaxTableItem] AS ti ON ti.[TaxTableRef] = tt.[TaxTableId] GROUP BY tt.[TaxTableId], tt.[Title], tt.[Title_En] ORDER BY ItemCount DESC;",
                         "gold_tables":  [
                                             "PAY.TaxTable",
                                             "PAY.TaxTableItem"
@@ -4255,7 +3869,7 @@
                                              "PAY.TaxTableItem.TaxTableItemId"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by", "join", "order_by", "top_limit"], "feature_count": 5, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -4278,19 +3892,19 @@
                                              "PAY.TaxTable.TaxTableId"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by", "join", "order_by", "top_limit"], "feature_count": 5, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
                     {
                         "id":  "questions_tax_intent_002_en",
                         "language":  "en",
-                        "question":  "List each tax group with its English and Persian titles and the number of tax tables associated with it, ordered by the count descending (top 20).",
+                        "question":  "List the top 20 tax groups that have associated tax tables, showing their Persian title, English title, and tax table count, ordered by count descending.",
                         "intent_id":  "questions_tax_intent_002",
                         "db_name":  "Sepidar02-back",
                         "schema":  "PAY",
                         "table":  "TaxGroup",
-                        "reference_sql":  "SELECT TOP (20) tg.[Title], tg.[Title_En], COUNT(tt.[TaxTableId]) AS TableCount FROM [PAY].[TaxGroup] tg JOIN [PAY].[TaxTable] tt ON tt.[TaxGroupRef] = tg.[TaxGroupId] GROUP BY tg.[Title], tg.[Title_En] ORDER BY TableCount DESC",
+                        "reference_sql":  "SELECT TOP (20) tg.[Title], tg.[Title_En], COUNT(tt.[TaxTableId]) AS TableCount FROM [PAY].[TaxGroup] AS tg INNER JOIN [PAY].[TaxTable] AS tt ON tt.[TaxGroupRef] = tg.[TaxGroupId] GROUP BY tg.[Title], tg.[Title_En] ORDER BY TableCount DESC;",
                         "gold_tables":  [
                                             "PAY.TaxGroup",
                                             "PAY.TaxTable"
@@ -4301,55 +3915,7 @@
                                              "PAY.TaxTable.TaxTableId"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
-                        "review_status":  "candidate",
-                        "review_notes":  ""
-                    },
-                    {
-                        "id":  "questions_tax_intent_003_fa",
-                        "language":  "fa",
-                        "question":  "برای هر گروه مالیاتی، تعداد قراردادهای مرتبط و مجموع مبلغ غیرقابل مالیات آن قراردادها چقدر است؟",
-                        "intent_id":  "questions_tax_intent_003",
-                        "db_name":  "Sepidar02-back",
-                        "schema":  "PAY",
-                        "table":  "TaxGroup",
-                        "reference_sql":  "SELECT tg.[Title] AS [Title],tg.[Title_En] AS [Title_En],COUNT(c.[Number]) AS [ContractCount],SUM(c.[NonTaxableAmount]) AS [TotalNonTaxableAmount] FROM [PAY].[TaxGroup] AS tg LEFT JOIN [PAY].[Contract] AS c ON c.[TaxGroupRef]=tg.[TaxGroupId] GROUP BY tg.[Title],tg.[Title_En] ORDER BY [ContractCount] DESC",
-                        "gold_tables":  [
-                                            "PAY.TaxGroup",
-                                            "PAY.Contract"
-                                        ],
-                        "gold_columns":  [
-                                             "PAY.TaxGroup.Title",
-                                             "PAY.TaxGroup.Title_En",
-                                             "PAY.Contract.Number",
-                                             "PAY.Contract.NonTaxableAmount"
-                                         ],
-                        "category":  "aggregation",
-                        "difficulty":  "medium",
-                        "review_status":  "candidate",
-                        "review_notes":  ""
-                    },
-                    {
-                        "id":  "questions_tax_intent_003_en",
-                        "language":  "en",
-                        "question":  "For each tax group, how many contracts are linked and what is the total non‑taxable amount of those contracts?",
-                        "intent_id":  "questions_tax_intent_003",
-                        "db_name":  "Sepidar02-back",
-                        "schema":  "PAY",
-                        "table":  "TaxGroup",
-                        "reference_sql":  "SELECT tg.[Title] AS [Title],tg.[Title_En] AS [Title_En],COUNT(c.[Number]) AS [ContractCount],SUM(c.[NonTaxableAmount]) AS [TotalNonTaxableAmount] FROM [PAY].[TaxGroup] AS tg LEFT JOIN [PAY].[Contract] AS c ON c.[TaxGroupRef]=tg.[TaxGroupId] GROUP BY tg.[Title],tg.[Title_En] ORDER BY [ContractCount] DESC",
-                        "gold_tables":  [
-                                            "PAY.TaxGroup",
-                                            "PAY.Contract"
-                                        ],
-                        "gold_columns":  [
-                                             "PAY.TaxGroup.Title",
-                                             "PAY.TaxGroup.Title_En",
-                                             "PAY.Contract.Number",
-                                             "PAY.Contract.NonTaxableAmount"
-                                         ],
-                        "category":  "aggregation",
-                        "difficulty":  "medium",
+                        "features": ["aggregation", "group_by", "join", "order_by", "top_limit"], "feature_count": 5, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -4369,7 +3935,7 @@
                                              "PAY.TaxGroup.Type"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -4389,7 +3955,7 @@
                                              "PAY.TaxGroup.Type"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by", "order_by"], "feature_count": 3, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -4409,7 +3975,7 @@
                                              "PAY.TaxTable.TaxType"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -4429,60 +3995,14 @@
                                              "PAY.TaxTable.TaxType"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
-                        "review_status":  "candidate",
-                        "review_notes":  ""
-                    },
-                    {
-                        "id":  "questions_worksite_intent_001_fa",
-                        "language":  "fa",
-                        "question":  "مجموع مقدار محاسبه برای هر پرسنل در سال جاری چقدر است؟",
-                        "intent_id":  "questions_worksite_intent_001",
-                        "db_name":  "Sepidar02-back",
-                        "schema":  "PAY",
-                        "table":  "Personnel",
-                        "reference_sql":  "SELECT p.[PersonnelId], p.[InsuranceNumber], SUM(c.[Value]) AS TotalValue FROM [PAY].[Personnel] AS p JOIN [PAY].[Calculation] AS c ON c.[PersonnelRef] = p.[PersonnelId] WHERE YEAR(c.[Date]) = YEAR(GETDATE()) GROUP BY p.[PersonnelId], p.[InsuranceNumber] ORDER BY TotalValue DESC",
-                        "gold_tables":  [
-                                            "PAY.Personnel",
-                                            "PAY.Calculation"
-                                        ],
-                        "gold_columns":  [
-                                             "PAY.Personnel.PersonnelId",
-                                             "PAY.Personnel.InsuranceNumber",
-                                             "PAY.Calculation.Value"
-                                         ],
-                        "category":  "financial",
-                        "difficulty":  "medium",
-                        "review_status":  "candidate",
-                        "review_notes":  ""
-                    },
-                    {
-                        "id":  "questions_worksite_intent_001_en",
-                        "language":  "en",
-                        "question":  "What is the total calculation value for each personnel in the current year?",
-                        "intent_id":  "questions_worksite_intent_001",
-                        "db_name":  "Sepidar02-back",
-                        "schema":  "PAY",
-                        "table":  "Personnel",
-                        "reference_sql":  "SELECT p.[PersonnelId], p.[InsuranceNumber], SUM(c.[Value]) AS TotalValue FROM [PAY].[Personnel] AS p JOIN [PAY].[Calculation] AS c ON c.[PersonnelRef] = p.[PersonnelId] WHERE YEAR(c.[Date]) = YEAR(GETDATE()) GROUP BY p.[PersonnelId], p.[InsuranceNumber] ORDER BY TotalValue DESC",
-                        "gold_tables":  [
-                                            "PAY.Personnel",
-                                            "PAY.Calculation"
-                                        ],
-                        "gold_columns":  [
-                                             "PAY.Personnel.PersonnelId",
-                                             "PAY.Personnel.InsuranceNumber",
-                                             "PAY.Calculation.Value"
-                                         ],
-                        "category":  "financial",
-                        "difficulty":  "medium",
+                        "features": ["aggregation", "group_by"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
                     {
                         "id":  "questions_worksite_intent_002_fa",
                         "language":  "fa",
-                        "question":  "لیست 20 پرسنل اول به همراه وضعیت کارمند، نوع قرارداد و تاریخ استخدام را نمایش دهید.",
+                        "question":  "۲۰ رکورد اول پرسنل و قرارداد را به ترتیب شناسهٔ پرسنل، همراه شناسهٔ پرسنل، وضعیت کارمند، نوع قرارداد و تاریخ استخدام نمایش بده.",
                         "intent_id":  "questions_worksite_intent_002",
                         "db_name":  "Sepidar02-back",
                         "schema":  "PAY",
@@ -4499,14 +4019,14 @@
                                              "PAY.Contract.EmploymentDate"
                                          ],
                         "category":  "join",
-                        "difficulty":  "easy",
+                        "features": ["join", "order_by", "top_limit"], "feature_count": 3, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
                     {
                         "id":  "questions_worksite_intent_002_en",
                         "language":  "en",
-                        "question":  "Show the first 20 personnel with their employee status, contract type, and employment date.",
+                        "question":  "Show the first 20 personnel-contract records ordered by personnel ID, including personnel ID, employee status, contract type, and employment date.",
                         "intent_id":  "questions_worksite_intent_002",
                         "db_name":  "Sepidar02-back",
                         "schema":  "PAY",
@@ -4523,7 +4043,7 @@
                                              "PAY.Contract.EmploymentDate"
                                          ],
                         "category":  "join",
-                        "difficulty":  "easy",
+                        "features": ["join", "order_by", "top_limit"], "feature_count": 3, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -4546,7 +4066,7 @@
                                              "PAY.MonthlyDataPersonnel.MonthlyDataRef"
                                          ],
                         "category":  "Personnel",
-                        "difficulty":  "easy",
+                        "features": ["join", "order_by", "top_limit"], "feature_count": 3, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -4569,7 +4089,7 @@
                                              "PAY.MonthlyDataPersonnel.MonthlyDataRef"
                                          ],
                         "category":  "Personnel",
-                        "difficulty":  "easy",
+                        "features": ["join", "order_by", "top_limit"], "feature_count": 3, "join_count": 1, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -4589,7 +4109,7 @@
                                              "PAY.Worksite.CreationDate"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "date_operation", "group_by", "order_by"], "feature_count": 4, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -4609,7 +4129,7 @@
                                              "PAY.Worksite.CreationDate"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "date_operation", "group_by", "order_by"], "feature_count": 4, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -4629,7 +4149,7 @@
                                              "PAY.Personnel.Sex"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
                     },
@@ -4649,9 +4169,185 @@
                                              "PAY.Personnel.Sex"
                                          ],
                         "category":  "aggregation",
-                        "difficulty":  "easy",
+                        "features": ["aggregation", "group_by"], "feature_count": 2, "join_count": 0, "classification_version": 1,
                         "review_status":  "candidate",
                         "review_notes":  ""
+                    }
+                    ,{
+                        "id": "questions_assets_intent_006_en",
+                        "language": "en",
+                        "question": "When was the depreciation record created if one of its items was calculated on 2024-04-19 and it belongs to the asset with plaque number 120100565?",
+                        "intent_id": "questions_assets_intent_006",
+                        "db_name": "Sepidar02-back",
+                        "schema": "AST",
+                        "table": "Depreciation",
+                        "reference_sql": "SELECT DISTINCT d.[CreationDate] FROM [AST].[Depreciation] AS d INNER JOIN [AST].[DepreciationItem] AS di ON di.[DepreciationRef] = d.[DepreciationID] INNER JOIN [AST].[Asset] AS a ON a.[AssetId] = d.[AssetRef] WHERE di.[CalculationDate] >= '2024-04-19' AND di.[CalculationDate] < '2024-04-20' AND a.[PlaqueNumber] = N'120100565';",
+                        "gold_tables": ["AST.Depreciation", "AST.DepreciationItem", "AST.Asset"],
+                        "gold_columns": ["AST.Depreciation.CreationDate", "AST.Depreciation.DepreciationID", "AST.Depreciation.AssetRef", "AST.DepreciationItem.DepreciationRef", "AST.DepreciationItem.CalculationDate", "AST.Asset.AssetId", "AST.Asset.PlaqueNumber"],
+                        "category": "join",
+                        "features": ["date_operation", "distinct", "filter", "join", "multi_join", "range_filter"], "feature_count": 6, "join_count": 2, "classification_version": 1,
+                        "review_status": "candidate",
+                        "review_notes": ""
+                    }
+                    ,{
+                        "id": "questions_item_typo_intent_001_fa",
+                        "language": "fa",
+                        "question": "کد آِیتم «صندلي مديرتي» چیست؟",
+                        "intent_id": "questions_item_typo_intent_001",
+                        "db_name": "Sepidar02-back",
+                        "schema": "INV",
+                        "table": "Item",
+                        "reference_sql": "SELECT [Code] FROM [INV].[Item] WHERE [Title] = N'صندلي مديريتي';",
+                        "gold_tables": ["INV.Item"],
+                        "gold_columns": ["INV.Item.Code", "INV.Item.Title"],
+                        "category": "filter",
+                        "features": ["filter", "typo"], "feature_count": 2, "join_count": 0, "classification_version": 1,
+                        "review_status": "candidate",
+                        "review_notes": "Intentional value typo: صندلي مديرتي -> صندلي مديريتي. User-supplied expected item code: 5000002. Check whether self-correction is attempted; the model may resolve the typo before execution."
+                    },
+                    {
+                        "id": "questions_item_typo_intent_002_en",
+                        "language": "en",
+                        "question": "What is the code for an [INV] item with title \"Flash Memroy HP 32 GB\"?",
+                        "intent_id": "questions_item_typo_intent_002",
+                        "db_name": "Sepidar02-back",
+                        "schema": "INV",
+                        "table": "Item",
+                        "reference_sql": "SELECT [Code] FROM [INV].[Item] WHERE [Title] = N'Flash Memory HP 32 GB ';",
+                        "gold_tables": ["INV.Item"],
+                        "gold_columns": ["INV.Item.Code", "INV.Item.Title"],
+                        "category": "filter",
+                        "features": ["filter", "typo"], "feature_count": 2, "join_count": 0, "classification_version": 1,
+                        "review_status": "candidate",
+                        "review_notes": "Intentional value typo: Memroy -> Memory. User-supplied expected item code: 5000005. Original title trailing space preserved. Check whether self-correction is attempted; the model may resolve the typo before execution."
+                    }
+                    ,{
+                        "id": "questions_bank_typo_intent_001_fa",
+                        "language": "fa",
+                        "question": "شناسهٔ بانک «اقتصاد نويين» چیست؟",
+                        "intent_id": "questions_bank_typo_intent_001",
+                        "db_name": "Sepidar02-back",
+                        "schema": "RPA",
+                        "table": "Bank",
+                        "reference_sql": "SELECT [BankId] FROM [RPA].[Bank] WHERE [Title] = N'اقتصاد نوين';",
+                        "gold_tables": ["RPA.Bank"],
+                        "gold_columns": ["RPA.Bank.BankId", "RPA.Bank.Title"],
+                        "category": "filter",
+                        "features": ["filter", "typo"], "feature_count": 2, "join_count": 0, "classification_version": 1,
+                        "review_status": "candidate",
+                        "review_notes": "Intentional value typo: اقتصاد نويين -> اقتصاد نوين. User-supplied expected BankId: 5. Check whether self-correction is attempted; the model may resolve the typo before execution."
+                    },
+                    {
+                        "id": "questions_bank_typo_intent_002_en",
+                        "language": "en",
+                        "question": "What is the bank ID for \"رفاه كارگرن\"?",
+                        "intent_id": "questions_bank_typo_intent_002",
+                        "db_name": "Sepidar02-back",
+                        "schema": "RPA",
+                        "table": "Bank",
+                        "reference_sql": "SELECT [BankId] FROM [RPA].[Bank] WHERE [Title] = N'رفاه كارگران';",
+                        "gold_tables": ["RPA.Bank"],
+                        "gold_columns": ["RPA.Bank.BankId", "RPA.Bank.Title"],
+                        "category": "filter",
+                        "features": ["filter", "typo"], "feature_count": 2, "join_count": 0, "classification_version": 1,
+                        "review_status": "candidate",
+                        "review_notes": "Intentional value typo: رفاه كارگرن -> رفاه كارگران. English question retains the Persian stored bank name. User-supplied expected BankId: 9. Check whether self-correction is attempted; the model may resolve the typo before execution."
+                    }
+                    ,{
+                        "id": "questions_coefficient_typo_intent_001_fa",
+                        "language": "fa",
+                        "question": "ضریب «حسن انجام کاز» چند درصد است؟",
+                        "intent_id": "questions_coefficient_typo_intent_001",
+                        "db_name": "Sepidar02-back",
+                        "schema": "CNT",
+                        "table": "Coefficient",
+                        "reference_sql": "SELECT TOP 1 c.[Percent] FROM [CNT].[Coefficient] AS c WHERE c.[Title] = N'حسن انجام كار'",
+                        "gold_tables": ["CNT.Coefficient"],
+                        "gold_columns": ["CNT.Coefficient.Code", "CNT.Coefficient.Title"],
+                        "category": "filter",
+                        "features": ["filter", "top_limit", "typo"], "feature_count": 3, "join_count": 0, "classification_version": 1,
+                        "review_status": "candidate",
+                        "review_notes": "Intentional value typo: افوده -> افزوده. User-supplied expected coefficient code: 6. Check whether self-correction is attempted; the model may resolve the typo before execution."
+                    },
+                    {
+                        "id": "questions_coefficient_typo_intent_002_en",
+                        "language": "en",
+                        "question": "What is the percent of the coefficient with the English title \"Performnace Bond\"?",
+                        "intent_id": "questions_coefficient_typo_intent_002",
+                        "db_name": "Sepidar02-back",
+                        "schema": "CNT",
+                        "table": "Coefficient",
+                        "reference_sql": "SELECT [Percent] FROM [CNT].[Coefficient] WHERE [Title_En] = N'Performance Bond';",
+                        "gold_tables": ["CNT.Coefficient"],
+                        "gold_columns": ["CNT.Coefficient.Code", "CNT.Coefficient.Title_En"],
+                        "category": "filter",
+                        "features": ["filter", "typo"], "feature_count": 2, "join_count": 0, "classification_version": 1,
+                        "review_status": "candidate",
+                        "review_notes": "Intentional value typo: Performnace -> Performance. User-supplied expected coefficient code: 1. Check whether self-correction is attempted; the model may resolve the typo before execution."
+                    }
+                    ,{
+                        "id": "questions_worksite_typo_intent_001_fa",
+                        "language": "fa",
+                        "question": "کد سایت کاری «دفتر دارالفون» در بخش حقوق و دستمزد چیست؟",
+                        "intent_id": "questions_worksite_typo_intent_001",
+                        "db_name": "Sepidar02-back",
+                        "schema": "PAY",
+                        "table": "Worksite",
+                        "reference_sql": "SELECT [Code] FROM [PAY].[Worksite] WHERE [Title] = N'دفتر دارالفنون';",
+                        "gold_tables": ["PAY.Worksite"],
+                        "gold_columns": ["PAY.Worksite.Code", "PAY.Worksite.Title"],
+                        "category": "filter",
+                        "features": ["filter", "typo"], "feature_count": 2, "join_count": 0, "classification_version": 1,
+                        "review_status": "candidate",
+                        "review_notes": "Intentional value typo: دفتر دارالفون -> دفتر دارالفنون. User-supplied expected worksite code: 1004. Check whether self-correction is attempted; the model may resolve the typo before execution."
+                    },
+                    {
+                        "id": "questions_worksite_typo_intent_002_en",
+                        "language": "en",
+                        "question": "What is the code of the worksite named \"دفتر زرتشيان\" in payroll?",
+                        "intent_id": "questions_worksite_typo_intent_002",
+                        "db_name": "Sepidar02-back",
+                        "schema": "PAY",
+                        "table": "Worksite",
+                        "reference_sql": "SELECT [Code] FROM [PAY].[Worksite] WHERE [Title] = N'دفتر زرتشتيان';",
+                        "gold_tables": ["PAY.Worksite"],
+                        "gold_columns": ["PAY.Worksite.Code", "PAY.Worksite.Title"],
+                        "category": "filter",
+                        "features": ["filter", "typo"], "feature_count": 2, "join_count": 0, "classification_version": 1,
+                        "review_status": "candidate",
+                        "review_notes": "Intentional value typo: دفتر زرتشيان -> دفتر زرتشتيان. English question retains the Persian stored worksite name. User-supplied expected worksite code: 1005. Check whether self-correction is attempted; the model may resolve the typo before execution."
+                    }
+                    ,{
+                        "id": "questions_template_typo_intent_001_fa",
+                        "language": "fa",
+                        "question": "شناسهٔ قالب پیام با عنوان «مانده حساب مشري» چیست؟",
+                        "intent_id": "questions_template_typo_intent_001",
+                        "db_name": "Sepidar02-back",
+                        "schema": "MSG",
+                        "table": "Template",
+                        "reference_sql": "SELECT [TemplateID] FROM [MSG].[Template] WHERE [Title] = N'مانده حساب مشتري';",
+                        "gold_tables": ["MSG.Template"],
+                        "gold_columns": ["MSG.Template.TemplateID", "MSG.Template.Title"],
+                        "category": "filter",
+                        "features": ["filter", "typo"], "feature_count": 2, "join_count": 0, "classification_version": 1,
+                        "review_status": "candidate",
+                        "review_notes": "Intentional value typo: مانده حساب مشري -> مانده حساب مشتري. User-supplied expected TemplateID: 2. Check whether self-correction is attempted; the model may resolve the typo before execution."
+                    },
+                    {
+                        "id": "questions_template_typo_intent_002_en",
+                        "language": "en",
+                        "question": "What is the ID of the message template titled \"ثبت رسيد خرريد\"?",
+                        "intent_id": "questions_template_typo_intent_002",
+                        "db_name": "Sepidar02-back",
+                        "schema": "MSG",
+                        "table": "Template",
+                        "reference_sql": "SELECT [TemplateID] FROM [MSG].[Template] WHERE [Title] = N'ثبت رسيد خريد';",
+                        "gold_tables": ["MSG.Template"],
+                        "gold_columns": ["MSG.Template.TemplateID", "MSG.Template.Title"],
+                        "category": "filter",
+                        "features": ["filter", "typo"], "feature_count": 2, "join_count": 0, "classification_version": 1,
+                        "review_status": "candidate",
+                        "review_notes": "Intentional value typo: ثبت رسيد خرريد -> ثبت رسيد خريد. English question retains the Persian stored template title. User-supplied expected TemplateID: 4. Check whether self-correction is attempted; the model may resolve the typo before execution."
                     }
                 ]
 }

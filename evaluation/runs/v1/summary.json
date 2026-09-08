@@ -1,184 +1,303 @@
 {
-  "generated_at": "2026-09-08T00:59:37.936981+00:00",
+  "generated_at": "2026-09-08T12:31:14.634971+00:00",
   "manifest": {
     "evaluator_version": 2,
-    "dataset": "E:\\B Project\\chat-with-unknown-data\\evaluation\\datasets\\questions_all.json",
-    "dataset_sha256": "6447b99da927652c159d31a30e2fe7cf40dac02a7442e74537218a34976e6482",
+    "dataset": "D:\\lessons\\Project\\chat-with-unknown-data\\evaluation\\datasets\\questions_all.json",
+    "dataset_sha256": "23dc804514ee0cd981f96fdc2af950c33601ef8f67bbd5d34aee0e3af566aee1",
     "db_name": "test1",
     "db_type": "mssql",
     "timing_repeats": 5,
     "created_at": "2026-09-06T19:07:48.017267+00:00",
-    "setup_latency_ms": 8734.392,
+    "setup_latency_ms": 20833.902,
     "setup_tokens": {
       "by_operation": {}
     },
-    "dataset_updated_at": "2026-09-08T00:54:57.166676+00:00"
+    "dataset_updated_at": "2026-09-08T12:05:29.320262+00:00"
   },
-  "completed_questions": 150,
+  "completed_questions": 200,
   "metrics": {
-    "initial_execution_accuracy": 0.92,
-    "final_execution_accuracy": 0.92,
+    "initial_execution_accuracy": 0.905,
+    "final_execution_accuracy": 0.955,
     "initial_valid_sql_rate": 1.0,
     "final_valid_sql_rate": 1.0,
-    "table_recall": 0.946667,
-    "table_precision": 0.787841,
-    "column_recall": 0.948222,
-    "self_correction_success_rate": 0.0,
-    "correction_gain": 0.0,
-    "r_ves": 87.223723,
+    "table_recall": 0.97,
+    "table_precision": 0.800881,
+    "column_recall": 0.971167,
+    "self_correction_success_rate": 0.666667,
+    "correction_gain": 0.05,
+    "r_ves": 90.052126,
     "end_to_end_latency_ms": {
-      "count": 150,
-      "mean": 39577.837,
-      "median": 42901.548,
+      "count": 200,
+      "mean": 38184.79,
+      "median": 40427.749,
       "p90": 58368.29,
-      "p95": 61171.554,
-      "min": 7788.511,
-      "max": 70397.241
+      "p95": 61734.018,
+      "min": 7502.187,
+      "max": 71366.805
     },
     "final_sql_latency_ms": {
-      "count": 150,
-      "mean": 21.907,
-      "median": 14.092,
-      "p90": 39.217,
-      "p95": 56.992,
-      "min": 2.1,
+      "count": 200,
+      "mean": 20.196,
+      "median": 13.194,
+      "p90": 38.642,
+      "p95": 52.989,
+      "min": 1.068,
       "max": 338.951
     },
-    "total_llm_calls": 593,
-    "average_llm_calls": 3.953,
-    "total_tokens": 975733,
-    "average_tokens": 6504.887
+    "total_llm_calls": 804,
+    "average_llm_calls": 4.02,
+    "total_tokens": 1295152,
+    "average_tokens": 6475.76
   },
   "by_language": {
     "en": {
-      "questions": 77,
-      "execution_accuracy": 0.961039,
+      "questions": 104,
+      "execution_accuracy": 0.971154,
       "valid_sql_rate": 1.0,
-      "table_recall": 0.980519,
-      "column_recall": 0.984848
+      "table_recall": 0.985577,
+      "column_recall": 0.988782
     },
     "fa": {
-      "questions": 73,
-      "execution_accuracy": 0.876712,
+      "questions": 96,
+      "execution_accuracy": 0.9375,
       "valid_sql_rate": 1.0,
-      "table_recall": 0.910959,
-      "column_recall": 0.909589
+      "table_recall": 0.953125,
+      "column_recall": 0.952083
     }
   },
-  "by_category": {
-    "account": {
-      "questions": 4,
-      "execution_accuracy": 0.75,
-      "valid_sql_rate": 1.0,
-      "table_recall": 0.875,
-      "column_recall": 0.916667
+  "by_feature": {
+    "join": {
+      "description": "Combines tables with JOIN",
+      "questions": 65,
+      "scored_questions": 65,
+      "initial_execution_accuracy": 0.876923,
+      "execution_accuracy": 0.876923,
+      "correction_gain": 0.0,
+      "correction_attempted": 4,
+      "recovered_questions": 0,
+      "recovery_per_attempt": 0.0,
+      "table_recall": 0.923077,
+      "column_recall": 0.926667,
+      "errors": 0
     },
-    "account-element": {
-      "questions": 2,
-      "execution_accuracy": 1.0,
-      "valid_sql_rate": 1.0,
+    "multi_join": {
+      "description": "Uses two or more JOINs",
+      "questions": 1,
+      "scored_questions": 1,
+      "initial_execution_accuracy": 1,
+      "execution_accuracy": 1,
+      "correction_gain": 0,
+      "correction_attempted": 0,
+      "recovered_questions": 0,
+      "recovery_per_attempt": null,
       "table_recall": 1.0,
-      "column_recall": 1.0
+      "column_recall": 1.0,
+      "errors": 0
     },
-    "account_overview": {
-      "questions": 2,
-      "execution_accuracy": 1.0,
-      "valid_sql_rate": 1.0,
-      "table_recall": 1.0,
-      "column_recall": 1.0
+    "outer_join": {
+      "description": "Uses LEFT, RIGHT or FULL JOIN",
+      "questions": 25,
+      "scored_questions": 25,
+      "initial_execution_accuracy": 0.88,
+      "execution_accuracy": 0.88,
+      "correction_gain": 0.0,
+      "correction_attempted": 1,
+      "recovered_questions": 0,
+      "recovery_per_attempt": 0.0,
+      "table_recall": 0.92,
+      "column_recall": 0.916,
+      "errors": 0
     },
     "aggregation": {
-      "questions": 83,
-      "execution_accuracy": 0.939759,
-      "valid_sql_rate": 1.0,
-      "table_recall": 0.957831,
-      "column_recall": 0.959839
+      "description": "Uses COUNT, SUM, AVG, MIN or MAX",
+      "questions": 118,
+      "scored_questions": 118,
+      "initial_execution_accuracy": 0.949153,
+      "execution_accuracy": 0.949153,
+      "correction_gain": 0.0,
+      "correction_attempted": 3,
+      "recovered_questions": 0,
+      "recovery_per_attempt": 0.0,
+      "table_recall": 0.957627,
+      "column_recall": 0.958192,
+      "errors": 1
     },
-    "analytics": {
-      "questions": 4,
-      "execution_accuracy": 1.0,
-      "valid_sql_rate": 1.0,
-      "table_recall": 1.0,
-      "column_recall": 1.0
+    "group_by": {
+      "description": "Groups rows",
+      "questions": 109,
+      "scored_questions": 109,
+      "initial_execution_accuracy": 0.944954,
+      "execution_accuracy": 0.944954,
+      "correction_gain": 0.0,
+      "correction_attempted": 3,
+      "recovered_questions": 0,
+      "recovery_per_attempt": 0.0,
+      "table_recall": 0.954128,
+      "column_recall": 0.95474,
+      "errors": 1
     },
-    "balance": {
-      "questions": 2,
-      "execution_accuracy": 1.0,
-      "valid_sql_rate": 1.0,
-      "table_recall": 1.0,
-      "column_recall": 1.0
+    "order_by": {
+      "description": "Sorts results",
+      "questions": 151,
+      "scored_questions": 151,
+      "initial_execution_accuracy": 0.953642,
+      "execution_accuracy": 0.953642,
+      "correction_gain": 0.0,
+      "correction_attempted": 3,
+      "recovered_questions": 0,
+      "recovery_per_attempt": 0.0,
+      "table_recall": 0.970199,
+      "column_recall": 0.972848,
+      "errors": 0
     },
-    "detail": {
-      "questions": 23,
-      "execution_accuracy": 1.0,
-      "valid_sql_rate": 1.0,
-      "table_recall": 1.0,
-      "column_recall": 1.0
+    "top_limit": {
+      "description": "Limits results with TOP, LIMIT or FETCH",
+      "questions": 84,
+      "scored_questions": 84,
+      "initial_execution_accuracy": 0.904762,
+      "execution_accuracy": 0.916667,
+      "correction_gain": 0.011905,
+      "correction_attempted": 4,
+      "recovered_questions": 1,
+      "recovery_per_attempt": 0.25,
+      "table_recall": 0.946429,
+      "column_recall": 0.95119,
+      "errors": 0
     },
-    "financial": {
-      "questions": 17,
-      "execution_accuracy": 0.705882,
-      "valid_sql_rate": 1.0,
-      "table_recall": 0.823529,
-      "column_recall": 0.807843
+    "filter": {
+      "description": "Filters rows with WHERE",
+      "questions": 61,
+      "scored_questions": 61,
+      "initial_execution_accuracy": 0.819672,
+      "execution_accuracy": 0.983607,
+      "correction_gain": 0.163935,
+      "correction_attempted": 11,
+      "recovered_questions": 10,
+      "recovery_per_attempt": 0.9090909090909091,
+      "table_recall": 0.991803,
+      "column_recall": 0.991803,
+      "errors": 0
     },
-    "listing": {
-      "questions": 4,
-      "execution_accuracy": 1.0,
-      "valid_sql_rate": 1.0,
-      "table_recall": 1.0,
-      "column_recall": 1.0
-    },
-    "party_address": {
-      "questions": 2,
-      "execution_accuracy": 1.0,
-      "valid_sql_rate": 1.0,
-      "table_recall": 1.0,
-      "column_recall": 1.0
-    },
-    "party_phone": {
-      "questions": 2,
-      "execution_accuracy": 0.5,
-      "valid_sql_rate": 1.0,
-      "table_recall": 0.75,
-      "column_recall": 0.75
-    },
-    "payment_receipt": {
+    "distinct": {
+      "description": "Removes duplicates with DISTINCT",
       "questions": 1,
-      "execution_accuracy": 1.0,
-      "valid_sql_rate": 1.0,
+      "scored_questions": 1,
+      "initial_execution_accuracy": 1,
+      "execution_accuracy": 1,
+      "correction_gain": 0,
+      "correction_attempted": 0,
+      "recovered_questions": 0,
+      "recovery_per_attempt": null,
       "table_recall": 1.0,
-      "column_recall": 1.0
+      "column_recall": 1.0,
+      "errors": 0
     },
-    "ranking": {
-      "questions": 2,
-      "execution_accuracy": 1.0,
-      "valid_sql_rate": 1.0,
+    "date_operation": {
+      "description": "Extracts, converts or compares date/time values",
+      "questions": 14,
+      "scored_questions": 14,
+      "initial_execution_accuracy": 1,
+      "execution_accuracy": 1,
+      "correction_gain": 0,
+      "correction_attempted": 0,
+      "recovered_questions": 0,
+      "recovery_per_attempt": null,
       "table_recall": 1.0,
-      "column_recall": 1.0
+      "column_recall": 1.0,
+      "errors": 0
     },
-    "template_management": {
-      "questions": 2,
-      "execution_accuracy": 1.0,
-      "valid_sql_rate": 1.0,
-      "table_recall": 0.75,
-      "column_recall": 0.833333
+    "null_handling": {
+      "description": "Explicit IS NULL, COALESCE or ISNULL",
+      "questions": 3,
+      "scored_questions": 3,
+      "initial_execution_accuracy": 0.666667,
+      "execution_accuracy": 0.666667,
+      "correction_gain": 0.0,
+      "correction_attempted": 1,
+      "recovered_questions": 0,
+      "recovery_per_attempt": 0.0,
+      "table_recall": 0.833333,
+      "column_recall": 0.777778,
+      "errors": 0
+    },
+    "range_filter": {
+      "description": "Uses BETWEEN or inequality comparisons",
+      "questions": 5,
+      "scored_questions": 5,
+      "initial_execution_accuracy": 1,
+      "execution_accuracy": 1,
+      "correction_gain": 0,
+      "correction_attempted": 0,
+      "recovered_questions": 0,
+      "recovery_per_attempt": null,
+      "table_recall": 1.0,
+      "column_recall": 1.0,
+      "errors": 0
+    },
+    "typo": {
+      "description": "Intentional spelling error in the benchmark input",
+      "questions": 10,
+      "scored_questions": 10,
+      "initial_execution_accuracy": 0,
+      "execution_accuracy": 1,
+      "correction_gain": 1,
+      "correction_attempted": 10,
+      "recovered_questions": 10,
+      "recovery_per_attempt": 1.0,
+      "table_recall": 1.0,
+      "column_recall": 1.0,
+      "errors": 0
     }
   },
-  "by_difficulty": {
-    "easy": {
-      "questions": 93,
-      "execution_accuracy": 0.946237,
+  "by_feature_count": {
+    "1": {
+      "questions": 4,
+      "execution_accuracy": 1.0,
       "valid_sql_rate": 1.0,
-      "table_recall": 0.956989,
-      "column_recall": 0.960573
+      "table_recall": 1.0,
+      "column_recall": 1.0
     },
-    "medium": {
+    "2": {
       "questions": 57,
-      "execution_accuracy": 0.877193,
+      "execution_accuracy": 0.982456,
       "valid_sql_rate": 1.0,
-      "table_recall": 0.929825,
-      "column_recall": 0.92807
+      "table_recall": 0.982456,
+      "column_recall": 0.982456
+    },
+    "3": {
+      "questions": 79,
+      "execution_accuracy": 0.974684,
+      "valid_sql_rate": 1.0,
+      "table_recall": 0.993671,
+      "column_recall": 0.995781
+    },
+    "4": {
+      "questions": 25,
+      "execution_accuracy": 0.96,
+      "valid_sql_rate": 1.0,
+      "table_recall": 0.98,
+      "column_recall": 0.98
+    },
+    "5": {
+      "questions": 20,
+      "execution_accuracy": 0.85,
+      "valid_sql_rate": 1.0,
+      "table_recall": 0.875,
+      "column_recall": 0.875
+    },
+    "6": {
+      "questions": 13,
+      "execution_accuracy": 0.846154,
+      "valid_sql_rate": 1.0,
+      "table_recall": 0.884615,
+      "column_recall": 0.889744
+    },
+    "7": {
+      "questions": 2,
+      "execution_accuracy": 1.0,
+      "valid_sql_rate": 1.0,
+      "table_recall": 1.0,
+      "column_recall": 1.0
     }
   },
   "most_missed_tables": [
@@ -192,14 +311,6 @@
     ],
     [
       "ast.asset",
-      1
-    ],
-    [
-      "rpa.bank",
-      1
-    ],
-    [
-      "rpa.receiptcheque",
       1
     ],
     [
@@ -220,10 +331,6 @@
     ],
     [
       "msg.templatescheduling",
-      1
-    ],
-    [
-      "sls.returnedinvoice",
       1
     ]
   ],
@@ -253,18 +360,6 @@
       1
     ],
     [
-      "rpa.bank.title",
-      1
-    ],
-    [
-      "rpa.bank.title_en",
-      1
-    ],
-    [
-      "rpa.receiptcheque.amount",
-      1
-    ],
-    [
       "rpa.bankbranch.title",
       1
     ],
@@ -286,6 +381,18 @@
     ],
     [
       "sls.invoiceitem.netprice",
+      1
+    ],
+    [
+      "gnr.party.name",
+      1
+    ],
+    [
+      "gnr.party.partyid",
+      1
+    ],
+    [
+      "msg.templatescheduling.schedulingref",
       1
     ]
   ]
