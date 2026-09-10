@@ -83,6 +83,22 @@ class VisualizationLayerTests(unittest.TestCase):
         self.assertEqual(result["type"], "bar")
         self.assertEqual(result["category_column"], "Product")
 
+    def test_long_categorical_result_keeps_bar_chart(self):
+        rows = [
+            {"BankTitle": f"Bank {index}", "TotalAmount": index * 1000}
+            for index in range(1, 29)
+        ]
+
+        result = self.layer.run(
+            "What is the total amount of receipt cheques for each bank, "
+            "mention the bank title",
+            rows,
+        )
+
+        self.assertEqual(result["type"], "bar")
+        self.assertEqual(result["category_column"], "BankTitle")
+        self.assertEqual(result["value_columns"], ["TotalAmount"])
+
     def test_record_listing_with_many_numeric_fields_uses_table(self):
         rows = [
             {

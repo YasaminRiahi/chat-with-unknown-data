@@ -186,7 +186,7 @@
   .tool-btn { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); cursor: pointer; text-transform: none; }
   .tool-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-  .chart-shell { min-height: 390px; padding: 16px; }
+  .chart-shell { min-height: 390px; max-width: 100%; padding: 16px; overflow-x: auto; overflow-y: hidden; }
   .chart-container { position: relative; width: 100%; height: 360px; }
   .kpi-card { min-height: 220px; display: grid; align-content: center; gap: 14px; padding: 26px; background: linear-gradient(135deg, var(--soft), transparent), var(--panel); }
   .kpi-card.multi { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); align-content: stretch; }
@@ -255,9 +255,9 @@
     100% { filter: drop-shadow(0 0 0 rgba(229, 176, 160, 0)); }
   }
 
-  .sidebar::-webkit-scrollbar, .insights::-webkit-scrollbar, .messages::-webkit-scrollbar, .table-wrap::-webkit-scrollbar { width: 6px; height: 6px; }
-  .sidebar::-webkit-scrollbar-track, .insights::-webkit-scrollbar-track, .messages::-webkit-scrollbar-track, .table-wrap::-webkit-scrollbar-track { background: transparent; }
-  .sidebar::-webkit-scrollbar-thumb, .insights::-webkit-scrollbar-thumb, .messages::-webkit-scrollbar-thumb, .table-wrap::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
+  .sidebar::-webkit-scrollbar, .insights::-webkit-scrollbar, .messages::-webkit-scrollbar, .table-wrap::-webkit-scrollbar, .chart-shell::-webkit-scrollbar { width: 6px; height: 6px; }
+  .sidebar::-webkit-scrollbar-track, .insights::-webkit-scrollbar-track, .messages::-webkit-scrollbar-track, .table-wrap::-webkit-scrollbar-track, .chart-shell::-webkit-scrollbar-track { background: transparent; }
+  .sidebar::-webkit-scrollbar-thumb, .insights::-webkit-scrollbar-thumb, .messages::-webkit-scrollbar-thumb, .table-wrap::-webkit-scrollbar-thumb, .chart-shell::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
 
   @media (max-width: 1180px) {
     .app { height: auto; min-height: 100vh; grid-template-columns: 1fr; overflow: auto; }
@@ -627,11 +627,7 @@ async function sendMessage() {
       if (data.data) {
         const visualization = data.visualization || { type: "table", title: "Query result" };
         renderVisualization(data.data, visualization, data.reply, data.sql);
-        if (["table", "kpi"].includes(visualization.type || "table")) {
-          appendResultMessage(visualization.type || "table", visualization.title || "Query result");
-        } else {
-          appendMessage("ai", data.reply || "Done.");
-        }
+        appendResultMessage(visualization.type || "table", visualization.title || "Query result");
       } else {
         appendMessage("ai", data.reply || "Done.");
       }
@@ -808,6 +804,10 @@ function renderChart(card, rows, spec) {
   shell.className = "chart-shell";
   const wrapper = document.createElement("div");
   wrapper.className = "chart-container";
+  const hasManyBarCategories = spec.type === "bar" && rows.length > 12;
+  if (hasManyBarCategories) {
+    wrapper.style.width = `${Math.max(900, rows.length * 72)}px`;
+  }
   const canvas = document.createElement("canvas");
   wrapper.appendChild(canvas);
   shell.appendChild(wrapper);
@@ -852,7 +852,15 @@ function renderChart(card, rows, spec) {
         },
       },
       scales: {
-        x: { ticks: { color: textColor, maxRotation: 45, minRotation: 0 }, grid: { color: hexToRgba(gridColor, 0.45) } },
+        x: {
+          ticks: {
+            color: textColor,
+            autoSkip: !hasManyBarCategories,
+            maxRotation: 45,
+            minRotation: hasManyBarCategories ? 45 : 0,
+          },
+          grid: { color: hexToRgba(gridColor, 0.45) },
+        },
         y: { beginAtZero: spec.type === "bar", ticks: { color: textColor, callback: value => formatNumber(value) }, grid: { color: gridColor } },
       },
     },
