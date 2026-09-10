@@ -56,7 +56,7 @@
 
 <h3>Current architectural constraints</h3>
 <ul>
-  <li>SQL generation is explicitly SQL Server/T-SQL, although the connection manager advertises SQLite, PostgreSQL, MySQL/MariaDB, and MSSQL.</li>
+  <li>SQL generation and database connectivity are both restricted to Microsoft SQL Server/T-SQL.</li>
   <li>The execution layer does not independently reject write statements. Prompts demand SELECT, but a code-level read-only validator is still absent.</li>
   <li>All users share one in-memory <code>active_db</code> and one <code>chat_history</code>. This is suitable for a local demo, not multi-user production.</li>
   <li>Database connection strings are returned by <code>GET /databases</code> and therefore reach the frontend. They may contain credentials.</li>
@@ -82,7 +82,7 @@
 <p><b>Removal impact:</b> hard-coding settings reduces deployability and risks secret exposure. Keep configuration even if individual settings are removed.</p>
 
 <h3>Database access layer — <code>api/database_manager.py</code></h3>
-<p>Stores SQLAlchemy engines in memory, verifies connections with <code>SELECT 1</code>, disposes removed engines, exposes engine metadata, and executes SQL into a list of dictionaries. <code>pool_pre_ping=True</code> detects stale pooled connections.</p>
+<p>Stores SQLAlchemy engines in memory, accepts only <code>mssql</code> connection types and URL dialects, verifies connections with <code>SELECT 1</code>, disposes removed engines, exposes engine metadata, and executes SQL into a list of dictionaries. <code>pool_pre_ping=True</code> detects stale pooled connections.</p>
 <p><b>Removal impact:</b> core capability. It can be simplified to one preconfigured engine, which also lets you remove database CRUD and the sidebar.</p>
 
 <h3>Provider logging layer — <code>api/model_logging.py</code></h3>
@@ -154,8 +154,8 @@
 <div class="box danger"><b>Safety gap:</b> extraction checks that SELECT or WITH appears, but does not prove the complete statement is read-only. A malicious or mistaken model response containing additional statements could reach database execution. Use a read-only database account and add AST/dialect validation before production.</div>
 <h3>Can it be removed?</h3>
 <p><span class="tag high">CORE</span> Only if users supply SQL themselves or if questions map to fixed query templates. It can be replaced with a different model or deterministic query builder.</p>
-<h3>Dialect mismatch</h3>
-<p>This layer always produces SQL Server syntax, while the database UI accepts SQLite, PostgreSQL, and MySQL. If those database types matter, make dialect a pipeline input and use dialect-specific prompts/validation. Otherwise, removing non-MSSQL connection options is a sensible simplification.</p>
+<h3>SQL Server dialect</h3>
+<p>This layer always produces SQL Server syntax, and both the API and database manager reject non-MSSQL connection types and URL dialects.</p>
 
 <h2>7. Layer 5 — execution and self-correction</h2>
 <p><b>File:</b> <code>pipeline/self_correction/layer.py</code></p>
@@ -193,7 +193,7 @@
 <tr><td>Remove fuzzy zero-row correction</td><td>Low</td><td>Less probing/model use; simpler behavior</td><td>Misspellings return no rows</td></tr>
 <tr><td>Remove answer-generation LLM</td><td>Low–medium</td><td>Cost, latency, result privacy</td><td>Add JSON/table presentation</td></tr>
 <tr><td>Remove full model-call payload logs</td><td>Low</td><td>Privacy and disk reduction</td><td>Use redacted metrics if observability matters</td></tr>
-<tr><td>Remove non-MSSQL DB types</td><td>Low</td><td>Product truth matches T-SQL implementation</td><td>No SQLite/Postgres/MySQL connectivity</td></tr>
+<tr><td>Non-MSSQL DB types (removed)</td><td>Complete</td><td>Product truth matches T-SQL implementation</td><td>No SQLite/PostgreSQL/MySQL connectivity</td></tr>
 <tr><td>Single preconfigured database</td><td>Medium</td><td>Removes sidebar CRUD, active selection, credential exposure</td><td>Need secure server-side connection config</td></tr>
 <tr><td>Remove LLM SQL error repair</td><td>Low</td><td>Predictability and lower cost</td><td>More failed questions</td></tr>
 <tr><td>Remove embeddings/Ollama</td><td>Medium–high</td><td>No local model dependency</td><td>Need lexical retrieval, allowlist, or all-DDL strategy</td></tr>

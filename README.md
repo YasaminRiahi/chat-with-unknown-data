@@ -112,11 +112,10 @@ Open http://localhost:25796. The published port is bound to localhost only, so i
 is not directly exposed to the LAN or internet. A local FRP client can forward
 `127.0.0.1:25796` when remote access is configured.
 
-The application connects to databases supplied through its UI; it does not use
-an internal application database, so Compose intentionally does not create a
-PostgreSQL or MySQL service. From inside the container, databases running on the
-host must use `host.docker.internal` rather than `localhost` in their connection
-strings.
+The application connects only to Microsoft SQL Server databases supplied through
+its UI; it does not use an internal application database. From inside the
+container, SQL Server instances running on the host must use
+`host.docker.internal` rather than `localhost` in their connection strings.
 
 Useful commands:
 

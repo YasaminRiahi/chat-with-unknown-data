@@ -308,14 +308,9 @@
       </button>
       <div class="add-db-form" id="addForm">
         <input class="form-input" id="dbName" placeholder="Name (e.g. accounting_prod)" />
-        <select class="form-select" id="dbType">
-          <option value="sqlite">SQLite</option>
-          <option value="postgresql">PostgreSQL</option>
-          <option value="mysql">MySQL / MariaDB</option>
-          <option value="mssql">SQL Server (MSSQL)</option>
-        </select>
+        <input class="form-input" id="dbType" value="SQL Server (MSSQL)" readonly />
         <input class="form-input" id="dbConn" placeholder="Connection string" />
-        <div class="form-hint" id="connHint">sqlite:///./path/to/file.db</div>
+        <div class="form-hint" id="connHint">mssql+pyodbc://sa:password@localhost/dbname?driver=ODBC+Driver+17+for+SQL+Server</div>
         <div class="form-row">
           <button class="btn" onclick="toggleAddForm()">Cancel</button>
           <button class="btn btn-primary" onclick="addDatabase()">Connect</button>
@@ -512,19 +507,9 @@ function toggleAddForm() {
   renderIcons();
 }
 
-document.getElementById("dbType").addEventListener("change", e => {
-  const hints = {
-    sqlite: "sqlite:///./path/to/file.db",
-    postgresql: "postgresql://user:pass@localhost:5432/dbname",
-    mysql: "mysql+pymysql://user:pass@localhost/dbname",
-    mssql: "mssql+pyodbc://sa:password@localhost/dbname?driver=ODBC+Driver+17+for+SQL+Server",
-  };
-  document.getElementById("connHint").textContent = hints[e.target.value] || "";
-});
-
 async function addDatabase() {
   const name = document.getElementById("dbName").value.trim();
-  const type = document.getElementById("dbType").value;
+  const type = "mssql";
   const conn = document.getElementById("dbConn").value.trim();
 
   if (!name || !conn) {

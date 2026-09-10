@@ -1,26 +1,14 @@
 """
 api/database_manager.py
 ========================
-Manages multiple live database connections.
-
-To add a new DB type:
-  1. pip install the driver
-  2. Add an entry to SUPPORTED_TYPES
-  3. No other changes needed
+Manages live Microsoft SQL Server database connections.
 """
 
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import Engine
+from sqlalchemy.engine.url import make_url
 
-SUPPORTED_TYPES = {
-    "sqlite":     "sqlite",
-    "postgresql": "postgresql",
-    "postgres":   "postgresql",
-    "mysql":      "mysql",
-    "mariadb":    "mysql",
-    "mssql":   "mssql+pyodbc",
-    # "oracle":  "oracle+cx_oracle",
-}
+SUPPORTED_TYPE = "mssql"
 
 
 class DatabaseManager:
@@ -29,8 +17,16 @@ class DatabaseManager:
 
     def add_database(self, name: str, db_type: str, connection_string: str) -> None:
         db_type = db_type.lower()
-        if db_type not in SUPPORTED_TYPES:
-            raise ValueError(f"Unsupported type '{db_type}'. Supported: {list(SUPPORTED_TYPES)}")
+        if db_type != SUPPORTED_TYPE:
+            raise ValueError("Only Microsoft SQL Server (mssql) databases are supported.")
+        try:
+            backend = make_url(connection_string).get_backend_name()
+        except Exception as e:
+            raise ValueError(f"Invalid SQLAlchemy connection string: {e}") from e
+        if backend != SUPPORTED_TYPE:
+            raise ValueError(
+                "Only Microsoft SQL Server connection strings (mssql+...) are allowed."
+            )
         if name in self._databases:
             raise ValueError(f"'{name}' already connected. Remove it first.")
 

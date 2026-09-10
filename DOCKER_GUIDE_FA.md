@@ -267,7 +267,7 @@ docker compose down
 
 ## نکات اتصال دیتابیس
 
-این برنامه دیتابیس داخلی ثابتی ندارد و دیتابیس موردنظر از داخل رابط کاربری به آن معرفی می‌شود. به همین دلیل Compose سرویس PostgreSQL یا MySQL جداگانه ایجاد نمی‌کند.
+این برنامه دیتابیس داخلی ثابتی ندارد و فقط اتصال به Microsoft SQL Server را از داخل رابط کاربری می‌پذیرد.
 
 اگر دیتابیس روی همان سیستم ویندوز اجرا می‌شود، در connection string داخل برنامه به‌جای `localhost` یا `127.0.0.1` از این hostname استفاده کنید:
 
@@ -275,10 +275,10 @@ docker compose down
 host.docker.internal
 ```
 
-برای نمونه PostgreSQL روی سیستم میزبان:
+برای نمونه SQL Server روی سیستم میزبان:
 
 ```text
-postgresql://user:password@host.docker.internal:5432/database_name
+mssql+pyodbc://sa:password@host.docker.internal/database_name?driver=ODBC+Driver+18+for+SQL+Server&TrustServerCertificate=yes
 ```
 
 `localhost` از داخل کانتینر به خود کانتینر اشاره می‌کند، نه به سیستم ویندوز.

@@ -1,0 +1,4 @@
+mssql+pyodbc://sa:1234@localhost/Sepidar02-back?driver=ODBC+Driver+17+for+SQL+Server
+
+
+.\.venv\Scripts\python.exe -m uvicorn api.main:app --reload --port 8000            

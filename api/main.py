@@ -13,6 +13,7 @@ Or from project root:
 
 from contextlib import asynccontextmanager
 import re
+from typing import Literal
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -98,7 +99,7 @@ class ChatRequest(BaseModel):
 
 class AddDatabaseRequest(BaseModel):
     name:              str
-    type:              str = "sqlite"
+    type:              Literal["mssql"] = "mssql"
     connection_string: str
 
 class ActivateRequest(BaseModel):
