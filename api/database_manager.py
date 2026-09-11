@@ -52,8 +52,9 @@ class DatabaseManager:
     def get_info(self, name: str) -> dict:
         if name not in self._databases:
             raise ValueError(f"No database named '{name}'.")
-        e = self._databases[name]
-        return {"type": e["type"], "connection_string": e["connection_string"]}
+        # Connection strings may contain usernames, passwords, hosts, and other
+        # secrets. They are intentionally never exposed through API metadata.
+        return {"type": self._databases[name]["type"]}
 
     def execute_query(self, name: str, sql: str) -> list[dict]:
         engine = self.get_engine(name)

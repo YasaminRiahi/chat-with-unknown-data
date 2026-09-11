@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import MagicMock
 
 from pipeline.sql_generation.layer import SQLGenerationLayer
+from pipeline.sql_safety import is_read_only_sql
 
 
 class SQLGenerationPromptTests(unittest.TestCase):
@@ -55,6 +56,18 @@ class SQLGenerationPromptTests(unittest.TestCase):
 
         with self.assertRaisesRegex(RuntimeError, "Only read-only SELECT"):
             layer.run("Insert a new cost center", "CREATE TABLE [GNR].[CostCenter] (...)")
+
+    def test_select_into_and_multiple_selects_are_rejected(self):
+        self.assertFalse(is_read_only_sql("SELECT * INTO dbo.Copy FROM dbo.Source"))
+        self.assertFalse(is_read_only_sql("SELECT 1; SELECT 2"))
+
+    def test_keywords_in_literals_and_identifiers_do_not_trigger_false_positive(self):
+        self.assertTrue(is_read_only_sql("SELECT N'delete this' AS [Update]"))
+
+    def test_comment_quotes_cannot_mask_a_following_mutation(self):
+        sql = "SELECT 1 -- '\nDROP TABLE dbo.Secret; SELECT 'value'"
+        self.assertFalse(is_read_only_sql(sql))
+        self.assertFalse(is_read_only_sql("SELECT 'unterminated"))
 
 
 if __name__ == "__main__":

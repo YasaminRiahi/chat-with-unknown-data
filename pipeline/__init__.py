@@ -1,7 +1,7 @@
 """
 pipeline/__init__.py
 ====================
-Orchestrator — wires all 6 implemented layers together.
+Orchestrator — wires all 7 implemented layers together.
 Each layer is kept in its own sub-package for focused maintenance and testing.
 """
 

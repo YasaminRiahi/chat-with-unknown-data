@@ -51,7 +51,8 @@ Generate a T-SQL query for Microsoft SQL Server.
 - No explanations, no comments, no markdown, no other languages.
 - First word MUST be SELECT.
 - The query MUST be read-only. Never generate INSERT, UPDATE, DELETE, MERGE,
-  DROP, ALTER, TRUNCATE, EXEC, CREATE, GRANT, REVOKE, DBCC, BACKUP, or RESTORE.
+  DROP, ALTER, TRUNCATE, EXEC, CREATE, GRANT, REVOKE, DBCC, BACKUP, RESTORE,
+  SELECT INTO, or administrative/session commands.
 - Return one SELECT query only; do not append a second statement after a
   semicolon.
 - Use square brackets for schema and table names: [ACC].[Account]

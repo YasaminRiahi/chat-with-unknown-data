@@ -404,9 +404,29 @@
 // frontend from the same origin.
 const isLocalFrontend = ["file:", "http:", "https:"].includes(window.location.protocol) &&
   ["", "localhost", "127.0.0.1"].includes(window.location.hostname);
-const API = window.location.protocol === "file:" || isLocalFrontend
+const API = window.location.protocol === "file:"
   ? "http://localhost:8000"
-  : window.location.origin;
+  : (isLocalFrontend && window.location.port !== "25796")
+    ? "http://localhost:8000"
+    : window.location.origin;
+
+const SESSION_STORAGE_KEY = "conversation-with-data-session-id";
+let sessionId = localStorage.getItem(SESSION_STORAGE_KEY);
+if (!sessionId) {
+  sessionId = window.crypto?.randomUUID?.()
+    || `browser-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  localStorage.setItem(SESSION_STORAGE_KEY, sessionId);
+}
+
+function apiFetch(path, options = {}) {
+  return fetch(`${API}${path}`, {
+    ...options,
+    headers: {
+      ...(options.headers || {}),
+      "X-Session-ID": sessionId,
+    },
+  });
+}
 
 let activeDb = null;
 let databases = [];
@@ -442,7 +462,7 @@ async function init() {
   initTheme();
   renderIcons();
   try {
-    const res = await fetch(`${API}/databases`);
+    const res = await apiFetch("/databases");
     const data = await res.json();
     databases = data.databases || [];
     activeDb = data.active || null;
@@ -518,7 +538,7 @@ async function addDatabase() {
   }
 
   try {
-    const res = await fetch(`${API}/databases`, {
+    const res = await apiFetch("/databases", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, type, connection_string: conn }),
@@ -542,7 +562,7 @@ async function addDatabase() {
 
 async function activateDb(name) {
   try {
-    const res = await fetch(`${API}/databases/activate`, {
+    const res = await apiFetch("/databases/activate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name }),
@@ -561,7 +581,7 @@ async function removeDb(event, name) {
   event.stopPropagation();
   if (!confirm(`Remove "${name}"?`)) return;
   try {
-    const res = await fetch(`${API}/databases/${encodeURIComponent(name)}`, { method: "DELETE" });
+    const res = await apiFetch(`/databases/${encodeURIComponent(name)}`, { method: "DELETE" });
     const data = await res.json();
     activeDb = data.active;
     await refreshDatabases();
@@ -572,7 +592,7 @@ async function removeDb(event, name) {
 }
 
 async function refreshDatabases() {
-  const res = await fetch(`${API}/databases`);
+  const res = await apiFetch("/databases");
   const data = await res.json();
   databases = data.databases || [];
   activeDb = data.active || null;
@@ -613,7 +633,7 @@ async function sendMessage() {
   setWaiting(true);
 
   try {
-    const res = await fetch(`${API}/chat`, {
+    const res = await apiFetch("/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message: text }),

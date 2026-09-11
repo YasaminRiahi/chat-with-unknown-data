@@ -35,6 +35,7 @@ class DatabaseManagerTests(unittest.TestCase):
 
         connection.execute.assert_called_once()
         self.assertEqual(manager.get_info("test")["type"], "mssql")
+        self.assertNotIn("connection_string", manager.get_info("test"))
 
 
 if __name__ == "__main__":

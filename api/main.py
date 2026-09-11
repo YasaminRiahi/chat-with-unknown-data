@@ -12,10 +12,11 @@ Or from project root:
 """
 
 from contextlib import asynccontextmanager
+from dataclasses import dataclass, field
 import re
 from typing import Literal
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
@@ -52,9 +53,9 @@ app = FastAPI(title="Conversation with Data", version="0.1.0", lifespan=lifespan
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],   # tighten this in production
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=list(settings.cors_allowed_origins),
+    allow_methods=["GET", "POST", "DELETE"],
+    allow_headers=["Content-Type", "X-Session-ID"],
 )
 
 # ── Core singletons ───────────────────────────────────────────────────────────
@@ -85,11 +86,25 @@ pipeline = Pipeline(
     schema_linking_enabled=settings.schema_linking_enabled,
 )
 
-# ── Session state (single session, in-memory) ─────────────────────────────────
-# TODO: replace with Redis or DB-backed sessions for multi-user support
+# ── Per-client session state (in-memory) ──────────────────────────────────────
 
-chat_history: list[dict] = []
-active_db: str | None    = None
+DEFAULT_SESSION_ID = "default"
+
+
+@dataclass
+class SessionState:
+    active_db: str | None = None
+    chat_history: list[dict] = field(default_factory=list)
+
+
+session_states: dict[str, SessionState] = {}
+
+
+def get_session(session_id: str | None) -> SessionState:
+    value = str(session_id or DEFAULT_SESSION_ID).strip()
+    if not value or len(value) > 128 or not re.fullmatch(r"[A-Za-z0-9_.:-]+", value):
+        raise HTTPException(status_code=400, detail="Invalid X-Session-ID header")
+    return session_states.setdefault(value, SessionState())
 
 
 # ── Request/response models ───────────────────────────────────────────────────
@@ -108,7 +123,7 @@ class ActivateRequest(BaseModel):
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
-def build_system_prompt() -> str:
+def build_system_prompt(state: SessionState) -> str:
     db_list = db_manager.list_databases()
     db_info = "\n".join(f"  - {n}" for n in db_list) if db_list else "  (none connected)"
     return f"""You are a helpful data assistant for the "Conversation with Data" system.
@@ -117,7 +132,7 @@ You help users query databases using plain English — no SQL knowledge required
 Connected databases:
 {db_info}
 
-Active database: {active_db or "none selected"}
+Active database: {state.active_db or "none selected"}
 
 If no database is selected and the user asks a data question, ask them to pick one.
 Be concise and friendly.
@@ -133,12 +148,12 @@ def detect_intent(message: str) -> str:
         return "list_databases"
     return "query"
 
-def handle_list_databases() -> str:
+def handle_list_databases(state: SessionState) -> str:
     dbs = db_manager.list_databases()
     if not dbs:
         return "No databases connected. Add one using the sidebar."
     lines = "\n".join(f"• **{n}** ({db_manager.get_info(n)['type']})" for n in dbs)
-    active = f"\n\nCurrently active: **{active_db}**" if active_db else ""
+    active = f"\n\nCurrently active: **{state.active_db}**" if state.active_db else ""
     return f"Connected databases:\n\n{lines}{active}"
 
 def is_data_mutation_request(message: str) -> bool:
@@ -262,8 +277,10 @@ def friendly_error_message(error: object, user_message: str = "") -> str:
         "Please try again or rephrase the question."
     )
 
-def run_chat_detailed(user_message: str) -> dict:
-    global active_db
+def run_chat_detailed(
+    user_message: str, state: SessionState | None = None,
+) -> dict:
+    state = state or get_session(DEFAULT_SESSION_ID)
 
     def text_response(reply: str) -> dict:
         return {
@@ -279,13 +296,16 @@ def run_chat_detailed(user_message: str) -> dict:
         return text_response("Hi! Ask me a question about your connected database.")
 
     if intent == "list_databases":
-        return text_response(handle_list_databases())
+        return text_response(handle_list_databases(state))
+
+    if is_data_mutation_request(user_message):
+        return text_response(read_only_message(user_message))
 
     # Auto-select if only one DB connected
-    if not active_db:
+    if not state.active_db:
         dbs = db_manager.list_databases()
         if len(dbs) == 1:
-            active_db = dbs[0]
+            state.active_db = dbs[0]
         elif len(dbs) > 1:
             names = ", ".join(f"**{d}**" for d in dbs)
             return text_response(
@@ -293,12 +313,14 @@ def run_chat_detailed(user_message: str) -> dict:
             )
 
     # Run pipeline if a DB is active
-    if active_db:
+    if state.active_db:
         try:
-            metadata_answer = pipeline.answer_metadata_question(user_message, active_db)
+            metadata_answer = pipeline.answer_metadata_question(
+                user_message, state.active_db
+            )
             if metadata_answer is not None:
                 return text_response(metadata_answer)
-            result = pipeline.run(user_message, active_db)
+            result = pipeline.run(user_message, state.active_db)
             if result["success"]:
                 return {
                     "reply": result["answer"],
@@ -312,8 +334,8 @@ def run_chat_detailed(user_message: str) -> dict:
             return text_response(friendly_error_message(exc, user_message))
 
     # Build message list for LLM
-    messages = [SystemMessage(content=build_system_prompt())]
-    for turn in chat_history[-10:]:
+    messages = [SystemMessage(content=build_system_prompt(state))]
+    for turn in state.chat_history[-10:]:
         if turn["role"] == "user":
             messages.append(HumanMessage(content=turn["content"]))
         else:
@@ -327,9 +349,9 @@ def run_chat_detailed(user_message: str) -> dict:
         return text_response(friendly_error_message(exc, user_message))
 
 
-def run_chat(user_message: str) -> str:
+def run_chat(user_message: str, session_id: str = DEFAULT_SESSION_ID) -> str:
     """Backward-compatible text-only chat helper."""
-    return run_chat_detailed(user_message)["reply"]
+    return run_chat_detailed(user_message, get_session(session_id))["reply"]
 
 
 # ── Routes ────────────────────────────────────────────────────────────────────
@@ -343,59 +365,74 @@ def health():
     }
 
 @app.get("/databases")
-def list_databases():
+def list_databases(x_session_id: str | None = Header(default=None, alias="X-Session-ID")):
+    state = get_session(x_session_id)
     dbs = [{"name": n, **db_manager.get_info(n)} for n in db_manager.list_databases()]
-    return {"databases": dbs, "active": active_db}
+    return {"databases": dbs, "active": state.active_db}
 
 @app.post("/databases")
-def add_database(req: AddDatabaseRequest):
-    global active_db
+def add_database(
+    req: AddDatabaseRequest,
+    x_session_id: str | None = Header(default=None, alias="X-Session-ID"),
+):
+    state = get_session(x_session_id)
     try:
         db_manager.add_database(req.name, req.type, req.connection_string)
         pipeline.clear_cache(req.name)
-        if not active_db:
-            active_db = req.name
-        return {"success": True, "active": active_db}
+        if not state.active_db:
+            state.active_db = req.name
+        return {"success": True, "active": state.active_db}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.post("/databases/activate")
-def activate_database(req: ActivateRequest):
-    global active_db
+def activate_database(
+    req: ActivateRequest,
+    x_session_id: str | None = Header(default=None, alias="X-Session-ID"),
+):
+    state = get_session(x_session_id)
     if req.name not in db_manager.list_databases():
         raise HTTPException(status_code=404, detail=f"'{req.name}' not found")
-    active_db = req.name
-    return {"success": True, "active": active_db}
+    state.active_db = req.name
+    return {"success": True, "active": state.active_db}
 
 @app.delete("/databases/{name}")
-def remove_database(name: str):
-    global active_db
+def remove_database(
+    name: str,
+    x_session_id: str | None = Header(default=None, alias="X-Session-ID"),
+):
+    state = get_session(x_session_id)
     try:
         db_manager.remove_database(name)
         pipeline.clear_cache(name)
-        if active_db == name:
-            remaining = db_manager.list_databases()
-            active_db = remaining[0] if remaining else None
-        return {"success": True, "active": active_db}
+        remaining = db_manager.list_databases()
+        for session in session_states.values():
+            if session.active_db == name:
+                session.active_db = remaining[0] if remaining else None
+        return {"success": True, "active": state.active_db}
     except Exception as e:
         raise HTTPException(status_code=404, detail=str(e))
 
 @app.post("/chat")
-def chat(req: ChatRequest):
-    global chat_history
+def chat(
+    req: ChatRequest,
+    x_session_id: str | None = Header(default=None, alias="X-Session-ID"),
+):
+    state = get_session(x_session_id)
     msg = req.message.strip()
     if not msg:
         raise HTTPException(status_code=400, detail="Empty message")
 
-    chat_history.append({"role": "user", "content": msg})
-    response = run_chat_detailed(msg)
+    state.chat_history.append({"role": "user", "content": msg})
+    response = run_chat_detailed(msg, state)
     reply = response["reply"]
-    chat_history.append({"role": "assistant", "content": reply})
+    state.chat_history.append({"role": "assistant", "content": reply})
 
-    return {**response, "active_db": active_db}
+    return {**response, "active_db": state.active_db}
 
 @app.delete("/chat/history")
-def clear_history():
-    global chat_history
-    chat_history = []
+def clear_history(
+    x_session_id: str | None = Header(default=None, alias="X-Session-ID"),
+):
+    get_session(x_session_id).chat_history.clear()
     return {"success": True}

@@ -3,14 +3,9 @@ pipeline/self_correction/layer.py
 ===================================
 Layer 5 — Self-Correction
 
-Runs generated SQL and corrects execution errors or confidently recoverable
-empty results.
-
-TODO improvements:
-  - Add SQL safety check before execution (block DROP, DELETE, UPDATE)
-  - Classify error types and use different fix strategies
-  - Log all retries for evaluation / debugging
-  - Detect infinite loops (same error twice → give up early)
+Runs generated SQL, enforces the shared read-only policy on every attempt, and
+corrects execution errors or confidently recoverable empty results. Repeated
+queries are detected so the bounded retry loop terminates early.
 """
 
 import json
