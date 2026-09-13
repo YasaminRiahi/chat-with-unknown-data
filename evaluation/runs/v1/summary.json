@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-09-08T12:31:14.634971+00:00",
+  "generated_at": "2026-09-12T18:39:24.073816+00:00",
   "manifest": {
     "evaluator_version": 2,
     "dataset": "D:\\lessons\\Project\\chat-with-unknown-data\\evaluation\\datasets\\questions_all.json",
-    "dataset_sha256": "23dc804514ee0cd981f96fdc2af950c33601ef8f67bbd5d34aee0e3af566aee1",
+    "dataset_sha256": "0827c8fb38e8eef86f796b77651e2f70c9fcff0424eac6e5aae397bcbab50c9b",
     "db_name": "test1",
     "db_type": "mssql",
     "timing_repeats": 5,
     "created_at": "2026-09-06T19:07:48.017267+00:00",
-    "setup_latency_ms": 20833.902,
+    "setup_latency_ms": 18612.66,
     "setup_tokens": {
       "by_operation": {}
     },
-    "dataset_updated_at": "2026-09-08T12:05:29.320262+00:00"
+    "dataset_updated_at": "2026-09-12T18:36:08.445133+00:00"
   },
   "completed_questions": 200,
   "metrics": {
@@ -25,10 +25,10 @@
     "column_recall": 0.971167,
     "self_correction_success_rate": 0.666667,
     "correction_gain": 0.05,
-    "r_ves": 90.052126,
+    "r_ves": 90.119114,
     "end_to_end_latency_ms": {
       "count": 200,
-      "mean": 38184.79,
+      "mean": 38187.369,
       "median": 40427.749,
       "p90": 58368.29,
       "p95": 61734.018,
@@ -37,17 +37,17 @@
     },
     "final_sql_latency_ms": {
       "count": 200,
-      "mean": 20.196,
-      "median": 13.194,
+      "mean": 20.279,
+      "median": 13.255,
       "p90": 38.642,
       "p95": 52.989,
       "min": 1.068,
       "max": 338.951
     },
-    "total_llm_calls": 804,
-    "average_llm_calls": 4.02,
-    "total_tokens": 1295152,
-    "average_tokens": 6475.76
+    "total_llm_calls": 805,
+    "average_llm_calls": 4.025,
+    "total_tokens": 1296533,
+    "average_tokens": 6482.665
   },
   "by_language": {
     "en": {

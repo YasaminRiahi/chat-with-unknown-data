@@ -3631,7 +3631,7 @@
                     {
                         "id":  "questions_payments_receipts_intent_004_en",
                         "language":  "en",
-                        "question":  "SELECT [State], SUM([TotalAmount]) AS TotalAmountSum, AVG([TotalAmount]) AS AvgTotalAmount, COUNT(*) AS ReceiptCount FROM [RPA].[ReceiptHeader] GROUP BY [State] ORDER BY TotalAmountSum DESC;",
+                        "question":  "What are the total amount, average total amount, and number of receipts for each receipt state? Order the states by total amount in descending order.",
                         "intent_id":  "questions_payments_receipts_intent_004",
                         "db_name":  "Sepidar02-back",
                         "schema":  "RPA",

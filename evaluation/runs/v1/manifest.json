@@ -1,14 +1,14 @@
 {
   "evaluator_version": 2,
   "dataset": "D:\\lessons\\Project\\chat-with-unknown-data\\evaluation\\datasets\\questions_all.json",
-  "dataset_sha256": "23dc804514ee0cd981f96fdc2af950c33601ef8f67bbd5d34aee0e3af566aee1",
+  "dataset_sha256": "0827c8fb38e8eef86f796b77651e2f70c9fcff0424eac6e5aae397bcbab50c9b",
   "db_name": "test1",
   "db_type": "mssql",
   "timing_repeats": 5,
   "created_at": "2026-09-06T19:07:48.017267+00:00",
-  "setup_latency_ms": 20833.902,
+  "setup_latency_ms": 18612.66,
   "setup_tokens": {
     "by_operation": {}
   },
-  "dataset_updated_at": "2026-09-08T12:05:29.320262+00:00"
+  "dataset_updated_at": "2026-09-12T18:36:08.445133+00:00"
 }

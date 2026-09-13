@@ -628,7 +628,6 @@ ORDER BY SUM(rh.[TotalAmount]) DESC","SELECT rh.[State],
 FROM [RPA].[ReceiptHeader] AS rh
 GROUP BY rh.[State]
 ORDER BY SUM(rh.[TotalAmount]) DESC",1,1,1,1,1.0,0.5,1.0,False,False,86.60254,57887.034,4,7211,
-questions_payments_receipts_intent_004_en,en,aggregation,aggregation|group_by|order_by,3,"SELECT [State], SUM([TotalAmount]) AS TotalAmountSum, AVG([TotalAmount]) AS AvgTotalAmount, COUNT(*) AS ReceiptCount FROM [RPA].[ReceiptHeader] GROUP BY [State] ORDER BY TotalAmountSum DESC;","SELECT [State], SUM([TotalAmount]) AS TotalAmountSum, AVG([TotalAmount]) AS AvgTotalAmount, COUNT(*) AS ReceiptCount FROM [RPA].[ReceiptHeader] GROUP BY [State] ORDER BY TotalAmountSum DESC;",1,1,1,1,1.0,1.0,1.0,False,False,86.60254,26303.192,3,5380,
 questions_payments_receipts_intent_005_en,en,aggregation,aggregation|group_by|order_by|top_limit,4,"SELECT TOP 20 ph.[Type],
        SUM(ph.[PaymentAmount]) AS TotalPaymentAmount,
        SUM(ph.[AmountInBaseCurrency]) AS TotalAmountInBaseCurrency
@@ -773,3 +772,4 @@ questions_template_typo_intent_002_en,en,filter,filter|typo,2,SELECT [TemplateID
 questions_worksite_typo_intent_001_fa,fa,filter,filter|typo,2,SELECT TOP 1 w.[Code] FROM [PAY].[Worksite] AS w WHERE w.[Title] = N'دفتر دارالفون',SELECT TOP 1 w.[Code] FROM [PAY].[Worksite] AS w WHERE w.[Title] = N'دفتر دارالفنون',0,1,1,1,1.0,1.0,1.0,True,True,100.0,31804.721,5,5585,
 questions_item_typo_intent_002_en,en,filter,filter|typo,2,SELECT i.[Code] FROM [INV].[Item] AS i WHERE i.[Title] = N'Flash Memroy HP 32 GB',SELECT i.[Code] FROM [INV].[Item] AS i WHERE i.[Title] = N'Flash Memory HP 32 GB ',0,1,1,1,1.0,0.5,1.0,True,True,100.0,14769.529,5,7976,
 questions_template_typo_intent_001_fa,fa,filter,filter|typo,2,SELECT t.[TemplateID] FROM [MSG].[Template] AS t WHERE t.[Title] = N'مانده حساب مشري',SELECT t.[TemplateID] FROM [MSG].[Template] AS t WHERE t.[Title] = N'مانده حساب مشتري',0,1,1,1,1.0,1.0,1.0,True,True,86.60254,14225.225,5,5495,
+questions_payments_receipts_intent_004_en,en,aggregation,aggregation|group_by|order_by,3,"SELECT rh.[State] AS State, SUM(rh.[TotalAmount]) AS TotalAmount, AVG(rh.[TotalAmount]) AS AvgTotalAmount, COUNT(*) AS ReceiptCount FROM [RPA].[ReceiptHeader] AS rh GROUP BY rh.[State] ORDER BY SUM(rh.[TotalAmount]) DESC","SELECT rh.[State] AS State, SUM(rh.[TotalAmount]) AS TotalAmount, AVG(rh.[TotalAmount]) AS AvgTotalAmount, COUNT(*) AS ReceiptCount FROM [RPA].[ReceiptHeader] AS rh GROUP BY rh.[State] ORDER BY SUM(rh.[TotalAmount]) DESC",1,1,1,1,1.0,1.0,1.0,False,False,100.0,26819.116,4,6761,
