@@ -15,13 +15,6 @@ def _env_bool(name: str, default: bool) -> bool:
     return value.strip().lower() in {"1", "true", "yes", "on"}
 
 
-def _env_list(name: str, default: tuple[str, ...]) -> tuple[str, ...]:
-    value = os.getenv(name)
-    if value is None:
-        return default
-    return tuple(item.strip() for item in value.split(",") if item.strip())
-
-
 @dataclass(frozen=True)
 class Settings:
     groq_api_key: str
@@ -34,14 +27,6 @@ class Settings:
     llm_enrichment_enabled: bool = True
     enrichment_batch_size: int = 12
     schema_linking_enabled: bool = True
-    cors_allowed_origins: tuple[str, ...] = (
-        "http://localhost:25796",
-        "http://127.0.0.1:25796",
-        "http://localhost:5500",
-        "http://127.0.0.1:5500",
-        "http://localhost:8000",
-        "http://127.0.0.1:8000",
-    )
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -72,8 +57,5 @@ class Settings:
             ),
             schema_linking_enabled=_env_bool(
                 "SCHEMA_LINKING_ENABLED", cls.schema_linking_enabled
-            ),
-            cors_allowed_origins=_env_list(
-                "CORS_ALLOWED_ORIGINS", cls.cors_allowed_origins
             ),
         )

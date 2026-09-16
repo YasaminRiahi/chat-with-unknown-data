@@ -77,12 +77,12 @@ and rule-adjusted rankings, followed by the final threshold and
 its survivors. These traces make it possible to identify the exact stage where
 a required table drops out during retrieval evaluation.
 
-After hybrid retrieval, the enabled-by-default LLM schema-linking stage considers the top 12 table
+After hybrid retrieval, optional LLM schema linking considers the top 12 table
 candidates together. It receives compact column metadata, declared foreign
 keys, and conservative `Ref`-to-`Id` relationship hints, then selects a
 validated group of at most eight tables. Unknown identifiers, malformed JSON,
 or provider failures are rejected and fall back to deterministic retrieval.
-`SCHEMA_LINKING_ENABLED=false` is retained only for diagnostics and ablation tests.
+Set `SCHEMA_LINKING_ENABLED=false` to disable this additional model call.
 
 When a valid query returns no rows because an exact text value is slightly
 wrong, the self-correction layer performs one bounded lookup in the exact
@@ -95,13 +95,9 @@ through the normal schema-grounded SQL error correction path.
 
 ```bash
 uvicorn api.main:app --reload --port 8000
-python -m http.server 5500 -d frontend
 ```
 
-Then open http://localhost:5500. Browser sessions use a persistent
-`X-Session-ID`, so the active database and chat history remain separated per
-client. Allowed frontend origins are configured with the comma-separated
-`CORS_ALLOWED_ORIGINS` environment variable; wildcard origins are not enabled.
+Then open `frontend/index.html` in your browser.
 
 ## Run with Docker
 
@@ -143,7 +139,6 @@ FastAPI auto-generates docs at: http://localhost:8000/docs
 | 4 — SQL Generation | ✅ Implemented | `pipeline/sql_generation/layer.py` |
 | 5 — Self-Correction | ✅ Implemented | `pipeline/self_correction/layer.py` |
 | 6 — Answer Generation | ✅ Implemented | `pipeline/answer_generation/layer.py` |
-| 7 — Visualization | ✅ Implemented | `pipeline/visualization/layer.py` |
 
 ## Project structure
 
@@ -156,9 +151,7 @@ chat-with-unknown-data/
 │   ├── enrichment/
 │   ├── rag/
 │   ├── sql_generation/
-│   ├── self_correction/
-│   ├── answer_generation/
-│   └── visualization/
+│   └── self_correction/
 ├── api/
 │   ├── main.py              ← FastAPI server
 │   └── database_manager.py

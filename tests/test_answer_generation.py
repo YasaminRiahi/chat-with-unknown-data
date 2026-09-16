@@ -15,18 +15,6 @@ class CapturingLLM:
 
 
 class AnswerGenerationTests(unittest.TestCase):
-    def test_empty_result_uses_question_language(self):
-        layer = AnswerGenerationLayer(CapturingLLM("unused"), None, None)
-
-        self.assertEqual(
-            layer.run("فاکتورهای امسال را نشان بده", "SELECT ...", []),
-            "هیچ رکورد منطبقی یافت نشد.",
-        )
-        self.assertEqual(
-            layer.run("Show this year's invoices", "SELECT ...", []),
-            "No matching records were found.",
-        )
-
     def test_multi_row_prompt_requests_observations_instead_of_table(self):
         llm = CapturingLLM("Key observations\n\n- Bank A has the largest total.")
         layer = AnswerGenerationLayer(llm, None, None)

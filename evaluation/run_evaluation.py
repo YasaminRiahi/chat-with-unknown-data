@@ -823,7 +823,6 @@ def write_html(path: Path, summary: dict, records: list[dict]) -> None:
     cards = [
         ("Valid SQL Rate", format_percent(metrics["final_valid_sql_rate"])),
         ("Table Recall", format_percent(metrics["table_recall"])),
-        ("Table Precision", format_percent(metrics["table_precision"])),
         ("Column Recall", format_percent(metrics["column_recall"])),
         ("Correction Gain", format_percent(metrics["correction_gain"])),
         ("Correction Success", format_percent(metrics["self_correction_success_rate"])),
@@ -876,7 +875,6 @@ def write_html(path: Path, summary: dict, records: list[dict]) -> None:
             ("Final execution accuracy", final_accuracy),
             ("Final valid SQL rate", metrics["final_valid_sql_rate"]),
             ("Table recall", metrics["table_recall"]),
-            ("Table precision", metrics["table_precision"]),
             ("Column recall", metrics["column_recall"]),
         ]),
         "charts": "\n".join([
