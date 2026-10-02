@@ -597,7 +597,7 @@ def bar_chart(title: str, groups: dict[str, dict], metric: str) -> str:
             f'<div class="track"><i style="width:{width:.1f}%"></i></div>'
             f'<b>{width:.1f}%</b></div>'
         )
-    return f"<section><h2>{html.escape(title)}</h2>{''.join(bars) or '<p>داده‌ای نیست.</p>'}</section>"
+    return f"<section><h2>{html.escape(title)}</h2>{''.join(bars) or '<p>No data available.</p>'}</section>"
 
 
 def write_html(path: Path, summary: dict, records: list[dict]) -> None:
@@ -625,8 +625,8 @@ def write_html(path: Path, summary: dict, records: list[dict]) -> None:
         for r in failed[:100]
     )
     document = f"""<!doctype html>
-<html lang="fa" dir="rtl"><head><meta charset="utf-8">
-<title>گزارش ارزیابی Text-to-SQL</title>
+<html lang="en"><head><meta charset="utf-8">
+<title>Text-to-SQL Evaluation Report</title>
 <style>
 body{{font-family:Tahoma,Segoe UI,sans-serif;background:#f5f7fb;color:#172033;margin:0;padding:28px}}
 main{{max-width:1200px;margin:auto}}h1,h2{{color:#152a4a}}.muted{{color:#667085}}
@@ -634,19 +634,19 @@ main{{max-width:1200px;margin:auto}}h1,h2{{color:#152a4a}}.muted{{color:#667085}
 .card,section{{background:white;border:1px solid #e2e8f0;border-radius:12px;padding:18px;margin:14px 0}}
 .card b{{display:block;font-size:25px;color:#176b87;margin-top:8px}}.bar-row{{display:grid;grid-template-columns:150px 1fr 60px;gap:10px;align-items:center;margin:10px 0}}
 .track{{height:14px;background:#e8edf4;border-radius:8px;overflow:hidden}}.track i{{height:100%;display:block;background:#22a699}}
-table{{width:100%;border-collapse:collapse;background:white}}th,td{{padding:9px;border-bottom:1px solid #e5e7eb;text-align:right;vertical-align:top}}
+table{{width:100%;border-collapse:collapse;background:white}}th,td{{padding:9px;border-bottom:1px solid #e5e7eb;text-align:left;vertical-align:top}}
 code{{direction:ltr}}@media(max-width:650px){{.bar-row{{grid-template-columns:100px 1fr 50px}}}}
 </style></head><body><main>
-<h1>گزارش ارزیابی Text-to-SQL</h1>
-<p class="muted">تولیدشده در {html.escape(summary['generated_at'])} — {len(records)} سؤال تکمیل‌شده</p>
+<h1>Text-to-SQL Evaluation Report</h1>
+<p class="muted">Generated at {html.escape(summary['generated_at'])} — {len(records)} completed questions</p>
 <div class="cards">{''.join(f'<div class="card"><span>{html.escape(k)}</span><b>{html.escape(v)}</b></div>' for k,v in cards)}</div>
-{bar_chart('Execution Accuracy بر اساس زبان', summary['by_language'], 'execution_accuracy')}
-{bar_chart('Execution Accuracy بر اساس دسته', summary['by_category'], 'execution_accuracy')}
+{bar_chart('Execution Accuracy by Language', summary['by_language'], 'execution_accuracy')}
+{bar_chart('Execution Accuracy by Category', summary['by_category'], 'execution_accuracy')}
 {bar_chart('Execution Accuracy by Feature', summary['by_feature'], 'execution_accuracy')}
-{bar_chart('Table Recall بر اساس دسته', summary['by_category'], 'table_recall')}
-{bar_chart('Column Recall بر اساس دسته', summary['by_category'], 'column_recall')}
-<section><h2>سؤال‌های ناموفق ({len(failed)})</h2><table><thead><tr><th>ID</th><th>سؤال</th><th>خطا/نتیجه</th></tr></thead><tbody>{failed_rows}</tbody></table></section>
-<section><h2>فایل‌های همراه</h2><p><code>summary.json</code> خلاصه ماشینی، <code>per_question.csv</code> جزئیات و <code>checkpoint.jsonl</code> امکان ادامه اجرا را فراهم می‌کنند.</p></section>
+{bar_chart('Table Recall by Category', summary['by_category'], 'table_recall')}
+{bar_chart('Column Recall by Category', summary['by_category'], 'column_recall')}
+<section><h2>Failed Questions ({len(failed)})</h2><table><thead><tr><th>ID</th><th>Question</th><th>Error / Result</th></tr></thead><tbody>{failed_rows}</tbody></table></section>
+<section><h2>Supporting Files</h2><p><code>summary.json</code> contains the machine-readable summary, <code>per_question.csv</code> contains question-level details, and <code>checkpoint.jsonl</code> supports resuming a run.</p></section>
 </main></body></html>"""
     atomic_write_text(path, document)
 

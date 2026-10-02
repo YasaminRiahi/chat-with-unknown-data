@@ -74,6 +74,12 @@ The seven implementation layers are intentionally isolated behind a shared base
 interface, which keeps retrieval, correction, answer generation, and presentation
 independently testable.
 
+## Technical report
+
+For a formal treatment of the problem formulation, layer-by-layer methodology,
+theoretical foundations, evaluation protocol, threats to validity, and research
+extensions, read the [academic technical report](docs/technical-report.md).
+
 ## Tech stack
 
 | Area | Technology |
@@ -126,7 +132,7 @@ mssql+pyodbc://USER:PASSWORD@host.docker.internal/DATABASE?driver=ODBC+Driver+18
 ```
 
 Stop the application with `docker compose down`. For additional Docker and FRP
-notes, see the [Docker guide (Persian)](DOCKER_GUIDE_FA.md).
+notes, see the [Docker and FRP guide](DOCKER_GUIDE.md).
 
 ## Local development
 

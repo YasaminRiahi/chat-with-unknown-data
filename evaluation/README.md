@@ -1,39 +1,39 @@
-# اجرای ارزیابی مستقل پروژه
+# Running the Standalone Evaluation
 
-فایل `run_evaluation.py` فقط هنگام اجرای مستقیم فعال می‌شود و هیچ تغییری در
-رفتار API یا اجرای عادی پروژه ایجاد نمی‌کند. evaluator سؤال‌ها را از JSON
-می‌خواند و نتیجه هر سؤال را بلافاصله در checkpoint ذخیره می‌کند.
+`run_evaluation.py` runs only when invoked directly and does not change the API
+or the application's normal behavior. The evaluator reads questions from JSON
+and immediately writes each completed result to a checkpoint.
 
-## معیارهای گزارش‌شده
+## Reported metrics
 
-- Execution Accuracy قبل و بعد از Self-Correction
-- Valid SQL Rate قبل و بعد از Self-Correction
-- Table Recall کسری
+- Execution Accuracy before and after Self-Correction
+- Valid SQL Rate before and after Self-Correction
+- Fractional Table Recall
 - Table Precision
 - Column Recall
 - Self-Correction Success Rate
 - Correction Gain
-- R-VES مطابق reward bandهای BIRD Mini-Dev
-- End-to-End Latency و زمان مراحل
-- Token Usage و تعداد فراخوانی مدل
+- R-VES using the BIRD Mini-Dev reward bands
+- End-to-End Latency and per-stage timing
+- Token Usage and model call count
 
-Column Precision و نسخه صفر و یکی Table Recall عمداً محاسبه نمی‌شوند.
+Column Precision and binary Table Recall are intentionally not calculated.
 
-## اتصال امن پایگاه داده
+## Secure database connection
 
-بهتر است connection string را در متغیر محیطی همان terminal قرار دهید تا در
-فایل گزارش یا history فرمان ثبت نشود:
+Set the connection string as an environment variable in the current terminal so
+it is not written to a report file or command history:
 
 ```powershell
 $env:EVALUATION_DATABASE_URL = "mssql+pyodbc://..."
 ```
 
-evaluator مقدار connection string را داخل manifest، checkpoint یا گزارش ذخیره
-نمی‌کند.
+The evaluator does not store the connection string in the manifest, checkpoint,
+or reports.
 
-## اجرای آزمایشی کم‌هزینه
+## Low-cost smoke test
 
-ابتدا فقط یک یا چند سؤال اجرا کنید:
+Start with one or two questions:
 
 ```powershell
 .\.venv\Scripts\python.exe evaluation\run_evaluation.py `
@@ -45,10 +45,10 @@ evaluator مقدار connection string را داخل manifest، checkpoint یا 
   --run-dir evaluation\runs\smoke_test
 ```
 
-فایل فعلی `test1_candidate_bilingual.json` وضعیت candidate دارد. SQLهای مرجع
-و معنای کسب‌وکاری آن‌ها باید پیش از گزارش نهایی تأیید شوند.
+The current `test1_candidate_bilingual.json` file is a candidate dataset. Its
+reference SQL and business meaning must be reviewed before final reporting.
 
-## ادامه اجرای متوقف‌شده
+## Resume an interrupted run
 
 ```powershell
 .\.venv\Scripts\python.exe evaluation\run_evaluation.py `
@@ -58,17 +58,17 @@ evaluator مقدار connection string را داخل manifest، checkpoint یا 
   --resume evaluation\runs\smoke_test
 ```
 
-سؤال‌هایی که شناسه آن‌ها در checkpoint کامل شده است دوباره اجرا نمی‌شوند و
-token جدید مصرف نمی‌کنند، حتی اگر دیتاست بعداً ویرایش شود. evaluator هنگام
-resume، hash جدید دیتاست را در manifest ثبت می‌کند و سؤال‌های اجرا‌نشده را از
-نسخه جدید می‌خواند. برای اجرای دوباره یک سؤال باید رکورد آن عمداً از checkpoint
-حذف شود یا گزینه retry مناسب استفاده شود. نام و نوع دیتابیس و نسخه evaluator
-همچنان باید با manifest قبلی یکسان باشند.
+Questions whose IDs are complete in the checkpoint are not rerun and consume no
+new tokens, even if the dataset is edited later. On resume, the evaluator records
+the new dataset hash in the manifest and reads unfinished questions from the new
+version. To rerun a question, deliberately remove its checkpoint record or use
+the appropriate retry option. The database name, database type, and evaluator
+version must still match the existing manifest.
 
-برای توقف امن می‌توان `Ctrl+C` زد. نتیجه سؤال‌های کامل‌شده باقی می‌ماند و گزارش
-تا همان نقطه دوباره ساخته می‌شود.
+Press `Ctrl+C` to stop safely. Completed question results remain available, and
+the reports are rebuilt up to that point.
 
-## محدودکردن مصرف token
+## Limit token usage
 
 ```powershell
 .\.venv\Scripts\python.exe evaluation\run_evaluation.py `
@@ -78,10 +78,10 @@ resume، hash جدید دیتاست را در manifest ثبت می‌کند و �
   --run-dir evaluation\runs\budgeted_run
 ```
 
-بودجه در مرز سؤال‌ها کنترل می‌شود؛ یک فراخوانی در حال اجرا وسط کار قطع نمی‌شود.
-پس از رسیدن مجموع tokenهای checkpoint به سقف، اجرا به‌صورت امن متوقف می‌شود.
+The budget is checked between questions; an in-progress call is not interrupted.
+The run stops safely after the checkpoint's total token usage reaches the limit.
 
-فیلترهای قابل استفاده:
+Available filters:
 
 ```text
 --language fa
@@ -92,12 +92,12 @@ resume، hash جدید دیتاست را در manifest ثبت می‌کند و �
 --retry-failed
 ```
 
-برای چند category می‌توان گزینه `--category` را چند بار تکرار کرد.
+Repeat `--category` to include multiple categories.
 
-## بازسازی گزارش از checkpoint
+## Rebuild reports from a checkpoint
 
-برای هماهنگ‌کردن تمام گزارش‌ها با وضعیت فعلی `checkpoint.jsonl` بدون اتصال به
-دیتابیس یا فراخوانی مدل:
+To synchronize every report with the current `checkpoint.jsonl` without a
+database connection or model call:
 
 ```powershell
 .\.venv\Scripts\python.exe evaluation\run_evaluation.py `
@@ -108,42 +108,43 @@ resume، hash جدید دیتاست را در manifest ثبت می‌کند و �
   --reports-only
 ```
 
-این فرمان آخرین رکورد هر شناسه را از checkpoint انتخاب می‌کند و
-`report.html`، `debug.html`، `summary.json`، `debug_eval.json` و
-`per_question.csv` را دوباره می‌سازد.
+This command selects the latest record for each question ID and rebuilds
+`report.html`, `debug.html`, `summary.json`, `debug_eval.json`, and
+`per_question.csv`.
 
-## خروجی هر Run
+## Output from each run
 
 ```text
 evaluation/runs/<run-name>/
-├── manifest.json
-├── checkpoint.jsonl
-├── model_calls.jsonl
-├── summary.json
-├── per_question.csv
-├── debug_eval.json
-├── debug.html
-└── report.html
+|-- manifest.json
+|-- checkpoint.jsonl
+|-- model_calls.jsonl
+|-- summary.json
+|-- per_question.csv
+|-- debug_eval.json
+|-- debug.html
+`-- report.html
 ```
 
-- `checkpoint.jsonl`: نتیجه کامل هر سؤال برای resume
-- `model_calls.jsonl`: audit فراخوانی‌های مدل همان run
-- `summary.json`: معیارهای تجمیعی و breakdownها
-- `per_question.csv`: خروجی مناسب بررسی در Excel
-- `debug_eval.json`: داده‌های فشرده عیب‌یابی برای هر سؤال
-- `debug.html`: مرور تعاملی و مستقل SQL مرجع، SQL تولیدشده، خطا و retrieval هر
-  سؤال؛ evaluator آخرین رکوردهای checkpoint را هنگام ساخت گزارش داخل آن قرار
-  می‌دهد تا فایل مستقیماً در مرورگر باز شود.
-- `report.html`: گزارش فارسی مستقل با کارت‌ها، نمودارها و موارد ناموفق
+- `checkpoint.jsonl`: complete per-question results used for resume
+- `model_calls.jsonl`: audit log of model calls for the run
+- `summary.json`: aggregate metrics and breakdowns
+- `per_question.csv`: results suitable for review in Excel
+- `debug_eval.json`: compact per-question debugging data
+- `debug.html`: standalone interactive review of reference SQL, generated SQL,
+  errors, and retrieval for each question; the evaluator embeds the latest
+  checkpoint records so the file opens directly in a browser
+- `report.html`: standalone English report with metric cards, charts, and failed
+  cases
 
-## نکات اندازه‌گیری
+## Measurement notes
 
-- نتیجه SQL تولیدشده با نتیجه SQL مرجع مقایسه می‌شود، نه متن SQL.
-- اگر SQL مرجع `ORDER BY` نداشته باشد، ترتیب سطرها در مقایسه نادیده گرفته
-  می‌شود؛ سطرهای تکراری همچنان حفظ می‌شوند.
-- فقط SQLهای read-only پذیرفته می‌شوند.
-- R-VES فقط برای SQL دارای نتیجه صحیح محاسبه می‌شود.
-- برای R-VES یک warm-up انجام می‌شود و ترتیب SQL مرجع/تولیدی در تکرارها جابه‌جا
-  می‌شود.
-- هزینه یک‌باره introspection/enrichment در `manifest.json` ثبت می‌شود و با
-  latency هر سؤال مخلوط نمی‌شود.
+- Generated SQL results are compared with reference SQL results, not SQL text.
+- If the reference SQL has no `ORDER BY`, row order is ignored during comparison;
+  duplicate rows are still preserved.
+- Only read-only SQL is accepted.
+- R-VES is calculated only for SQL with a correct result.
+- R-VES uses a warm-up, and the reference/generated SQL execution order is
+  alternated between timing repetitions.
+- One-time introspection and enrichment costs are recorded in `manifest.json`
+  and are not mixed into per-question latency.
