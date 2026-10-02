@@ -179,7 +179,7 @@ frequency, document length, and saturation parameters [4]. Dense and lexical
 scores are not directly comparable, so the system fuses their *ranks* using
 Reciprocal Rank Fusion (RRF) [5]:
 
-$$\operatorname{RRF}(d)=\sum_{r\in R}\frac{1}{k+\operatorname{rank}_r(d)},$$
+$$RRF(d)=\sum_{r\in R}\frac{1}{k+rank_r(d)},$$
 
 with $k=60$ in the implementation. Forty fused table candidates are considered
 before deterministic identifier and relationship rules. The layer ultimately
@@ -306,7 +306,7 @@ queries. Timing uses five repetitions according to the run manifest.
 Execution Accuracy is
 
 $$EX=\frac{1}{N}\sum_{i=1}^{N}\mathbb{1}
-[\operatorname{Exec}(s_i)=\operatorname{Exec}(s_i^*)].$$
+[Exec(s_i)=Exec(s_i^*)].$$
 
 Retrieval metrics are
 
